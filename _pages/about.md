@@ -2,24 +2,31 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+subtitle: Microsoft Software Engineer
 
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+  more_info: 
 
-news: true # includes a list of news items
+news: false # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
-social: true # includes social icons at the bottom of the page
+social: false # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+Hello, my name is Michael Vanden Heuvel. I received my undergraduate degree in Computer Science from the University of Wisconsin - Madison. I am currently a Software Engineer at Microsoft working on Microsoft Sentinel. 
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+During my undergrad, I was a member of the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/) research group led by Dr. Dane Morgan. I worked on several projects in conjunction with the University of Wisconsin School of Medicine Department of radiology. Specifically I worked on.... For more information, visit my projects and publication pages.
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+<!-- add note about Mingren, Dr. Lubner -->
+<!-- Add note about Internship and what I do at Microsoft -->
+<!-- Add more about CheeseHacks and include link and sponsor discussion -->
+<!-- Talk about peer mentor for CS 220? -->
+<!-- Include note about TEALS? -->
+
+While at UW - Madison, I was also the event management lead of the Google Developer Students Club. I helped organize events, including the CheeseHacks hackathon. 
+
+TEALS
+
+I currently live in Seattle where I enjoy running, hiking, [baking](), and visiting local coffee shops and bookstores.
