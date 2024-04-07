@@ -29,4 +29,4 @@ While at UW - Madison, I was also the event management lead of the Google Develo
 
 TEALS
 
-I currently live in Seattle where I enjoy running, hiking, [baking](), and visiting local coffee shops and bookstores.
+I currently live in Seattle where I enjoy running, hiking, [baking](/baking/), and visiting local coffee shops and bookstores.
