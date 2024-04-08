@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Renal AML Neural Network Project
+title: Renal Cell Carcinoma Classification Project
 description: The last project I worked on during my undergrad
 img:
 importance: 1
