@@ -70,5 +70,43 @@
       "url": "https://doi.org/10.1007/s00261-021-03289-0",
       "summary": "Current diagnostic and treatment modalities for pancreatic cysts (PCs) are invasive and are associated with patient morbidity. The purpose of this study is to develop and evaluate machine learning algorithms to delineate mucinous from non-mucinous PCs using non-invasive CT-based radiomics."
     }
+  ],
+  "projects": [
+    {
+      "name": "Pancreatic Cyst Classification",
+      "summary": "",
+      "highlights": [
+        "Developed machine learning models to classify patients’ pancreatic tumors as mucinous/nonmucinous and malignant/benign to reduce unnecessary surgeries",
+        "Created XGBoost and random forest models with oversampling and undersampling using Python and Scikit-learn",
+        "Analyzed and processed 496 features for 103 pancreatic tumor patients from University Hospital’s dataset",
+        "Acted as a lead of a 3-student development team to delegate tasks and maintain development schedule",
+        "Utilized SHAP to analyze feature impact on model output"
+      ],
+      "startDate": "2020",
+      "endDate": "2021",
+      "url": "https://doi.org/10.1007/s00261-021-03289-0"
+    },
+    {
+      "name": "Renal AML  Classification and Regression",
+      "summary": "",
+      "highlights": [
+        "Guided two subteams of undergraduate students in developing machine learning models",
+        "Developed and evaluated machine learning and Neural Network models to predict growth rate of renal AMLs and to classify renal AMLs as high or low growth"
+      ],
+      "startDate": "2022-01",
+      "endDate": "2022-05",
+      "url": "../../projects/renal_aml_classification/"
+    },
+    {
+      "name": "Renal Cell Carcinoma Neural Network",
+      "summary": "",
+      "highlights": [
+        "Developed data transformation pipeline to clean data and make MRI scans usable for Neural Network",
+        "Utilized transfer learning to train Convolutional Neural Network to classify Renal Cell Carcinoma as low or high grade"
+      ],
+      "startDate": "2022-09",
+      "endDate": "2022-12",
+      "url": "../../projects/renal_carcinoma_nn/"
+    }
   ]
 }
