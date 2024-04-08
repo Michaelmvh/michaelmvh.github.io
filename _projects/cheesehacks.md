@@ -2,7 +2,7 @@
 layout: page
 title: CheeseHacks 2021
 description: A hackathon jokingly named after cheese that I cofounded and helped host not just once, but twice!
-img: assets/img/cheesehacks_logo.png
+img: assets/img/projects/cheesehacks_logo.png
 importance: 1
 category: fun
 giscus_comments: true
