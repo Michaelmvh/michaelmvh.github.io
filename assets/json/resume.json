@@ -6,7 +6,7 @@
     "email": "",
     "phone": "",
     "url": "https://github.com/michaelmvh",
-    "summary": "A Wisconsin-born software engineer interested in the intersection of Artificial Intelligence and health",
+    "summary": "I am a software engineer interested in the intersection of Artificial Intelligence and health",
     "location": {
       "address": "",
       "postalCode": "",
@@ -24,20 +24,14 @@
       "startDate": "2023-03",
       "endDate": "",
       "summary": "",
-      "highlights": [""]
+      "highlights": [
+        "Developed internal API endpoints for Microsoft Defender XDR customer onboarding, offboarding, and metadata retrieval using Azure Functions",
+        "Utilized React with TypeScript to develop a responsive frontend for the Microsoft Defender XDR onboarding wizard and settings page",
+        "Rewrote legacy Kockout code in React for Microsoft Sentinel settings and pricing pages",
+        "Contributed to the upkeep of services by implementing monitors, writing unit tests, and contributing to internal bug bashes"
+      ]
     }
   ],
-  // "volunteer": [
-  //   {
-  //     "organization": "People's Climate March",
-  //     "position": "Lead Organizer",
-  //     "url": "https://example.com",
-  //     "startDate": "2014-04-01",
-  //     "endDate": "2015-07-01",
-  //     "summary": "Lead organizer for the New York City branch of the People's Climate March, the largest climate march in history.",
-  //     "highlights": ["Awarded 'Climate Hero' award by Greenpeace for my efforts organizing the march.", "Men of the year 2014 by Time magazine"]
-  //   }
-  // ],
   "education": [
     {
       "institution": "University of Wisconsin - Madison",
@@ -77,43 +71,4 @@
       "summary": "Current diagnostic and treatment modalities for pancreatic cysts (PCs) are invasive and are associated with patient morbidity. The purpose of this study is to develop and evaluate machine learning algorithms to delineate mucinous from non-mucinous PCs using non-invasive CT-based radiomics."
     }
   ]
-  // "skills": [
-  //   {
-  //     "name": "Physics",
-  //     "level": "Master",
-  //     "icon": "fa-solid fa-hashtag",
-  //     "keywords": [
-  //       "Quantum Mechanics",
-  //       "Quantum Computing",
-  //       "Quantum Information",
-  //       "Quantum Cryptography",
-  //       "Quantum Communication",
-  //       "Quantum Teleportation"
-  //     ]
-  //   }
-  // ],
-  // "interests": [
-  //   {
-  //     "name": "Physics",
-  //     "icon": "fa-solid fa-tag",
-  //     "keywords": [
-  //       "Quantum Mechanics",
-  //       "Quantum Computing",
-  //       "Quantum Information",
-  //       "Quantum Cryptography",
-  //       "Quantum Communication",
-  //       "Quantum Teleportation"
-  //     ]
-  //   }
-  // ],
-  // "projects": [
-  //   {
-  //     "name": "Quantum Computing",
-  //     "summary": "Quantum computing is the use of quantum-mechanical phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers.",
-  //     "highlights": ["Quantum Teleportation", "Quantum Cryptography"],
-  //     "startDate": "2018-01-01",
-  //     "endDate": "2018-01-01",
-  //     "url": "https://example.com"
-  //   }
-  // ]
 }
