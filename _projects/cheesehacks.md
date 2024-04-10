@@ -5,7 +5,7 @@ description: A hackathon jokingly named after cheese that I cofounded and helped
 img: assets/img/projects/cheesehacks_logo.png
 importance: 1
 category: fun
-giscus_comments: true
+# giscus_comments: true
 ---
 
 <div class="row">

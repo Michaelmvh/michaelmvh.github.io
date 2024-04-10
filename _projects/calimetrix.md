@@ -5,7 +5,6 @@ description: A part-time internship I had during the pandemic
 img:
 importance: 1
 category: research
-related_publications: true
 ---
 
 Writeup coming soon!

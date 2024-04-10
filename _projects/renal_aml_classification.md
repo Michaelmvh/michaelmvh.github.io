@@ -5,7 +5,6 @@ description: Building upon my previous experience
 img:
 importance: 1
 category: research
-related_publications: true
 ---
 
 For this project, I was a member of the Informatics Skunkworks research group and led a team of undergraduate students and built upon my experience in the pancreatic cyst project. The writeup below was written at the conclusion of the project during my undergrad.
