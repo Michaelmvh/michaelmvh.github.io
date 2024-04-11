@@ -2,7 +2,7 @@
 layout: page
 title: SoccerNet Plus
 description: A class project about Computer Vision
-img:
+img: assets/img/projects/GIFs/detection.gif
 importance: 1
 category: personal projects # change to education if you plan on adding other class projects
 ---
