@@ -2,8 +2,8 @@
 layout: page
 title: Renal Cell Carcinoma Classification Project
 description: The last project I worked on during my undergrad
-img: assets/img/projects/renal_carcinoma_code.png
-importance: 1
+img:
+importance: 3
 category: research
 ---
 
