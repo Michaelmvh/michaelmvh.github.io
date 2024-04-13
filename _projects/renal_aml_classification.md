@@ -2,7 +2,7 @@
 layout: page
 title: Renal AML Classification Project
 description: Building upon my previous experience
-img: assets/img/projects/renal_carcinoma_code.png
+img: assets/img/projects/renal_aml_code.png
 importance: 1
 category: research
 ---
