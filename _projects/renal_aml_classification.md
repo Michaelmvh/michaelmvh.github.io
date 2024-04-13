@@ -7,7 +7,7 @@ importance: 1
 category: research
 ---
 
-For this project, I was a member of the Informatics Skunkworks research group and led a team of undergraduate students and built upon my experience in the pancreatic cyst project. The writeup below was written at the conclusion of the project during my undergrad.
+For this project, I was a member of the Informatics Skunkworks research group and led a team of undergraduate students and built upon my experience in the [pancreatic cyst project](../pancreatic_cyst). The writeup below was written at the conclusion of the project during my undergrad.
 
 View this writeup and relevant code [[Github](https://github.com/Michaelmvh/Renal-AML-Regression-Classification-Spring-2022/tree/main)]
 
