@@ -198,7 +198,9 @@ ul.task-list input[type="checkbox"] {
   .more-info {
     margin-bottom: 5px;
     margin-top: 5px;
-    font-family: monospace;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-color: var(--global-theme-color);
 
     p {
       display: inline-block;

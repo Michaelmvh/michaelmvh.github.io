@@ -8,7 +8,8 @@ profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
-  more_info:
+  more_info: >
+    <a href="../assets/pdf/Michael Vanden Heuvel - pseudo anonymized.pdf">Take a look at my CV!</a>
 
 news: false # includes a list of news items
 selected_papers: false # includes a list of papers marked as "selected={true}"
