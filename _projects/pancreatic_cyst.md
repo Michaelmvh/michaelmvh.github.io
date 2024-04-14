@@ -8,10 +8,10 @@ category: research
 related_publications: true
 ---
 
-<img src="../../assets/img/projects/pancreatic_cyst.png" height="100%" width="100%">
-Image sourced from publication.
+<img src="../../assets/img/publication_preview/pancreatic_cyst.png" height="100%" width="100%">
+Image sourced from our publication {% cite Awe2022%}
 
-This project was my first research experience. This project was through the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/). Please consider reading our publication, {% cite Awe2022%}, to get a complete picture of what we were able to accomplish with this project.
+This project was my first research experience. This project was through the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/). Please consider reading our publication below to get a complete picture of what we were able to accomplish with this project.
 
 # My Experience
 
