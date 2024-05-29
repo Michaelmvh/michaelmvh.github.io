@@ -4,7 +4,7 @@ title: projects
 permalink: /projects/
 description: Writeups of some of the projects I've had the opporunity to be a part of!
 nav: true
-nav_order: 3
+nav_order: 40
 display_categories: [research, personal projects, fun]
 horizontal: false
 ---

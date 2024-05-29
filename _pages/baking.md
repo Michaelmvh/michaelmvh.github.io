@@ -4,7 +4,7 @@ title: baking
 permalink: /baking/
 description: Some highlights of things that I've baked or cooked that I am proud about
 nav: true
-nav_order: 3
+nav_order: 20
 display_categories: []
 horizontal: false
 ---
