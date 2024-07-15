@@ -2,35 +2,35 @@
 layout: page
 title: baking
 permalink: /baking/
-description: Some highlights of things that I've baked or cooked that I am proud about
+description: A few things I've baked recently that I wanted to share!
 nav: true
-nav_order: 20
+nav_order: 40
 display_categories: []
 horizontal: false
 ---
 
 <!-- pages/projects.md -->
 <div class="projects">
-{% if site.enable_project_categories and page.display_categories %}
+{% if site.enable_baking_categories and page.display_categories %}
   <!-- Display categorized projects -->
   {% for category in page.display_categories %}
   <a id="{{ category }}" href=".#{{ category }}">
     <h2 class="category">{{ category }}</h2>
   </a>
-  {% assign categorized_projects = site.projects | where: "category", category %}
-  {% assign sorted_projects = categorized_projects | sort: "importance" %}
+  {% assign categorized_bakes = site.bakes | where: "category", category %}
+  {% assign sorted_bakes = categorized_bakes | sort: "importance" %}
   <!-- Generate cards for each project -->
   {% if page.horizontal %}
   <div class="container">
     <div class="row row-cols-2">
-    {% for project in sorted_projects %}
+    {% for project in sorted_bakes %}
       {% include projects_horizontal.liquid %}
     {% endfor %}
     </div>
   </div>
   {% else %}
   <div class="grid">
-    {% for project in sorted_projects %}
+    {% for project in sorted_bakes %}
       {% include projects.liquid %}
     {% endfor %}
   </div>
@@ -41,7 +41,7 @@ horizontal: false
 
 <!-- Display projects without categories -->
 
-{% assign sorted_projects = site.projects | sort: "importance" %}
+{% assign sorted_bakes = site.bakes | sort: "importance" %}
 
   <!-- Generate cards for each project -->
 
@@ -49,15 +49,15 @@ horizontal: false
 
   <div class="container">
     <div class="row row-cols-2">
-    {% for bakes in sorted_bakes %}
-      {% include bakes_horizontal.liquid %}
+    {% for project in sorted_bakes %}
+      {% include projects_horizontal.liquid %}
     {% endfor %}
     </div>
   </div>
   {% else %}
   <div class="grid">
-    {% for bakes in sorted_bakes %}
-      {% include bakes.liquid %}
+    {% for project in sorted_bakes %}
+      {% include projects.liquid %}
     {% endfor %}
   </div>
   {% endif %}
