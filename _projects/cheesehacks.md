@@ -7,8 +7,6 @@ importance: 1
 category: fun
 ---
 
-<!-- ![Cheesehacks logo](../../assets/img/projects/cheesehacks_logo.png) -->
-
 <img src="../../assets/img/projects/cheesehacks_logo.png" height="100%" width="100%">
 
 CheeseHacks was a hackathon I helped cofound and host in 2021 and 2022 as part of the Google Developer Student Club in conjunction with the Web Development Club. We had a overwhelming turnout both years and saw some great projects created. We learned a lot coordinating the event and had the opportunity to work with some great sponsors. To my knowledge, CheeseHacks 2021 was the first hackathon to take place since the pandemic. Please take a look at the links below for more information.
