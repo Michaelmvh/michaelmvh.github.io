@@ -7,6 +7,6 @@ importance: 1
 category: baking
 ---
 
-<img src="../../assets/img/bakes/smores_tart.png" height="100%" width="100%">
+<img src="../../assets/img/bakes/smores_tart_3.png" height="100%" width="100%">
 
 This was a hit both times I made it during the summer! Watch as Claire Saffitz [works through her recipe step by step](https://www.youtube.com/watch?v=FI4IJJ8pIXg).
