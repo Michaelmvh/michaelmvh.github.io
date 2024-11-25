@@ -19,9 +19,3 @@ Use the below if making drastic changes
 ```bash
 $ docker compose up --build
 ```
-
-## Run prettier
-
-```bash
-$ npx prettier -w .
-```
