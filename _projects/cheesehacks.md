@@ -1,7 +1,7 @@
 ---
 layout: page
 title: CheeseHacks
-description: A hackathon jokingly named after cheese that I cofounded and helped host not just once, but twice!
+description: A hackathon that I cofounded and helped host not just once, but twice!
 img: assets/img/projects/cheesehacks_logo.png
 importance: 1
 category: fun
