@@ -1,11 +1,11 @@
 ---
 layout: cv
-permalink: assets/pdf/Michael Vanden Heuvel - pseudo anonymized.pdf
+permalink: /cv/
 title: cv
 nav: true
 nav_order: 50
 cv_pdf: Michael Vanden Heuvel - pseudo anonymized.pdf
-tabout: true
+cv_tabout: true
 description:
 toc:
   sidebar: left
