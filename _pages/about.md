@@ -9,7 +9,7 @@ profile:
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <a href="../assets/pdf/Michael Vanden Heuvel - pseudo anonymized.pdf">Take a look at my CV!</a>
+    <a href="../assets/pdf/Michael_Vanden_Heuvel-pseudo_anonymized.pdf">Take a look at my CV!</a>
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
