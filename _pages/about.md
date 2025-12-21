@@ -11,9 +11,18 @@ profile:
   more_info: >
     <a href="../assets/pdf/Michael Vanden Heuvel - pseudo anonymized.pdf">Take a look at my CV!</a>
 
-news: false # includes a list of news items
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
+
+announcements:
+  enabled: false # includes a list of news items
+  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
+  limit: 5 # leave blank to include all the news in the `_news` folder
+
+latest_posts:
+  enabled: false
+  scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
+  limit: 3 # leave blank to include all the blog posts
 ---
 
 Hello, my name is Michael Vanden Heuvel. I received my undergraduate degree in Computer Science from the University of Wisconsin - Madison. I am currently a Software Engineer at Microsoft working on Microsoft Sentinel.
