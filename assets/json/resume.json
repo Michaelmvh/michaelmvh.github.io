@@ -95,7 +95,7 @@
       ],
       "startDate": "2022-01",
       "endDate": "2022-05",
-      "url": "../../projects/renal_aml_classification/"
+      "url": "../../_projects/renal_aml_classification.md"
     },
     {
       "name": "Renal Cell Carcinoma Neural Network",
@@ -106,7 +106,7 @@
       ],
       "startDate": "2022-09",
       "endDate": "2022-12",
-      "url": "../../projects/renal_carcinoma_nn/"
+      "url": "../../_projects/renal_carcinoma_nn.md"
     }
   ]
 }
