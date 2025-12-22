@@ -3,7 +3,7 @@ layout: page
 title: Smores Tart
 description: One of the many recipes I enjoy from "What's for Dessert" by Claire Saffitz
 img: assets/img/bakes/smores_tart_3.png
-importance: 1
+importance: 2
 category: baking
 ---
 

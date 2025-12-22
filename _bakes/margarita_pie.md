@@ -3,7 +3,7 @@ layout: page
 title: Frozen Margarita Pie
 description: A simple summer recipe from Andy Baraghani at Bon Appetit
 img: assets/img/bakes/margarita_pie.png
-importance: 1
+importance: 3
 category: baking
 ---
 

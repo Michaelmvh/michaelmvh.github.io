@@ -3,7 +3,7 @@ layout: page
 title: Strawberry Rhubarb Pie
 description: A strawberry rhubarb pie made with freshly picked strawberries
 img: assets/img/bakes/strawberry_rhubarb_pie.png
-importance: 1
+importance: 5
 category: baking
 ---
 

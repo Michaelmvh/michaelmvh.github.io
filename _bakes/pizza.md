@@ -3,7 +3,7 @@ layout: page
 title: Homemade Pizza
 description: Pizza time!
 img: assets/img/bakes/pizza.png
-importance: 1
+importance: 4
 category: baking
 ---
 
