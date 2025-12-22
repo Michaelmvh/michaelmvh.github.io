@@ -7,6 +7,6 @@ importance: 1
 category: baking
 ---
 
-<img src="../../assets/img/bakes/pizza.png" height="100%" width="100%">
+{% include figure.liquid path="assets/img/bakes/pizza.png" %}
 
 Easy crust recipe from Sam Merritt on [Sugar Spun Run](https://sugarspunrun.com/the-best-pizza-dough-recipe/).
