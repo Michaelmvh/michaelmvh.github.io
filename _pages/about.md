@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Microsoft Software Engineer
+subtitle: Software Engineer at Microsoft | Prospective PhD Student | NSF CSGrad4US Fellow
 
 profile:
   align: right
@@ -34,3 +34,22 @@ In addition to my research, I served as the event management lead for the Google
 Outside of my technical work, I have been passionate about computer science outreach. I have taught computer science to college, high school, and elementary school students. As a peer mentor at the college level, I held office hours, designed and proctored exams, hosted mock exams, and led a lab section. Through Microsoft TEALS, I volunteered as a teaching assistant for Shiocton High School. During fall of 2022, I was a volunteer for a local elementary school's Scratch programming club.
 
 I currently live in Seattle where I enjoy running, hiking, [baking](/baking/), and visiting local coffee shops and bookstores.
+
+<!-- Website TODO
+- Check accessibility
+  - Color contrast for project page
+  - underline links on homepage
+- Update styling of check out my CV
+  - Normal link
+  - centered
+- Content
+  - Research interests and goals
+
+
+
+
+
+
+
+
+ -->
