@@ -67,23 +67,7 @@ ninja.data = [{
           description: "A strawberry rhubarb pie made with freshly picked strawberries",
           section: "Bakes",handler: () => {
               window.location.href = "/bakes/strawberry_rhubarb_pie/";
-            },},{id: "books-the-godfather",
-          title: 'The Godfather',
-          description: "",
-          section: "Books",handler: () => {
-              window.location.href = "/books/the_godfather/";
-            },},{id: "news-a-simple-inline-announcement",
-          title: 'A simple inline announcement.',
-          description: "",
-          section: "News",},{id: "news-a-long-announcement-with-details",
-          title: 'A long announcement with details',
-          description: "",
-          section: "News",handler: () => {
-              window.location.href = "/news/announcement_2/";
-            },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
-          title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
-          description: "",
-          section: "News",},{id: "projects-cheesehacks",
+            },},{id: "projects-cheesehacks",
           title: 'CheeseHacks',
           description: "A hackathon that I cofounded and helped host not just once, but twice!",
           section: "Projects",handler: () => {
