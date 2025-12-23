@@ -37,8 +37,8 @@ I currently live in Seattle where I enjoy running, hiking, [baking](/baking/), a
 
 <!-- Website TODO
 - Check accessibility
-  - Color contrast for project page
-  - underline links on homepage
+  - Color contrast for card text on project page
+  - Color contrast on navbar
 - Update styling of check out my CV
   - Normal link
   - centered
