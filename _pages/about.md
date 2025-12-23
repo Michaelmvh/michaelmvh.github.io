@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Software Engineer at Microsoft | Prospective PhD Student | NSF CSGrad4US Fellow
+subtitle: Software Engineer at Microsoft | Prospective PhD Student | NSF CSGrad4US Fellowship Recipient
 
 profile:
   align: right
@@ -37,19 +37,18 @@ I currently live in Seattle where I enjoy running, hiking, [baking](/baking/), a
 
 <!-- Website TODO
 - Check accessibility
-  - Color contrast for card text on project page
-  - Color contrast on navbar
+  - Color contrast for card text on project page in dark mode
+  - Color contrast on navbar in dark mode
 - Update styling of check out my CV
   - Normal link
   - centered
 - Content
-  - Research interests and goals
-
-
-
-
-
-
-
-
+  - About page
+    - Research interests and goals -- Research interests: Molecular Machine Learning,
+    Important things to highlight:
+      - Teaching, volunteer work
+  - Projects page!
+    - Taglines
+    - Project details
+  - Bakes page
  -->
