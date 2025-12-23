@@ -3,7 +3,7 @@ layout: page
 title: Fruit Pizza
 description: Reminds me of midwest summers
 img: assets/img/bakes/fruit_pizza.png
-importance: 6 
+importance: 6
 category: baking
 ---
 
