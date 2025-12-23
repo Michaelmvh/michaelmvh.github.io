@@ -27,9 +27,7 @@ latest_posts:
 
 Hello, my name is Michael Vanden Heuvel. I received my undergraduate degree in Computer Science from the University of Wisconsin - Madison. I am currently a Software Engineer at Microsoft working on Microsoft Sentinel.
 
-<!-- Talk about work at Microsoft -->
-
-During my undergrad, I was a member of the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/) research group led by Dr. Dane Morgan. I worked on several projects in collaboration with the University of Wisconsin School of Medicine Department of Radiology. I worked on projects including pacreatic cyst classification and renal AML classification and regression. For more information, visit my [projects](/projects/) and [publication](/publications/) pages.
+During my undergrad, I was a member of the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/) research group led by Dr. Dane Morgan. I worked on several projects in collaboration with the University of Wisconsin School of Medicine Department of Radiology. I worked on projects including pancreatic cyst classification and renal AML classification and regression. For more information, visit my [projects](/projects/) and [publication](/publications/) pages.
 
 In addition to my research, I served as the event management lead for the Google Developer Students Club at UW-Madison, where I led the creation of the CheeseHacks hackathon. During my time with the club, we tripled chapter membership!
 
