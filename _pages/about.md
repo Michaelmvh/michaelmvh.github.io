@@ -25,13 +25,21 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-**About Me** I am a Software Engineer at Microsoft and a recipient of the NSF CSGrad4US Fellowship. I hold a B.S. in Computer Science from the University of Wisconsin-Madison.
+**About Me**
+
+I am a Software Engineer at Microsoft and a recipient of the NSF CSGrad4US Fellowship. I hold a B.S. in Computer Science from the University of Wisconsin-Madison.
 
 My research interests lie at the intersection of machine Learning and molecular biology. I am particularly interested in leveraging generative modeling (diffusion, flow matching) to accelerate therapeutic design and protein engineering. I am currently applying to CS PhD programs for Fall 2026.
 
+**Research & Professional Experience**
+
 During my undergrad, I was a member of the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/) research group led by Dr. Dane Morgan. I worked on several projects in collaboration with the University of Wisconsin School of Medicine Department of Radiology. I worked on projects including pancreatic cyst classification and renal AML classification and regression. For more information, visit my [projects](/projects/) and [publication](/publications/) pages.
 
+**Service & Outreach**
+
 Outside of my technical work, I have been passionate about computer science outreach. I have taught computer science to college, high school, and elementary school students. As a peer mentor at the college level, I held office hours, designed and proctored exams, hosted mock exams, and led a lab section. Through Microsoft TEALS, I volunteered as a teaching assistant for Shiocton High School. During fall of 2022, I was a volunteer for a local elementary school's Scratch programming club.
+
+**Fun Stuff**
 
 I currently live in Seattle where I enjoy running, hiking, [baking](/baking/), and visiting local coffee shops and bookstores.
 
