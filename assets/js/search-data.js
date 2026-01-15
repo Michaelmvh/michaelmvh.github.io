@@ -30,6 +30,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/projects/";
           },
+        },{id: "nav-linkedin",
+          title: "linkedin",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/https:/www.linkedin.com/in/michaelmvh/";
+          },
         },{id: "nav-cv",
           title: "cv",
           description: "",
