@@ -81,7 +81,7 @@ ninja.data = [{
               window.location.href = "/projects/cheesehacks/";
             },},{id: "projects-pancreatic-cysts-prediction-project",
           title: 'Pancreatic Cysts Prediction Project',
-          description: "My first research project. I learned a lot!",
+          description: "Imbalanced data!",
           section: "Projects",handler: () => {
               window.location.href = "/projects/pancreatic_cyst/";
             },},{id: "projects-renal-aml-classification-project",
