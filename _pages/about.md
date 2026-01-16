@@ -29,7 +29,7 @@ I am a Software Engineer at Microsoft and a recipient of the [National Science F
 
 My research interests lie at the intersection of machine Learning and molecular biology. I am particularly interested in leveraging generative modeling (diffusion, flow matching) to accelerate therapeutic design and protein engineering. I am currently applying to CS PhD programs for Fall 2026.
 
-### Research & Professional Experience
+### Research Experience
 
 During my undergrad, I was a member of the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/) research group led by Dr. Dane Morgan. I worked on several projects in collaboration with the University of Wisconsin School of Medicine Department of Radiology. I worked on projects including pancreatic cyst classification and renal AML classification and regression. For more information, visit my [projects](/projects/) and [publication](/publications/) pages.
 
