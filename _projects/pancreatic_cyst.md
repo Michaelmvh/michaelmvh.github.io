@@ -3,7 +3,7 @@ layout: page
 title: Pancreatic Cysts Prediction Project
 description: Imbalanced data!
 img: assets/img/publication_preview/pancreatic_cyst.png
-importance: 2
+importance: 1
 category: research
 related_publications: true
 ---
