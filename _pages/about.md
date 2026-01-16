@@ -2,14 +2,12 @@
 layout: about
 title: about
 permalink: /
-subtitle: NSF CSGrad4US Fellowship Recipient | Software Engineer at Microsoft | Fall 2026 PhD Applicant
+subtitle: NSF CSGrad4US Fellowship Recipient  |  Software Engineer at Microsoft  |  Fall 2026 PhD Applicant
 
 profile:
   align: right
   image: prof_pic.jpg
-  image_circular: false # crops the image to make it circular
-  more_info: >
-    <a href="../assets/pdf/Michael_Vanden_Heuvel-pseudo_anonymized.pdf">Take a look at my CV!</a>
+  image_circular: true # crops the image to make it circular
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
@@ -25,34 +23,39 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-**About Me**
+### About Me
 
-I am a Software Engineer at Microsoft and a recipient of the NSF CSGrad4US Fellowship. I hold a B.S. in Computer Science from the University of Wisconsin-Madison.
+I am a Software Engineer at Microsoft and a recipient of the [National Science Foundation CSGrad4US Fellowship](https://www.nsf.gov/cise/graduate-fellowships). I hold a B.S. in Computer Science from the University of Wisconsin - Madison.
 
 My research interests lie at the intersection of machine Learning and molecular biology. I am particularly interested in leveraging generative modeling (diffusion, flow matching) to accelerate therapeutic design and protein engineering. I am currently applying to CS PhD programs for Fall 2026.
 
-**Research & Professional Experience**
+### Research & Professional Experience
 
 During my undergrad, I was a member of the [Informatics Skunkworks](https://skunkworks.engr.wisc.edu/) research group led by Dr. Dane Morgan. I worked on several projects in collaboration with the University of Wisconsin School of Medicine Department of Radiology. I worked on projects including pancreatic cyst classification and renal AML classification and regression. For more information, visit my [projects](/projects/) and [publication](/publications/) pages.
 
-**Service & Outreach**
+### Service & Outreach
 
-Outside of my technical work, I have been passionate about computer science outreach. I have taught computer science to college, high school, and elementary school students. As a peer mentor at the college level, I held office hours, designed and proctored exams, hosted mock exams, and led a lab section. Through Microsoft TEALS, I volunteered as a teaching assistant for Shiocton High School. During fall of 2022, I was a volunteer for a local elementary school's Scratch programming club.
+**Wet-Lab Instruction**: Most recently, I served as an Assistant Course Instructor at SoundBio Lab, where I guided students through "Microbiology Essentials," including sterile techniques, bacterial isolation, and antibiotic susceptibility assays. This Spring I will be helping with a Synthetic Biology course.
 
-**Fun Stuff**
+**Computer Science Education**: I have a long history of teaching, from volunteering with Microsoft TEALS instructing a high school Python course to serving as a Peer Mentor for Data Science Programming at UW-Madison.
 
-I currently live in Seattle where I enjoy running, hiking, [baking](/baking/), and visiting local coffee shops and bookstores.
+**Advocacy**: I am an executive member of the Microsoft Security Disability ERG, where I host townhalls to raise awareness and foster an inclusive environment for employees with disabilities.
+
+---
+
+When I’m not at my computer, you can find me running, hiking, [baking](/baking/), or visiting local coffee shops and bookstores.
 
 <!-- Website TODO
 - Content
   - About page
-    - Research interests and goals -- Research interests: Molecular Machine Learning,
     Important things to highlight:
       - Teaching, volunteer work
-  - Add LinkedIn to website top toolbar
   - Projects page!
     - Taglines
     - Project details
+      - Pancreatic cyst project
+      - Renal AML proj
+
   - Bakes page
 - Check accessibility
   - Color contrast for card text on project page in dark mode
