@@ -1,0 +1,31 @@
+{
+  "name": "michaelmvh.github.io",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "a11y": "playwright test",
+    "build": "node scripts/build.ts",
+    "check": "npm run typecheck && npm run validate && npm run build && npm run html:check && npm test && npm run a11y",
+    "dev": "node scripts/serve.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "html:check": "html-validate \"dist/**/*.html\"",
+    "sync:cv": "node scripts/sync-cv.ts",
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "validate": "node scripts/validate-content.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.62.1",
+    "@types/node": "24.13.3",
+    "html-validate": "11.6.2",
+    "prettier": "3.9.6",
+    "sharp": "0.35.3",
+    "typescript": "7.0.2"
+  }
+}

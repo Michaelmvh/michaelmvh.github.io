@@ -1,0 +1,80 @@
+html[data-site-theme="blueprint"] {
+  --ink: #eafafb;
+  --ink-soft: #e0f9fa;
+  --paper: #087a94;
+  --paper-deep: #086b81;
+  --white: #096d83;
+  --moss: #fff;
+  --moss-dark: #eafafb;
+  --coral: #e0f9fa;
+  --gold: #09677c;
+  --line: rgb(224 249 251 / 55%);
+  color-scheme: dark;
+}
+
+html[data-site-theme="blueprint"] body {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+html[data-site-theme="blueprint"] body::before {
+  background-image:
+    linear-gradient(rgb(224 249 251 / 13%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(224 249 251 / 13%) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+html[data-site-theme="blueprint"] h1,
+html[data-site-theme="blueprint"] h2,
+html[data-site-theme="blueprint"] h3,
+html[data-site-theme="blueprint"] .wordmark,
+html[data-site-theme="blueprint"] .footer-name {
+  font-family: var(--sans);
+  letter-spacing: -0.025em;
+}
+
+html[data-site-theme="blueprint"] .site-header,
+html[data-site-theme="blueprint"] .site-footer,
+html[data-site-theme="blueprint"] .home-story,
+html[data-site-theme="blueprint"] .publication-list,
+html[data-site-theme="blueprint"] .publication,
+html[data-site-theme="blueprint"] .detail-header {
+  border-color: var(--line);
+}
+
+html[data-site-theme="blueprint"] .button,
+html[data-site-theme="blueprint"] .filters button[aria-pressed="true"] {
+  border-color: #eafafb;
+  border-radius: 0;
+  background: #eafafb;
+  color: #086277;
+}
+
+html[data-site-theme="blueprint"] .button:hover {
+  background: #fff;
+}
+
+html[data-site-theme="blueprint"] .site-nav a:last-child,
+html[data-site-theme="blueprint"] .card,
+html[data-site-theme="blueprint"] .detail-header img,
+html[data-site-theme="blueprint"] .theme-reset {
+  border-radius: 0;
+}
+
+html[data-site-theme="blueprint"] .portrait,
+html[data-site-theme="blueprint"] .detail-header img {
+  border: 2px solid #eafafb;
+}
+
+html[data-site-theme="blueprint"] .portrait-accent {
+  border-width: 2px;
+}
+
+html[data-site-theme="blueprint"] .personal-note {
+  border: 1px solid var(--line);
+}
+
+html[data-site-theme="blueprint"] .theme-reset {
+  border-color: #eafafb;
+  background: #eafafb;
+  color: #086277;
+}

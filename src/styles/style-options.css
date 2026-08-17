@@ -1,0 +1,200 @@
+.style-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-s);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.style-switcher span {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.style-options-intro h1 {
+  max-width: 14ch;
+}
+
+.option-grid {
+  display: grid;
+  gap: var(--space-m);
+  padding-bottom: var(--space-xl);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.option-card {
+  display: flex;
+  min-height: 24rem;
+  align-items: flex-start;
+  padding: var(--space-m);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  flex-direction: column;
+}
+
+.option-card h2 {
+  margin-top: auto;
+  font-size: var(--step-2);
+}
+
+.option-card .button {
+  margin-top: var(--space-m);
+}
+
+.option-number {
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.option-card-blueprint {
+  border-color: #caedf2;
+  border-radius: 0;
+  background:
+    linear-gradient(rgb(202 237 242 / 16%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(202 237 242 / 16%) 1px, transparent 1px), #087a94;
+  background-size: 1.5rem 1.5rem;
+  color: #f0fcfc;
+}
+
+.option-card-blueprint .button {
+  border-color: #f0fcfc;
+  background: #f0fcfc;
+  color: #07677d;
+}
+
+body[data-page="style-biotech-blueprint"] {
+  background: #087a94;
+  color: #eafafb;
+}
+
+body[data-page="style-biotech-blueprint"]::before {
+  background-image:
+    linear-gradient(rgb(224 249 251 / 13%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(224 249 251 / 13%) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+body[data-page="style-biotech-blueprint"] .site-header,
+body[data-page="style-biotech-blueprint"] .site-footer,
+.blueprint-switcher {
+  border-color: rgb(224 249 251 / 55%);
+}
+
+body[data-page="style-biotech-blueprint"] .site-nav a,
+body[data-page="style-biotech-blueprint"] .wordmark,
+body[data-page="style-biotech-blueprint"] .copyright,
+.blueprint-switcher,
+.blueprint-switcher span {
+  color: #eafafb;
+}
+
+.blueprint-page {
+  max-width: 70rem;
+  margin-inline: auto;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+.blueprint-hero {
+  display: grid;
+  min-height: 39rem;
+  align-items: center;
+  gap: var(--space-xl);
+  padding-block: var(--space-xl);
+  border-bottom: 2px solid #eafafb;
+  grid-template-columns: 1.3fr 0.7fr;
+}
+
+.blueprint-hero p,
+.blueprint-spec > p {
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.blueprint-hero h1 {
+  max-width: 13ch;
+  color: #f5ffff;
+  font-family: var(--sans);
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 650;
+}
+
+.blueprint-cell {
+  position: relative;
+  width: min(100%, 19rem);
+  aspect-ratio: 1;
+  border: 3px solid #eafafb;
+  border-radius: 48% 52% 43% 57%;
+}
+
+.blueprint-cell::before,
+.blueprint-cell::after,
+.blueprint-cell span {
+  position: absolute;
+  border: 2px solid #eafafb;
+  border-radius: 50%;
+  content: "";
+}
+
+.blueprint-cell::before {
+  inset: 18%;
+}
+
+.blueprint-cell::after {
+  inset: 35%;
+}
+
+.blueprint-cell span:nth-child(1) {
+  top: 15%;
+  left: 18%;
+  width: 2rem;
+  height: 2rem;
+}
+
+.blueprint-cell span:nth-child(2) {
+  right: 16%;
+  bottom: 22%;
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.blueprint-cell span:nth-child(3) {
+  bottom: 14%;
+  left: 22%;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.blueprint-spec {
+  display: grid;
+  gap: var(--space-l);
+  padding-block: var(--space-xl);
+  border-bottom: 2px solid #eafafb;
+  grid-template-columns: 0.4fr repeat(2, 0.8fr);
+}
+
+.blueprint-spec h2 {
+  color: #f5ffff;
+  font-family: var(--sans);
+  font-size: var(--step-1);
+}
+
+.blueprint-links {
+  display: grid;
+  padding-block: var(--space-l) var(--space-xl);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.blueprint-links a {
+  padding: var(--space-s);
+  border-right: 1px solid #eafafb;
+  text-decoration: none;
+}
+
+.blueprint-links a:last-child {
+  border-right: 0;
+}

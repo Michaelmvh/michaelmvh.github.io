@@ -1,0 +1,28 @@
+:root {
+  --ink: #24211d;
+  --ink-soft: #716b63;
+  --paper: #f5eee3;
+  --paper-deep: #e8dbc8;
+  --white: #fffaf3;
+  --moss: #a4473b;
+  --moss-dark: #7f3029;
+  --coral: #9c362b;
+  --gold: #d7ad62;
+  --line: #d7c8b7;
+  --sans: "Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif;
+  --serif: Charter, "Bitstream Charter", "Iowan Old Style", Georgia, serif;
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.92rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.24rem, 1.13rem + 0.5vw, 1.56rem);
+  --step-2: clamp(1.6rem, 1.35rem + 1vw, 2.25rem);
+  --step-3: clamp(2.2rem, 1.74rem + 2vw, 3.5rem);
+  --step-4: clamp(3rem, 2.15rem + 3.7vw, 5.5rem);
+  --space-xs: clamp(0.5rem, 0.4rem + 0.4vw, 0.75rem);
+  --space-s: clamp(0.75rem, 0.6rem + 0.7vw, 1.25rem);
+  --space-m: clamp(1.25rem, 1rem + 1vw, 2rem);
+  --space-l: clamp(2rem, 1.4rem + 2.5vw, 4rem);
+  --space-xl: clamp(3.5rem, 2.5rem + 4vw, 7rem);
+  --content: 78rem;
+  --reading: 45rem;
+  color-scheme: light;
+}

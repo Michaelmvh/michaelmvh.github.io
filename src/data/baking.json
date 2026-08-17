@@ -1,0 +1,50 @@
+[
+  {
+    "slug": "cranberry-mousse-pie",
+    "title": "Cranberry-Pomegranate Mousse Pie",
+    "description": "A bright, layered pie that became a Thanksgiving tradition.",
+    "image": "/assets/images/baking/cranberry-pie.jpg",
+    "alt": "Cranberry-pomegranate mousse pie with a pink filling and sugared cranberry topping",
+    "recipeUrl": "https://www.oxo.com/blog/cooking-and-baking/cranberry-mousse-pie-claire-saffitz"
+  },
+  {
+    "slug": "smores-tart",
+    "title": "S’mores Tart",
+    "description": "A summer favorite with a glossy chocolate filling and toasted marshmallow top.",
+    "image": "/assets/images/baking/smores-tart.jpg",
+    "alt": "Chocolate s’mores tart topped with toasted marshmallow",
+    "recipeUrl": "https://www.youtube.com/watch?v=FI4IJJ8pIXg"
+  },
+  {
+    "slug": "margarita-pie",
+    "title": "Frozen Margarita Pie",
+    "description": "A tart, creamy, no-bake pie made for warm summer days.",
+    "image": "/assets/images/baking/margarita-pie.jpg",
+    "alt": "Frozen margarita pie topped with lime zest",
+    "recipeUrl": "https://www.bonappetit.com/recipe/frozen-margarita-pie"
+  },
+  {
+    "slug": "pizza",
+    "title": "Homemade Pizza",
+    "description": "A reliable homemade crust and an excellent excuse to experiment with toppings.",
+    "image": "/assets/images/baking/pizza.jpg",
+    "alt": "Homemade pizza with melted cheese and fresh toppings",
+    "recipeUrl": "https://sugarspunrun.com/the-best-pizza-dough-recipe/"
+  },
+  {
+    "slug": "strawberry-rhubarb-pie",
+    "title": "Strawberry Rhubarb Pie",
+    "description": "A classic sweet-tart pie made with freshly picked strawberries.",
+    "image": "/assets/images/baking/strawberry-rhubarb-pie.jpg",
+    "alt": "Strawberry rhubarb pie with a golden lattice crust",
+    "recipeUrl": "https://sallysbakingaddiction.com/strawberry-rhubarb-pie/"
+  },
+  {
+    "slug": "fruit-pizza",
+    "title": "Fruit Pizza",
+    "description": "A giant sugar cookie, cream cheese frosting, and the colors of a Midwest summer.",
+    "image": "/assets/images/baking/fruit-pizza.jpg",
+    "alt": "Fruit pizza decorated with colorful sliced fruit",
+    "recipeUrl": "https://sallysbakingaddiction.com/fruit-pizza/"
+  }
+]

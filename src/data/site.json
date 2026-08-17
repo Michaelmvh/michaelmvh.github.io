@@ -1,0 +1,30 @@
+{
+  "name": "Michael Vanden Heuvel",
+  "siteUrl": "https://michaelmvh.com",
+  "description": "Michael Vanden Heuvel is a Computer Science & Engineering PhD student at the University of Washington, advised by Jeff Nivala, and an NSF CSGrad4US Fellow.",
+  "currentRole": "CSE PhD student",
+  "footerLine": "CSE PhD student at the University of Washington.",
+  "analyticsId": "G-KJ0NTJQMRX",
+  "cvUrl": "/assets/documents/CV.pdf",
+  "navigation": [
+    { "id": "home", "label": "Home", "url": "/" },
+    { "id": "publications", "label": "Publications", "url": "/publications/" },
+    { "id": "projects", "label": "Projects", "url": "/projects/" },
+    { "id": "baking", "label": "Baking", "url": "/baking/" },
+    {
+      "id": "cv",
+      "label": "CV",
+      "url": "/assets/documents/CV.pdf",
+      "external": true
+    }
+  ],
+  "socials": [
+    { "label": "GitHub", "url": "https://github.com/Michaelmvh", "external": true },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/michaelmvh/", "external": true },
+    {
+      "label": "Google Scholar",
+      "url": "https://scholar.google.com/citations?hl=en&user=pp_S0yQAAAAJ",
+      "external": true
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+@media (max-width: 800px) {
+  .site-header {
+    position: relative;
+    min-height: 5.5rem;
+  }
+
+  .js .menu-button {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .menu-icon,
+  .menu-icon::before {
+    display: block;
+    width: 1.5rem;
+    height: 2px;
+    background: currentcolor;
+    content: "";
+    transition: transform 180ms ease;
+  }
+
+  .menu-icon::before {
+    transform: translateY(-6px);
+  }
+
+  .menu-button[aria-expanded="true"] .menu-icon {
+    transform: rotate(45deg);
+  }
+
+  .menu-button[aria-expanded="true"] .menu-icon::before {
+    transform: rotate(-90deg);
+  }
+
+  .site-nav {
+    position: absolute;
+    z-index: 10;
+    top: 5.5rem;
+    right: var(--space-m);
+    left: var(--space-m);
+    display: flex;
+    padding: var(--space-m);
+    border: 1px solid var(--line);
+    border-radius: 1rem;
+    background: var(--white);
+    box-shadow: 0 1rem 3rem rgb(23 37 31 / 15%);
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .js .site-nav {
+    display: none;
+  }
+
+  .js .site-nav[data-open="true"] {
+    display: flex;
+  }
+
+  .site-nav a {
+    padding: 0.5rem;
+  }
+
+  .site-nav a[aria-current="page"]::after {
+    display: none;
+  }
+
+  body[data-page="style-biotech-blueprint"] .site-nav {
+    border-color: rgb(224 249 251 / 55%);
+    background: #087a94;
+  }
+
+  .hero,
+  .split-heading,
+  .home-story,
+  .research-focus,
+  .detail-header,
+  .blueprint-hero,
+  .blueprint-spec {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: var(--space-l);
+  }
+
+  h1 {
+    font-size: clamp(2.55rem, 13vw, 3.75rem);
+  }
+
+  .eyebrow {
+    max-width: 26rem;
+  }
+
+  .portrait-wrap {
+    width: min(80%, 21rem);
+    justify-self: center;
+  }
+
+  .portrait {
+    aspect-ratio: 1;
+  }
+
+  .personal-note,
+  .research-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .bake-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bake-card:nth-child(3n + 2) {
+    transform: none;
+  }
+
+  .blueprint-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .blueprint-links a:nth-child(2) {
+    border-right: 0;
+  }
+
+  .blueprint-cell {
+    width: min(65%, 18rem);
+  }
+}
+
+@media (max-width: 560px) {
+  .interest-grid,
+  .card-grid,
+  .bake-grid,
+  .method-list,
+  .option-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .publication {
+    gap: var(--space-s);
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .style-switcher {
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .option-card {
+    min-height: 22rem;
+  }
+
+  .blueprint-links {
+    grid-template-columns: 1fr;
+  }
+
+  .blueprint-links a,
+  .blueprint-links a:nth-child(2) {
+    border-right: 0;
+    border-bottom: 1px solid currentcolor;
+  }
+
+  .blueprint-cell {
+    width: min(80%, 16rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

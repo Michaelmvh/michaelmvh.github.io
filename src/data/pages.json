@@ -1,0 +1,75 @@
+{
+  "_instructions": {
+    "purpose": "Central page-level copy. Use src/content for long-form HTML and collection JSON files for repeated cards or records.",
+    "emptyStrings": "Optional introduction and description fields may stay empty. Add plain text and the build will render it automatically; HTML is escaped.",
+    "fields": {
+      "title": "Browser, social-sharing, and page title text. The homepage browser title continues to use the site name.",
+      "description": "SEO and social-sharing summary. An empty homepage description falls back to site.json description.",
+      "eyebrow": "Small label displayed above a page heading.",
+      "heading": "Visible primary page heading.",
+      "introduction": "Optional visible paragraph beneath the heading. Empty strings render nothing.",
+      "detailLabel": "Small label shown on project detail pages.",
+      "detailEyebrow": "Small label shown on baking detail pages.",
+      "backLabel": "Text shown after the back arrow on detail pages.",
+      "recipeLabel": "External recipe-link text on baking detail pages.",
+      "fallbackText": "Text shown before the fallback CV link.",
+      "linkLabel": "Page-specific link text.",
+      "message": "Main explanatory sentence on the 404 page."
+    }
+  },
+  "home": {
+    "title": "CSE PhD student at the University of Washington",
+    "description": "",
+    "introduction": ""
+  },
+  "publications": {
+    "title": "Publications",
+    "description": "Peer-reviewed publications by Michael Vanden Heuvel.",
+    "eyebrow": "Peer-reviewed work",
+    "heading": "Publications",
+    "introduction": ""
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Selected security engineering, research, software, and community projects.",
+    "eyebrow": "Selected work",
+    "heading": "Projects",
+    "introduction": "A collection of my research, software, and community work across Microsoft Sentinel, medical imaging, machine learning, and computer vision.",
+    "detailLabel": "Project",
+    "backLabel": "All projects"
+  },
+  "baking": {
+    "title": "Baking",
+    "description": "A selection of recent bakes and favorite recipes.",
+    "eyebrow": "Beyond the lab",
+    "heading": "Things I’ve baked lately.",
+    "introduction": "",
+    "detailEyebrow": "From the kitchen",
+    "backLabel": "All baking",
+    "recipeLabel": "View the recipe"
+  },
+  "cv": {
+    "title": "CV",
+    "description": "Opening Michael Vanden Heuvel's latest curriculum vitae.",
+    "eyebrow": "Curriculum vitae",
+    "heading": "Opening my latest CV",
+    "fallbackText": "If it does not open automatically,",
+    "linkLabel": "view the latest PDF"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The requested page could not be found.",
+    "eyebrow": "404",
+    "heading": "This page wandered off.",
+    "message": "The research continues, but there is nothing at this address.",
+    "linkLabel": "Return home"
+  },
+  "styleOptions": {
+    "title": "Homepage style options",
+    "description": "Private homepage design explorations."
+  },
+  "styleBlueprint": {
+    "title": "Biotech Blueprint homepage",
+    "description": "Private homepage design exploration."
+  }
+}

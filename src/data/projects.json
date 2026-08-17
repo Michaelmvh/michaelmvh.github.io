@@ -1,0 +1,123 @@
+[
+  {
+    "slug": "sentinel-data-transformations",
+    "title": "Microsoft Sentinel Data Transformations",
+    "summary": "Backend and frontend engineering for filter, split, and scope-tag transformations that route and govern security data at ingestion.",
+    "category": "microsoft",
+    "image": "/assets/images/projects/sentinel-data-transformations.svg",
+    "width": 1200,
+    "height": 675,
+    "alt": "Abstract illustration of a security data stream splitting into multiple storage paths",
+    "tags": ["Microsoft Sentinel", "Data pipelines", "Row-level RBAC"],
+    "links": [
+      {
+        "label": "Explore filter and split transformations",
+        "url": "https://learn.microsoft.com/en-us/azure/sentinel/transformation-filter-split"
+      },
+      {
+        "label": "Explore Sentinel scoping",
+        "url": "https://learn.microsoft.com/en-us/defender-xdr/scoping"
+      }
+    ]
+  },
+  {
+    "slug": "sentinel-repositories",
+    "title": "Microsoft Sentinel Repositories",
+    "summary": "Engineering across reliability, frontend experience, Bicep support, and release readiness for Sentinel’s content-as-code workflow.",
+    "category": "microsoft",
+    "image": "/assets/images/projects/sentinel-repositories.svg",
+    "width": 1200,
+    "height": 675,
+    "alt": "Microsoft Sentinel product icon",
+    "tags": ["Microsoft Sentinel", "Content as code", "Bicep"],
+    "links": [
+      {
+        "label": "Explore Sentinel Repositories",
+        "url": "https://learn.microsoft.com/en-us/azure/sentinel/ci-cd-custom-content"
+      },
+      {
+        "label": "Read the Bicep announcement",
+        "url": "https://techcommunity.microsoft.com/blog/microsoftsentinelblog/whats-new-bicep-support-in-microsoft-sentinel-repositories/4358490"
+      }
+    ]
+  },
+  {
+    "slug": "pancreatic-cyst",
+    "title": "Pancreatic Cyst Classification",
+    "summary": "Machine learning with CT radiomics to support non-invasive classification of pancreatic cysts.",
+    "category": "research",
+    "image": "/assets/images/projects/pancreatic-cyst.png",
+    "width": 1200,
+    "height": 739,
+    "alt": "CT image and radiomics visualization for the pancreatic cyst study",
+    "tags": ["Medical imaging", "XGBoost", "Radiomics"],
+    "links": [{ "label": "Read the publication", "url": "https://doi.org/10.1007/s00261-021-03289-0" }]
+  },
+  {
+    "slug": "renal-aml-classification",
+    "title": "Renal AML Growth Modeling",
+    "summary": "A rigorous exploration of regression and classification for renal angiomyolipoma growth.",
+    "category": "research",
+    "image": "/assets/images/projects/renal-aml.png",
+    "width": 1200,
+    "height": 869,
+    "alt": "Code and model output from the renal AML project",
+    "tags": ["Clinical data", "Benchmarking", "PyTorch"],
+    "links": [
+      {
+        "label": "View code",
+        "url": "https://github.com/Michaelmvh/Renal-AML-Regression-Classification-Spring-2022"
+      }
+    ]
+  },
+  {
+    "slug": "renal-carcinoma-nn",
+    "title": "Renal Cell Carcinoma Classification",
+    "summary": "A medical imaging pipeline using transfer learning to classify renal cell carcinoma grade.",
+    "category": "research",
+    "image": "/assets/images/projects/renal-carcinoma.png",
+    "width": 1200,
+    "height": 916,
+    "alt": "Medical illustration of renal cell carcinoma",
+    "tags": ["Computer vision", "ResNet", "Transfer learning"],
+    "links": [
+      {
+        "label": "View code",
+        "url": "https://github.com/Michaelmvh/Renal-Cell-Carcinoma-Neural-Network-Research-Group-Fall-2022"
+      }
+    ]
+  },
+  {
+    "slug": "soccernet-plus",
+    "title": "SoccerNet Plus",
+    "summary": "Computer vision tools for player detection, tracking, statistics, and a bird’s-eye view of soccer footage.",
+    "category": "software",
+    "image": "/assets/images/projects/soccernet.webp",
+    "width": 400,
+    "height": 400,
+    "alt": "Soccer players detected and outlined in match footage",
+    "tags": ["Computer vision", "YOLO", "DeepSort"],
+    "links": [
+      { "label": "View code", "url": "https://github.com/AJ-Wuu/SoccerNetPlus" },
+      { "label": "Watch demo", "url": "https://youtu.be/nknLKGR8ZgM" }
+    ]
+  },
+  {
+    "slug": "cheesehacks",
+    "title": "CheeseHacks",
+    "summary": "A student hackathon I co-founded and helped organize at UW–Madison in 2021 and 2022.",
+    "category": "community",
+    "image": "/assets/images/projects/cheesehacks.png",
+    "width": 1200,
+    "height": 300,
+    "alt": "CheeseHacks logo with a wedge of cheese",
+    "tags": ["Community", "Leadership", "Education"],
+    "links": [
+      {
+        "label": "Read the UW–Madison story",
+        "url": "https://www.cs.wisc.edu/2021/11/09/cheesehacks-hackathon-participants-build-apps-to-address-real-world-issues-eat-a-lot-of-cheese/"
+      },
+      { "label": "View 2022 submissions", "url": "https://github.com/Michaelmvh/CheeseHacks2022Submissions" }
+    ]
+  }
+]

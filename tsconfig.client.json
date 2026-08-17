@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "declaration": false,
+    "erasableSyntaxOnly": false,
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "noEmit": false,
+    "outDir": "dist/assets/js",
+    "rootDir": "src/client",
+    "types": []
+  },
+  "include": ["src/client/**/*.ts"]
+}
