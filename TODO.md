@@ -9,6 +9,5 @@ TODO.md
 - Add an other page
   - Orca card collection
   - Other image of myself
-- Perfect lighthouse score
 - add multiple feeds to rss
   - Focused feed for TRMNL and others available for browser
