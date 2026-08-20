@@ -19,6 +19,11 @@
         "id": "purple-meadow-flowers",
         "image": "/assets/images/other/photography/purple-meadow-flowers.jpeg",
         "alt": "Tall purple and pink flower spikes in a softly focused meadow"
+      },
+      {
+        "id": "stoney-beach",
+        "image": "/assets/images/other/photography/stoney-beach.jpeg",
+        "alt": "A collection of stones of various shades of gray and a single orange stone near the center"
       }
     ]
   }
