@@ -71,7 +71,7 @@ test("project images stay within the asset size budget", async () => {
 
 test("Other page images have generated responsive variants", async () => {
   const sections = await readJson<OtherSection[]>("data/other.json");
-  assert.ok(sections.length >= 1);
+  assert.ok(sections.length > 0, "Other page data must include at least one section");
 
   for (const section of sections) {
     assert.ok(section.images.length > 0);
