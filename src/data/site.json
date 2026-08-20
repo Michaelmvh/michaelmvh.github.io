@@ -11,6 +11,7 @@
     { "id": "publications", "label": "Publications", "url": "/publications/" },
     { "id": "projects", "label": "Projects", "url": "/projects/" },
     { "id": "baking", "label": "Baking", "url": "/baking/" },
+    { "id": "other", "label": "Other", "url": "/other/" },
     {
       "id": "cv",
       "label": "CV",

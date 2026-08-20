@@ -17,7 +17,7 @@ export default defineConfig({
   },
   webServer: {
     command: "node scripts/serve.ts",
-    env: { ...process.env, PORT: String(port) },
+    env: { ...process.env, LIVE_RELOAD: "false", PORT: String(port) },
     url: baseURL,
     reuseExistingServer: false,
     timeout: 30_000,

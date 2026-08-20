@@ -75,6 +75,26 @@ export interface Bake {
   recipeUrl: string;
 }
 
+/** One image in an Other page collection section. */
+export interface OtherImage {
+  /** Stable identifier unique within its section. */
+  id: string;
+  /** Root-relative path to the source image. */
+  image: string;
+  alt: string;
+  /** Optional text displayed only while the lightbox is open. */
+  caption?: string;
+}
+
+/** One reusable image collection on the Other page. */
+export interface OtherSection {
+  /** Stable section anchor and identifier. */
+  id: string;
+  title: string;
+  description: string;
+  images: OtherImage[];
+}
+
 /** Reusable page-level copy from pages.json. */
 export interface PageCopy {
   title: string;
@@ -132,6 +152,7 @@ export interface Pages {
   publications: IndexPageCopy;
   projects: ProjectPageCopy;
   baking: BakingPageCopy;
+  other: IndexPageCopy;
   cv: CvPageCopy;
   notFound: NotFoundPageCopy;
   styleOptions: PageCopy;
@@ -145,6 +166,7 @@ export interface SiteData {
   projects: Project[];
   publications: Publication[];
   baking: Bake[];
+  other: OtherSection[];
 }
 
 /** One fully assembled page passed to the shared document layout. */

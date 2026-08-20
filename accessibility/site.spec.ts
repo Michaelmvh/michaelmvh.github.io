@@ -15,6 +15,7 @@ const sharedLayoutRoutes = [
   "/",
   "/publications/",
   "/baking/",
+  "/other/",
   `/bakes/${firstBake.slug}/`,
   "/projects/",
   `/projects/${firstProject.slug}/`,

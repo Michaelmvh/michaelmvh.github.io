@@ -2,8 +2,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { generateResponsiveImages } from "./images.ts";
 import {
+  generateResponsiveImages,
+  imageVariantPath,
+  otherImageWidths,
+  prepareOtherSections,
+} from "./images.ts";
+import {
+  assert,
   escapeHtml,
   output,
   readContent,
@@ -13,7 +19,8 @@ import {
   source,
   validateSiteData,
 } from "./site.ts";
-import type { Bake, Page, Project, Publication, SiteData } from "./types.ts";
+import type { PreparedOtherImage, PreparedOtherSection } from "./images.ts";
+import type { Bake, OtherSection, Page, Project, Publication, SiteData } from "./types.ts";
 
 const data: SiteData = {
   site: await readJson<SiteData["site"]>("data/site.json"),
@@ -21,10 +28,12 @@ const data: SiteData = {
   projects: await readJson<Project[]>("data/projects.json"),
   publications: await readJson<Publication[]>("data/publications.json"),
   baking: await readJson<Bake[]>("data/baking.json"),
+  other: await readJson<OtherSection[]>("data/other.json"),
 };
 validateSiteData(data);
 
-const { site, pages: pageCopy, projects, publications, baking } = data;
+const { site, pages: pageCopy, projects, publications, baking, other } = data;
+const preparedOther = await prepareOtherSections(source, other);
 const stylesheetSources = [
   "tokens.css",
   "base.css",
@@ -63,6 +72,13 @@ const pages = [
     title: pageCopy.baking.title,
     description: pageCopy.baking.description,
     content: renderBaking(baking),
+  },
+  {
+    route: "other",
+    id: "other",
+    title: pageCopy.other.title,
+    description: pageCopy.other.description,
+    content: renderOther(preparedOther),
   },
 ];
 
@@ -149,7 +165,7 @@ await fs.writeFile(
 );
 
 await fs.cp(path.join(source, "assets"), path.join(output, "assets"), { recursive: true });
-await generateResponsiveImages(source, output);
+await generateResponsiveImages(source, output, preparedOther);
 await promisify(execFile)(
   process.execPath,
   [path.join(root, "node_modules", "typescript", "bin", "tsc"), "-p", "tsconfig.client.json"],
@@ -423,6 +439,65 @@ function renderBaking(entries: Bake[]): string {
         )}/">${escapeHtml(item.title)}</a></h2><p>${escapeHtml(item.description)}</p></div></article>`,
     )
     .join("")}</section>`;
+}
+
+/**
+ * Builds the Other page from reusable ordered image-collection sections.
+ *
+ * @param {PreparedOtherSection[]} sections - Collections with detected source dimensions.
+ * @returns {string} Page introduction, galleries, and shared lightbox dialog.
+ */
+function renderOther(sections: PreparedOtherSection[]): string {
+  return `<div class="other-page"><header class="page-intro"><p class="eyebrow">${escapeHtml(
+    pageCopy.other.eyebrow,
+  )}</p><h1>${escapeHtml(pageCopy.other.heading)}</h1>${renderOptionalIntroduction(
+    pageCopy.other.introduction,
+  )}</header>${sections
+    .map(
+      (section) =>
+        `<section class="other-section" aria-labelledby="other-${escapeHtml(
+          section.id,
+        )}-title"><header class="other-section-header"><h2 id="other-${escapeHtml(
+          section.id,
+        )}-title">${escapeHtml(section.title)}</h2><p>${escapeHtml(
+          section.description,
+        )}</p></header><div class="other-gallery">${section.images
+          .map(otherGalleryImage)
+          .join("")}</div></section>`,
+    )
+    .join("")}</div>${renderLightbox()}`;
+}
+
+/**
+ * Renders one progressively enhanced gallery image link.
+ *
+ * @param {PreparedOtherImage} image - Validated source image metadata and detected dimensions.
+ * @returns {string} Responsive image link used by the shared lightbox.
+ */
+function otherGalleryImage(image: PreparedOtherImage): string {
+  const widths = otherImageWidths(image.width);
+  const largestWidth = widths.at(-1);
+  assert(largestWidth, `${image.image} must have a responsive image width`);
+  const largeImage = imageVariantPath(image.image, largestWidth);
+  const srcset = widths
+    .map((width) => `${escapeHtml(imageVariantPath(image.image, width))} ${width}w`)
+    .join(", ");
+  const caption = image.caption ? ` data-lightbox-caption="${escapeHtml(image.caption)}"` : "";
+
+  return `<a class="other-gallery-item" href="${escapeHtml(
+    largeImage,
+  )}" data-lightbox-image data-lightbox-src="${escapeHtml(
+    largeImage,
+  )}" data-lightbox-alt="${escapeHtml(image.alt)}"${caption}><picture><source type="image/webp" srcset="${srcset}" sizes="(max-width: 560px) calc(100vw - 2 * var(--space-m)), (max-width: 800px) 50vw, 33vw"><img src="${escapeHtml(
+    image.image,
+  )}" alt="${escapeHtml(image.alt)}" width="${image.width}" height="${
+    image.height
+  }" loading="lazy"></picture><span class="sr-only">Open larger view</span></a>`;
+}
+
+/** Renders the single modal image viewer shared by every Other page gallery. */
+function renderLightbox(): string {
+  return `<dialog class="lightbox" aria-labelledby="lightbox-title"><div class="lightbox-panel"><h2 id="lightbox-title" class="sr-only">Image preview</h2><button class="lightbox-close" type="button" aria-label="Close image preview">×</button><figure><img class="lightbox-image" src="/assets/images/favicon.svg" alt="" hidden><figcaption class="lightbox-caption" hidden></figcaption></figure></div></dialog>`;
 }
 
 /**

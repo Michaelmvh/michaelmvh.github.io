@@ -48,6 +48,13 @@
     "backLabel": "All baking",
     "recipeLabel": "View the recipe"
   },
+  "other": {
+    "title": "Other",
+    "description": "Photography, transit cards, and other personal collections by Michael Vanden Heuvel.",
+    "eyebrow": "Beyond the lab",
+    "heading": "Other",
+    "introduction": "A few other random things I wanted to show off"
+  },
   "cv": {
     "title": "CV",
     "description": "Opening Michael Vanden Heuvel's latest curriculum vitae.",

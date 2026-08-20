@@ -33,8 +33,9 @@ npm ci
 npm run dev
 ```
 
-The preview is available at <http://localhost:8080>. `npm run dev` builds once before starting the server;
-restart it after changing source files.
+The preview is available at <http://localhost:8080>. `npm run dev` builds once before starting the server; it
+watches files under `src/`, rebuilds after changes, and automatically refreshes connected browser tabs. Build
+errors are reported in the terminal, and the preview rebuilds again after the next source edit.
 
 Run all local checks with:
 
@@ -59,6 +60,7 @@ Site-wide settings and repeated content live in `src/data/`:
 - `projects.json`: project summaries, categories, tags, images, and external links
 - `publications.json`: publication metadata and citations
 - `baking.json`: baking cards, images, descriptions, and recipe links
+- `other.json`: ordered image-collection sections for the Other page
 
 Long-form content lives in `src/content/`. Home is an HTML fragment. Each project has an HTML fragment under
 `src/content/projects/` whose filename matches its `slug` in `projects.json`.
@@ -98,6 +100,18 @@ trusted authored markup belongs in an HTML fragment.
 
 Add a record to the corresponding JSON file and put any image or PDF under `src/assets/`. Baking detail pages
 are generated from JSON; publications appear on the publication index.
+
+### Add an Other page section or image
+
+The `/other/` page is generated from `src/data/other.json`. Each section has an `id`, title, description, and
+ordered image records. Put originals in an organized directory under `src/assets/images/other/`; each image
+record requires a stable `id`, root-relative `image` path, and useful `alt` text. A `caption` is optional and
+appears only in the lightbox. The build reads intrinsic dimensions directly from each source file.
+
+Add, remove, or reorder section records directly in `other.json`; the renderer, responsive gallery, and
+lightbox work for any number of sections without code changes. The build generates responsive WebP variants
+for each source image. Replacing an image later requires replacing the source file and updating its path in
+`other.json` if the filename changed.
 
 Images retain their natural aspect ratio. Record accurate intrinsic `width` and `height` values in structured
 content so the browser can reserve space without cropping or layout shift.

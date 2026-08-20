@@ -55,6 +55,53 @@ document.querySelectorAll<HTMLButtonElement>(".citation-button").forEach((button
   });
 });
 
+const lightbox = document.querySelector<HTMLDialogElement>(".lightbox");
+const lightboxImage = lightbox?.querySelector<HTMLImageElement>(".lightbox-image");
+const lightboxCaption = lightbox?.querySelector<HTMLElement>(".lightbox-caption");
+const lightboxClose = lightbox?.querySelector<HTMLButtonElement>(".lightbox-close");
+let lightboxTrigger: HTMLAnchorElement | null = null;
+
+document.querySelector(".other-page")?.addEventListener("click", (event) => {
+  const trigger =
+    event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("[data-lightbox-image]") : null;
+  if (!trigger || !lightbox || !lightboxImage || !lightboxCaption) return;
+
+  const source = trigger.dataset.lightboxSrc;
+  const alt = trigger.dataset.lightboxAlt;
+  if (!source || alt === undefined) throw new Error("Lightbox trigger is missing image data");
+
+  event.preventDefault();
+  lightboxTrigger = trigger;
+  lightboxImage.src = source;
+  lightboxImage.alt = alt;
+  lightboxImage.hidden = false;
+
+  const caption = trigger.dataset.lightboxCaption;
+  lightboxCaption.textContent = caption ?? "";
+  lightboxCaption.hidden = !caption;
+  lightbox.showModal();
+});
+
+lightboxClose?.addEventListener("click", () => lightbox?.close());
+
+lightbox?.addEventListener("click", (event) => {
+  if (event.target === lightbox) lightbox.close();
+});
+
+lightbox?.addEventListener("close", () => {
+  if (lightboxImage) {
+    lightboxImage.src = "/assets/images/favicon.svg";
+    lightboxImage.alt = "";
+    lightboxImage.hidden = true;
+  }
+  if (lightboxCaption) {
+    lightboxCaption.textContent = "";
+    lightboxCaption.hidden = true;
+  }
+  lightboxTrigger?.focus();
+  lightboxTrigger = null;
+});
+
 const siteThemeKey = "site-theme";
 type AlternateTheme = "blueprint" | "scifi";
 type SiteTheme = "museum" | AlternateTheme;

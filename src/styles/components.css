@@ -65,3 +65,68 @@
 .theme-reset[hidden] {
   display: none;
 }
+
+.lightbox {
+  width: min(calc(100% - 2 * var(--space-m)), 90rem);
+  max-width: none;
+  max-height: calc(100% - 6rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  overflow: visible;
+}
+
+.lightbox::backdrop {
+  background: rgb(10 10 14 / 82%);
+  backdrop-filter: blur(2px);
+}
+
+.lightbox-panel {
+  width: 100%;
+  max-width: 100%;
+}
+
+.lightbox figure {
+  display: grid;
+  margin: 0;
+  justify-items: center;
+}
+
+.lightbox-image {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(100vh - 8rem);
+  margin-inline: auto;
+  object-fit: contain;
+}
+
+.lightbox-caption {
+  max-width: var(--reading);
+  padding: var(--space-s) var(--space-xs) var(--space-xs);
+  margin-inline: auto;
+  color: #fff;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 80%);
+  text-align: center;
+}
+
+.lightbox-close {
+  position: fixed;
+  z-index: 1;
+  top: max(var(--space-m), env(safe-area-inset-top));
+  right: max(var(--space-m), env(safe-area-inset-right));
+  display: grid;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 100vmax;
+  background: var(--white);
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 22%);
+  color: var(--ink);
+  cursor: pointer;
+  font: 600 1.25rem / 1 var(--sans);
+  place-items: center;
+}

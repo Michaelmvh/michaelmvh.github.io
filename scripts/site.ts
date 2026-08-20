@@ -106,6 +106,7 @@ export function validateSiteData(data: SiteData): void {
       "backLabel",
       "recipeLabel",
     ],
+    other: ["title", "description", "eyebrow", "heading", "introduction"],
     cv: ["title", "description", "eyebrow", "heading", "fallbackText", "linkLabel"],
     notFound: ["title", "description", "eyebrow", "heading", "message", "linkLabel"],
     styleOptions: ["title", "description"],
@@ -116,6 +117,7 @@ export function validateSiteData(data: SiteData): void {
     "home.introduction",
     "publications.introduction",
     "baking.introduction",
+    "other.introduction",
   ]);
   const pages = record(data.pages, "pages.json");
   const instructions = record(pages._instructions, "pages.json: _instructions");
@@ -180,6 +182,23 @@ export function validateSiteData(data: SiteData): void {
     rootRelativeUrl(requiredString(entry, "image", location), `${location}.image`);
     const recipeUrl = string(entry.recipeUrl, `${location}.recipeUrl`);
     if (recipeUrl) absoluteUrl(recipeUrl, `${location}.recipeUrl`);
+  });
+
+  const other = array(data.other, "other.json");
+  validateUniqueCollection(other, "other.json", "id", (entry, index) => {
+    const location = `other.json[${index}]`;
+    safeIdentifier(requiredString(entry, "id", location), `${location}.id`);
+    for (const field of ["title", "description"] as const) requiredString(entry, field, location);
+
+    const images = array(entry.images, `${location}.images`);
+    assert(images.length > 0, `${location}.images must not be empty`);
+    validateUniqueCollection(images, `${location}.images`, "id", (image, imageIndex) => {
+      const imageLocation = `${location}.images[${imageIndex}]`;
+      safeIdentifier(requiredString(image, "id", imageLocation), `${imageLocation}.id`);
+      rootRelativeUrl(requiredString(image, "image", imageLocation), `${imageLocation}.image`);
+      requiredString(image, "alt", imageLocation);
+      if (image.caption !== undefined) requiredString(image, "caption", imageLocation);
+    });
   });
 }
 

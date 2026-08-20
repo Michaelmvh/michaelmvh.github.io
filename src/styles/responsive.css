@@ -76,6 +76,7 @@
   .home-story,
   .research-focus,
   .detail-header,
+  .other-section-header,
   .blueprint-hero,
   .blueprint-spec {
     grid-template-columns: 1fr;
@@ -115,6 +116,10 @@
     transform: none;
   }
 
+  .other-gallery {
+    column-count: 2;
+  }
+
   .blueprint-links {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -135,6 +140,24 @@
   .method-list,
   .option-grid {
     grid-template-columns: 1fr;
+  }
+
+  .other-gallery {
+    column-count: 1;
+  }
+
+  .lightbox {
+    width: calc(100% - 2 * var(--space-xs));
+    max-height: calc(100% - 5rem);
+  }
+
+  .lightbox-image {
+    max-height: calc(100vh - 6rem);
+  }
+
+  .lightbox-close {
+    top: max(var(--space-xs), env(safe-area-inset-top));
+    right: max(var(--space-xs), env(safe-area-inset-right));
   }
 
   .publication {

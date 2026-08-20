@@ -3,8 +3,18 @@ import path from "node:path";
 import test from "node:test";
 import assert from "node:assert/strict";
 import sharp from "sharp";
+import { injectLiveReload } from "../scripts/live-reload.ts";
 import { output, readJson, resolveWithin, source, validateSiteData } from "../scripts/site.ts";
-import type { Bake, IndexPageCopy, Pages, Project, Publication, Site, SiteData } from "../scripts/types.ts";
+import type {
+  Bake,
+  IndexPageCopy,
+  OtherSection,
+  Pages,
+  Project,
+  Publication,
+  Site,
+  SiteData,
+} from "../scripts/types.ts";
 
 test("content validation rejects unsafe paths and malformed nested values", async () => {
   const unsafeSlug = await readSiteData();
@@ -59,6 +69,34 @@ test("project images stay within the asset size budget", async () => {
   }
 });
 
+test("Other page images have generated responsive variants", async () => {
+  const sections = await readJson<OtherSection[]>("data/other.json");
+  assert.ok(sections.length >= 2);
+
+  for (const section of sections) {
+    assert.ok(section.images.length > 0);
+    for (const image of section.images) {
+      const parsed = path.posix.parse(image.image);
+      const sourceImage = path.join(source, image.image.replace(/^\//, ""));
+      const sourceMetadata = await sharp(sourceImage).metadata();
+      const sourceWidth = sourceMetadata.autoOrient.width;
+      const widths = [
+        ...new Set([480, 960, Math.min(sourceWidth, 1600)].filter((width) => width <= sourceWidth)),
+      ];
+      assert.ok(widths.length > 0);
+
+      for (const width of widths) {
+        const variant = path.join(output, parsed.dir, `${parsed.name}-${width}.webp`);
+        const { size } = await fs.stat(variant);
+        const metadata = await sharp(variant).metadata();
+        assert.equal(metadata.width, width);
+        assert.equal(metadata.format, "webp");
+        assert.ok(size <= 400 * 1024, `${path.basename(variant)} must not exceed 400 KiB`);
+      }
+    }
+  }
+});
+
 test("generated pages include accessibility and metadata essentials", async () => {
   const html = await fs.readFile(path.join(output, "index.html"), "utf8");
   assert.match(html, /<main id="main">/);
@@ -66,6 +104,15 @@ test("generated pages include accessibility and metadata essentials", async () =
   assert.match(html, /aria-label="Main navigation"/);
   assert.match(html, /<meta name="description"/);
   assert.match(html, /<link rel="canonical"/);
+});
+
+test("local live reload is injected without changing production output", async () => {
+  const productionHtml = await fs.readFile(path.join(output, "index.html"), "utf8");
+  assert.doesNotMatch(productionHtml, /__live-reload/);
+
+  const previewHtml = injectLiveReload(productionHtml);
+  assert.match(previewHtml, /new EventSource\("\/__live-reload"\)/);
+  assert.match(previewHtml, /__live-reload[\s\S]*<\/body>/);
 });
 
 test("homepage serves responsive optimized portrait images", async () => {
@@ -111,6 +158,7 @@ test("page-level copy comes from the central page data", async () => {
     ["publications", pages.publications],
     ["projects", pages.projects],
     ["baking", pages.baking],
+    ["other", pages.other],
   ];
   for (const [route, page] of indexPages) {
     const html = await fs.readFile(path.join(output, route, "index.html"), "utf8");
@@ -193,6 +241,35 @@ test("projects are publicly discoverable", async () => {
     assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
     assert.match(sitemap, new RegExp(`/projects/${project.slug}/`));
   }
+});
+
+test("Other page sections are public and data-driven", async () => {
+  const site = await readJson<Site>("data/site.json");
+  const sections = await readJson<OtherSection[]>("data/other.json");
+  assert.equal(
+    site.navigation.some((entry) => entry.url === "/other/"),
+    true,
+  );
+
+  const html = await fs.readFile(path.join(output, "other", "index.html"), "utf8");
+  const sitemap = await fs.readFile(path.join(output, "sitemap.xml"), "utf8");
+  assert.match(sitemap, /\/other\//);
+  assert.match(html, /class="other-gallery"/);
+  assert.match(html, /class="lightbox"/);
+
+  for (const section of sections) {
+    assert.match(html, new RegExp(`id="other-${section.id}-title"`));
+    for (const image of section.images) {
+      assert.match(html, new RegExp(image.alt.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    }
+  }
+
+  const captionedImage = sections.flatMap((section) => section.images).find((image) => image.caption);
+  const uncaptionedImage = sections.flatMap((section) => section.images).find((image) => !image.caption);
+  assert.ok(captionedImage?.caption);
+  assert.ok(uncaptionedImage);
+  assert.match(html, new RegExp(`data-lightbox-caption="${captionedImage.caption}"`));
+  assert.match(html, new RegExp(`data-lightbox-alt="${uncaptionedImage.alt}"(?! data-lightbox-caption)`));
 });
 
 test("Microsoft projects have a dedicated filter and public sources", async () => {
@@ -280,5 +357,6 @@ async function readSiteData(): Promise<SiteData> {
     projects: await readJson<Project[]>("data/projects.json"),
     publications: await readJson<Publication[]>("data/publications.json"),
     baking: await readJson<Bake[]>("data/baking.json"),
+    other: await readJson<OtherSection[]>("data/other.json"),
   };
 }

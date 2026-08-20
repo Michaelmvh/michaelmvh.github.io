@@ -1,0 +1,25 @@
+[
+  {
+    "id": "photography",
+    "title": "Photography",
+    "description": "A small selection of (mostly film) photographs I've taken",
+    "images": [
+      {
+        "id": "snail-by-log",
+        "image": "/assets/images/other/photography/snail-by-log.jpeg",
+        "alt": "A snail on gravel beside a fallen log, tinted by warm pink light",
+        "caption": "A snail beside a fallen log. Pentax K1000 Lomography Purple Film"
+      },
+      {
+        "id": "white-wildflowers",
+        "image": "/assets/images/other/photography/white-wildflowers.jpeg",
+        "alt": "White wildflowers and bees in a green meadow"
+      },
+      {
+        "id": "purple-meadow-flowers",
+        "image": "/assets/images/other/photography/purple-meadow-flowers.jpeg",
+        "alt": "Tall purple and pink flower spikes in a softly focused meadow"
+      }
+    ]
+  }
+]
