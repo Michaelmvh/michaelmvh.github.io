@@ -5,10 +5,20 @@
     "description": "A small selection of (mostly film) photographs I've taken",
     "images": [
       {
+        "id": "surf-fishers",
+        "image": "/assets/images/other/photography/surf-fishers.jpeg",
+        "alt": "Two silhouetted anglers surf fishing in rough water beneath a gray sky, with sea stacks on the horizon"
+      },
+      {
         "id": "snail-by-log",
         "image": "/assets/images/other/photography/snail-by-log.jpeg",
         "alt": "A snail on gravel beside a fallen log, tinted by warm pink light",
         "caption": "A snail beside a fallen log. Pentax K1000 Lomography Purple Film"
+      },
+      {
+        "id": "pinnacles-entrance",
+        "image": "/assets/images/other/photography/pinnacles-entrance.jpeg",
+        "alt": "Black-and-white view of a road entering Pinnacles National Park, with a car approaching a stone entrance sign"
       },
       {
         "id": "white-wildflowers",
@@ -16,9 +26,24 @@
         "alt": "White wildflowers and bees in a green meadow"
       },
       {
+        "id": "snowman-portrait",
+        "image": "/assets/images/other/photography/snowman-portrait.jpeg",
+        "alt": "Close-up film photograph of a snowman with dark button eyes and a leaf nose against bare winter branches"
+      },
+      {
+        "id": "desert-rocks",
+        "image": "/assets/images/other/photography/desert-rocks.jpeg",
+        "alt": "Joshua trees and desert scrub extending toward a rocky hill and distant mountains beneath a pale blue sky"
+      },
+      {
         "id": "purple-meadow-flowers",
         "image": "/assets/images/other/photography/purple-meadow-flowers.jpeg",
         "alt": "Tall purple and pink flower spikes in a softly focused meadow"
+      },
+      {
+        "id": "forest-path",
+        "image": "/assets/images/other/photography/forest-path.jpeg",
+        "alt": "A narrow dirt trail winding between ferns and large moss-covered trees in a dense forest"
       },
       {
         "id": "stoney-beach",
