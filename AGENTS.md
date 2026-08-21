@@ -45,6 +45,12 @@ npm run check
 `npm run check` type-checks the TypeScript, validates content, builds the site, validates generated HTML, runs
 regression tests, and runs Playwright/axe accessibility tests.
 
+When behavior, content structures, rendering, accessibility interactions, or asset processing changes, assess
+whether the existing suite would catch likely regressions and add focused tests when it would not. Prefer
+data-driven behavior and durable invariants over fixed item counts, incidental ordering, exact pixel geometry,
+or implementation details. Use reasonable ranges or tolerances for media and layout checks so normal content
+updates do not require unrelated test rewrites.
+
 For changes expected to affect loading performance, asset delivery, render timing, or analytics, also consider
 running mobile and desktop Lighthouse assessments against the deployed site after the production deployment
 finishes. Compare the relevant audits as well as category scores because Lighthouse scores vary between runs.

@@ -97,6 +97,32 @@ test("Other page images have generated responsive variants", async () => {
   }
 });
 
+test("transit card sources are optimized and card-shaped", async () => {
+  const sections = await readJson<OtherSection[]>("data/other.json");
+  const transitCards = sections.find((section) => section.id === "transit-cards");
+  assert.ok(transitCards, "Other page data must include the transit-cards section");
+
+  const maximumImageSize = 1024 * 1024;
+  const standardCardAspectRatio = 85.6 / 53.98;
+  const maximumAspectRatioDifference = 0.15;
+
+  for (const image of transitCards.images) {
+    const sourceImage = path.join(source, image.image.replace(/^\//, ""));
+    const { size } = await fs.stat(sourceImage);
+    const metadata = await sharp(sourceImage).metadata();
+    const width = metadata.autoOrient.width;
+    const height = metadata.autoOrient.height;
+
+    assert.equal(metadata.format, "webp", `${image.image} must use WebP`);
+    assert.ok(size <= maximumImageSize, `${image.image} must not exceed 1 MiB`);
+    assert.ok(width > height, `${image.image} must use landscape orientation`);
+    assert.ok(
+      Math.abs(width / height - standardCardAspectRatio) <= maximumAspectRatioDifference,
+      `${image.image} must remain close to the standard card aspect ratio`,
+    );
+  }
+});
+
 test("generated pages include accessibility and metadata essentials", async () => {
   const html = await fs.readFile(path.join(output, "index.html"), "utf8");
   assert.match(html, /<main id="main">/);

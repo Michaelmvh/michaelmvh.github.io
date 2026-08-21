@@ -104,6 +104,63 @@ test("Other page lightbox opens, clears captions, closes, and restores focus", a
   await expect(uncaptionedTrigger).toBeFocused();
 });
 
+test("Other page lightbox works for every gallery section", async ({ page }) => {
+  await page.goto("/other/");
+
+  const lightbox = page.locator(".lightbox");
+  const lightboxImage = lightbox.locator(".lightbox-image");
+  const lightboxCaption = lightbox.locator(".lightbox-caption");
+
+  for (const [sectionIndex, section] of otherSections.entries()) {
+    const expectedImage = section.images[0];
+    if (!expectedImage) throw new Error(`${section.id} must include an image`);
+
+    const trigger = page.locator(".other-section").nth(sectionIndex).locator("[data-lightbox-image]").first();
+    const expectedSource = await trigger.getAttribute("data-lightbox-src");
+    expect(expectedSource).not.toBeNull();
+
+    await trigger.focus();
+    await trigger.press("Enter");
+    await expect(lightbox).toBeVisible();
+    await expect(lightboxImage).toHaveAttribute("src", expectedSource ?? "");
+    await expect(lightboxImage).toHaveAttribute("alt", expectedImage.alt);
+
+    if (expectedImage.caption) {
+      await expect(lightboxCaption).toBeVisible();
+      await expect(lightboxCaption).toHaveText(expectedImage.caption);
+    } else {
+      await expect(lightboxCaption).toBeHidden();
+    }
+
+    await lightbox.locator(".lightbox-close").click();
+    await expect(lightbox).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+  }
+});
+
+test("Other page gallery images load successfully", async ({ page }) => {
+  await page.goto("/other/");
+
+  const images = page.locator(".other-gallery img");
+  await expect(images).toHaveCount(otherImages.length);
+
+  for (let index = 0; index < otherImages.length; index += 1) {
+    const image = images.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        image.evaluate(
+          (element) =>
+            element instanceof HTMLImageElement &&
+            element.complete &&
+            element.naturalWidth > 0 &&
+            element.naturalHeight > 0,
+        ),
+      )
+      .toBe(true);
+  }
+});
+
 test("Other page lightbox closes from the backdrop", async ({ page }) => {
   await page.goto("/other/");
   await page.locator("[data-lightbox-image]").first().click();

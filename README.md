@@ -49,6 +49,11 @@ Blueprint, and Sci-Fi themes, as well as strict TypeScript checking for the gene
 tests. Run only the accessibility scans with `npm run a11y`, or only the compiler with `npm run typecheck`.
 Install the pinned Chromium build once on a new machine with `npx playwright install chromium`.
 
+Changes to behavior, content structures, rendering, accessibility interactions, or asset processing should add
+focused regression coverage when the existing suite would not catch likely failures. Keep tests resilient by
+checking data-driven behavior and durable invariants rather than fixed content counts, incidental ordering,
+exact pixel geometry, or implementation details; use reasonable ranges for media and layout assertions.
+
 Generated files are written to `dist/` and are not committed.
 
 ## Editing content
