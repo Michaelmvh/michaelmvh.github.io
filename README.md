@@ -113,8 +113,38 @@ lightbox work for any number of sections without code changes. The build generat
 for each source image. Replacing an image later requires replacing the source file and updating its path in
 `other.json` if the filename changed.
 
-Images retain their natural aspect ratio. Record accurate intrinsic `width` and `height` values in structured
-content so the browser can reserve space without cropping or layout shift.
+#### Prepare a photographed transit card
+
+The optional `scripts/process-card-image.py` utility perspective-corrects a photographed card, normalizes
+lighting, exports WebP, and can replace serial-number regions with nearby card texture before publication.
+Install its image-processing dependency outside the project:
+
+```sh
+python -m pip install opencv-python
+```
+
+For a well-lit card with visible edges, let the utility detect its boundary:
+
+```sh
+python scripts/process-card-image.py source.jpg src/assets/images/other/orca-cards/new-card.webp \
+  --auto \
+  --gamma 0.9 \
+  --redact "100,820,470,915"
+```
+
+Automatic detection scores candidate quadrilaterals using card aspect ratio, rectangularity, area, and visible
+edge support. It exits without creating an image when confidence is too low. For a dark card on a dark
+surface, glare, or a partially hidden edge, open the source in an image editor and provide the four corners
+clockwise from the top left with `--corners "410,520 3600,540 3650,2540 390,2520"` instead.
+
+Values below `1` for `--gamma` brighten shadows. `--redact` uses output-image coordinates and may be repeated.
+The default card is 1600 pixels wide at the standard payment-card aspect ratio with 36 pixels of surrounding
+surface retained on every side; change that margin with `--padding`. OpenCV does not reliably read HEIC, so
+convert iPhone sources first on macOS with `sips -s format tiff source.heic --out source.tiff`.
+
+Images retain their natural aspect ratio. The build detects intrinsic dimensions from each source image so the
+browser can reserve space without cropping or layout shift; dimensions do not need to be recorded in
+`other.json`.
 
 The homepage portrait keeps `profile.jpg` as its compatibility fallback and serves generated 400px and 800px
 WebP variants through responsive image markup. `scripts/images.ts` defines responsive-image specifications;

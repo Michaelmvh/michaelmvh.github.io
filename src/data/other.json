@@ -26,5 +26,48 @@
         "alt": "A collection of stones of various shades of gray and a single orange stone near the center"
       }
     ]
+  },
+  {
+    "id": "transit-cards",
+    "title": "Orca cards",
+    "description": "My recent small collection of limited edition ORCA cards.",
+    "images": [
+      {
+        "id": "classic-blue-orca-card",
+        "image": "/assets/images/other/orca-cards/classic-blue-orca-card.webp",
+        "alt": "Well-used blue ORCA transit card with multicolored curved lines",
+        "caption": "The classic blue ORCA card. Received during my 2022 Microsoft Internship"
+      },
+      {
+        "id": "orca-puget-sound-card",
+        "image": "/assets/images/other/orca-cards/orca-puget-sound-card.webp",
+        "alt": "Orange ORCA transit card illustrated with an orca on a ferry and Mount Rainier",
+        "caption": "Special limited-edition ORCA card featuring Boop on a WSDOT ferry!."
+      },
+      {
+        "id": "black-stripes-orca-card",
+        "image": "/assets/images/other/orca-cards/black-stripes-orca-card.webp",
+        "alt": "Black ORCA transit card with colorful diagonal stripes",
+        "caption": "A black ORCA card with colorful stripes. Most recent design"
+      },
+      {
+        "id": "mariners-orca-card",
+        "image": "/assets/images/other/orca-cards/mariners-orca-card.webp",
+        "alt": "ORCA transit card styled as a white Seattle Mariners jersey",
+        "caption": "A Seattle Mariners ORCA card."
+      },
+      {
+        "id": "sea26-orca-card",
+        "image": "/assets/images/other/orca-cards/sea26-orca-card.webp",
+        "alt": "Blue ORCA SEA26 transit card decorated with colorful soccer balls and curved lines",
+        "caption": "An ORCA card celebrating the 2026 world cup!."
+      },
+      {
+        "id": "connect-orca-card",
+        "image": "/assets/images/other/orca-cards/connect-orca-card.webp",
+        "alt": "Dark blue ORCA Connect transit card illustrated with Link light rail trains",
+        "caption": "An ORCA Connect card commemorating two new light rail stations."
+      }
+    ]
   }
 ]
