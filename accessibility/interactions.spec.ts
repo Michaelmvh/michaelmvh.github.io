@@ -29,6 +29,15 @@ test("malformed request paths return a bad request response", async ({ request }
   expect(response.status()).toBe(400);
 });
 
+test("local previews serve JPEG images with the correct media type", async ({ request }) => {
+  const jpegImage = otherImages.find((image) => image.image.endsWith(".jpeg"));
+  if (!jpegImage) throw new Error("Media type test requires a JPEG Other page image");
+
+  const response = await request.get(jpegImage.image);
+  expect(response.ok()).toBe(true);
+  expect(response.headers()["content-type"]).toBe("image/jpeg");
+});
+
 test("project filters show only the selected category", async ({ page }) => {
   await page.goto("/projects/");
 
@@ -120,7 +129,7 @@ test("Other page lightbox works for every gallery section", async ({ page }) => 
     expect(expectedSource).not.toBeNull();
 
     await trigger.focus();
-    await trigger.press("Enter");
+    await trigger.click();
     await expect(lightbox).toBeVisible();
     await expect(lightboxImage).toHaveAttribute("src", expectedSource ?? "");
     await expect(lightboxImage).toHaveAttribute("alt", expectedImage.alt);
@@ -134,6 +143,8 @@ test("Other page lightbox works for every gallery section", async ({ page }) => 
 
     await lightbox.locator(".lightbox-close").click();
     await expect(lightbox).not.toBeVisible();
+    await expect(lightboxImage).toHaveAttribute("src", "/assets/images/favicon.svg");
+    await expect(lightboxImage).toBeHidden();
     await expect(trigger).toBeFocused();
   }
 });
@@ -219,16 +230,23 @@ test("Other page lightbox stays usable within the viewport", async ({ page }) =>
 });
 
 test("Other page close control is stable while the large image loads", async ({ page }) => {
+  await page.goto("/other/");
+  const trigger = page.locator('[data-lightbox-src*="/snail-by-log-"]');
+  const largeImageSource = await trigger.getAttribute("data-lightbox-src");
+  expect(largeImageSource).not.toBeNull();
+
   let releaseImage: (() => void) | undefined;
+  let imageRequestIntercepted = false;
   const imageReleased = new Promise<void>((resolve) => {
     releaseImage = resolve;
   });
-  await page.route("**/snail-by-log-1600.webp", async (route) => {
+  await page.route(`**${largeImageSource}`, async (route) => {
+    imageRequestIntercepted = true;
     await imageReleased;
     await route.continue();
   });
-  await page.goto("/other/");
-  await page.locator("[data-lightbox-image]").first().click();
+  await trigger.click();
+  await expect.poll(() => imageRequestIntercepted).toBe(true);
 
   const close = page.locator(".lightbox-close");
   await expect(close).toBeVisible();
