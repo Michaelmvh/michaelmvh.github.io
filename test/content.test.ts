@@ -9,6 +9,7 @@ import { escapeHtml, output, readJson, resolveWithin, source, validateSiteData }
 import type {
   Bake,
   IndexPageCopy,
+  NewsEntry,
   OtherSection,
   Pages,
   Project,
@@ -31,6 +32,66 @@ test("content validation rejects unsafe paths and malformed nested values", asyn
   assert.throws(() => validateSiteData(malformedTags), /tags must be an array/);
 
   assert.throws(() => resolveWithin(output, "../outside"), /Path escapes/);
+});
+
+test("authored news records pass date and content validation", async () => {
+  validateSiteData(await readSiteData());
+});
+
+test("news validation accepts precise calendar dates and rejects malformed records", async () => {
+  const entry = { id: "milestone", date: "2026-09", text: "A recent achievement." };
+  const invalidCollections = [
+    { value: null, error: /news.json must be an array/ },
+    { value: [null], error: /must be an object/ },
+    { value: [entry, entry], error: /duplicate id/ },
+    { value: [{ ...entry, id: "../milestone" }], error: /id must use lowercase/ },
+    { value: [{ ...entry, text: " " }], error: /text.*required/ },
+    { value: [{ ...entry, text: 12 }], error: /text.*must be a string/ },
+    { value: [{ ...entry, date: 2026 }], error: /date.*must be a string/ },
+    ...[
+      "",
+      "0000",
+      "26",
+      "2026-9",
+      "2026-09-7",
+      "09/07/2026",
+      "September 7, 2026",
+      " 2026-09-07",
+      "2026-09-07 ",
+      "2026-09-01T12:00:00Z",
+    ].map((date) => ({
+      value: [{ ...entry, date }],
+      error: /date/,
+    })),
+    ...[
+      "2026-00",
+      "2026-13",
+      "2026-02-29",
+      "2026-04-31",
+      "2026-09-00",
+      "2026-01-32",
+      "1900-02-29",
+      "2100-02-29",
+    ].map((date) => ({
+      value: [{ ...entry, date }],
+      error: /valid calendar date/,
+    })),
+  ];
+  for (const { value, error } of invalidCollections) {
+    const data = await readSiteData();
+    Object.assign(data, { news: value });
+    assert.throws(() => validateSiteData(data), error);
+  }
+  for (const date of ["2026", "2026-09", "2026-09-07", "2026-12-31", "2024-02-29", "2000-02-29"]) {
+    const data = await readSiteData();
+    data.news = [{ ...entry, date }];
+    assert.doesNotThrow(() => validateSiteData(data));
+  }
+  const data = await readSiteData();
+  data.news = [];
+  assert.doesNotThrow(() => validateSiteData(data));
+  data.pages.home.newsHeading = "";
+  assert.throws(() => validateSiteData(data), /newsHeading.*required/);
 });
 
 test("navigation references valid internal pages", async () => {
@@ -499,6 +560,7 @@ async function readSiteData(): Promise<SiteData> {
     pages: await readJson<Pages>("data/pages.json"),
     projects: await readJson<Project[]>("data/projects.json"),
     publications: await readJson<Publication[]>("data/publications.json"),
+    news: await readJson<NewsEntry[]>("data/news.json"),
     baking: await readJson<Bake[]>("data/baking.json"),
     other: await readJson<OtherSection[]>("data/other.json"),
   };

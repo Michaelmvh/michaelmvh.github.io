@@ -89,6 +89,7 @@
 
 .home-research,
 .home-story,
+.recent-news,
 .research-focus {
   padding-block: var(--space-xl);
   border-top: 1px solid var(--line);
@@ -96,6 +97,7 @@
 
 .split-heading,
 .home-story,
+.recent-news,
 .research-focus {
   display: grid;
   gap: var(--space-l);
@@ -103,8 +105,42 @@
 }
 
 .split-heading h2,
-.home-story h2 {
+.home-story h2,
+.recent-news h2 {
   max-width: 13ch;
+}
+
+.news-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.news-list li {
+  display: grid;
+  gap: var(--space-m);
+  grid-template-columns: 7rem minmax(0, 1fr);
+  padding-block: var(--space-m);
+}
+
+.news-list li:first-child {
+  padding-top: 0;
+}
+
+.news-list li + li {
+  border-top: 1px solid var(--line);
+}
+
+.news-list time {
+  color: var(--moss);
+  font-size: var(--step--1);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.news-list p {
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .interest-grid {

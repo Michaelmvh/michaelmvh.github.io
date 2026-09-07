@@ -74,6 +74,7 @@
   .hero,
   .split-heading,
   .home-story,
+  .recent-news,
   .research-focus,
   .detail-header,
   .other-section-header,
@@ -134,6 +135,11 @@
 }
 
 @media (max-width: 560px) {
+  .news-list li {
+    gap: var(--space-xs);
+    grid-template-columns: 1fr;
+  }
+
   .interest-grid,
   .card-grid,
   .bake-grid,

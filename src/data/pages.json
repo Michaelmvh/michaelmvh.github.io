@@ -8,6 +8,7 @@
       "eyebrow": "Small label displayed above a page heading.",
       "heading": "Visible primary page heading.",
       "introduction": "Optional visible paragraph beneath the heading. Empty strings render nothing.",
+      "newsHeading": "Heading above the homepage milestones from news.json; the section is hidden when there are no entries.",
       "detailLabel": "Small label shown on project detail pages.",
       "screenshotsLabel": "Heading above an optional project screenshot collection.",
       "detailEyebrow": "Small label shown on baking detail pages.",
@@ -21,7 +22,8 @@
   "home": {
     "title": "CSE PhD student at the University of Washington",
     "description": "",
-    "introduction": ""
+    "introduction": "",
+    "newsHeading": "Recent News"
   },
   "publications": {
     "title": "Publications",

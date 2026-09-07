@@ -93,7 +93,7 @@ export function validateSiteData(data: SiteData): void {
 
   type PageName = Exclude<keyof Pages, "_instructions">;
   const pageFields = {
-    home: ["title", "description", "introduction"],
+    home: ["title", "description", "introduction", "newsHeading"],
     publications: ["title", "description", "eyebrow", "heading", "introduction"],
     projects: [
       "title",
@@ -191,6 +191,24 @@ export function validateSiteData(data: SiteData): void {
     const doi = requiredString(entry, "doi", location);
     assert(/^10\.\d{4,9}\/\S+$/.test(doi), `${location}.doi must be a valid DOI`);
     rootRelativeUrl(requiredString(entry, "pdf", location), `${location}.pdf`);
+  });
+
+  const news = array(data.news, "news.json");
+  validateUniqueCollection(news, "news.json", "id", (entry, index) => {
+    const location = `news.json[${index}]`;
+    safeIdentifier(requiredString(entry, "id", location), `${location}.id`);
+    requiredString(entry, "text", location);
+    const date = requiredString(entry, "date", location);
+    assert(
+      /^\d{4}(?:-\d{2}(?:-\d{2})?)?$/.test(date) && Number(date.slice(0, 4)) > 0,
+      `${location}.date must use YYYY, YYYY-MM, or YYYY-MM-DD`,
+    );
+    const fullDate = date.length === 4 ? `${date}-01-01` : date.length === 7 ? `${date}-01` : date;
+    const parsed = new Date(`${fullDate}T12:00:00Z`);
+    assert(
+      Number.isFinite(parsed.getTime()) && parsed.toISOString().slice(0, 10) === fullDate,
+      `${location}.date must be a valid calendar date`,
+    );
   });
 
   const baking = array(data.baking, "baking.json");

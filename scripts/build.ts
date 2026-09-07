@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { renderNews } from "./news.ts";
 import {
   generateResponsiveImages,
   imageVariantPath,
@@ -28,6 +29,7 @@ const data: SiteData = {
   pages: await readJson<SiteData["pages"]>("data/pages.json"),
   projects: await readJson<Project[]>("data/projects.json"),
   publications: await readJson<Publication[]>("data/publications.json"),
+  news: await readJson<SiteData["news"]>("data/news.json"),
   baking: await readJson<Bake[]>("data/baking.json"),
   other: await readJson<OtherSection[]>("data/other.json"),
 };
@@ -629,15 +631,19 @@ function titleCase(value: string): string {
 }
 
 /**
- * Inserts optional homepage copy at the documented marker in the trusted HTML fragment.
+ * Inserts homepage copy and news at the documented markers in the trusted HTML fragment.
  *
- * @param {string} content - Homepage HTML containing the introduction marker.
- * @returns {string} Homepage HTML with the optional paragraph inserted or the marker removed.
+ * @param {string} content - Homepage HTML containing the introduction and news markers.
+ * @returns {string} Homepage HTML with generated content inserted.
  */
 function renderHome(content: string): string {
   const marker = "<!-- Optional pages.json home introduction -->";
   const introduction = renderOptionalIntroduction(pageCopy.home.introduction, "hero-lede");
-  return content.replace(`    ${marker}\n`, introduction ? `    ${introduction}\n` : "");
+  const newsMarker = "<!-- Recent news from news.json -->";
+  assert(content.includes(newsMarker), "home.html: recent news marker is required");
+  return content
+    .replace(`    ${marker}\n`, introduction ? `    ${introduction}\n` : "")
+    .replace(newsMarker, () => renderNews(data.news, pageCopy.home.newsHeading));
 }
 
 /**

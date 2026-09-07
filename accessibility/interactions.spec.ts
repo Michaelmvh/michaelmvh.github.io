@@ -1,11 +1,13 @@
 import fs from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
-import type { OtherSection, Project } from "../scripts/types.ts";
+import type { NewsEntry, OtherSection, Pages, Project } from "../scripts/types.ts";
 
 const otherSections = JSON.parse(await fs.readFile("src/data/other.json", "utf8")) as OtherSection[];
 const otherImages = otherSections.flatMap((section) => section.images);
 const projects = JSON.parse(await fs.readFile("src/data/projects.json", "utf8")) as Project[];
+const news = JSON.parse(await fs.readFile("src/data/news.json", "utf8")) as NewsEntry[];
+const pageCopy = JSON.parse(await fs.readFile("src/data/pages.json", "utf8")) as Pages;
 const screenshotProjects = projects.filter((project) => project.screenshots?.length);
 const captionedImageIndex = otherImages.findIndex((image) => image.caption);
 const uncaptionedImageIndex = otherImages.findIndex((image) => !image.caption);
@@ -25,6 +27,33 @@ test("local previews do not load production analytics", async ({ page }) => {
 
   await expect(page.locator('script[src*="googletagmanager.com"]')).toHaveCount(0);
   expect(analyticsRequests).toEqual([]);
+});
+
+test.describe("homepage news without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("dated achievements remain readable at desktop and mobile sizes", async ({ page }) => {
+    await page.goto("/");
+    const section = page.getByRole("region", { name: pageCopy.home.newsHeading });
+    if (news.length === 0) {
+      await expect(section).toHaveCount(0);
+      return;
+    }
+    await expect(section).toBeVisible();
+    const entries = news.toSorted((left, right) => right.date.localeCompare(left.date));
+    await expect(section.getByRole("listitem")).toHaveCount(entries.length);
+    for (const [index, entry] of entries.entries()) {
+      const row = section.getByRole("listitem").nth(index);
+      await expect(row.locator("time")).toHaveAttribute("datetime", entry.date);
+      await expect(row.locator("p")).toHaveText(entry.text);
+      const bounds = await row.boundingBox();
+      expect(bounds).not.toBeNull();
+      if (!bounds) throw new Error("News entry has no visible bounds");
+      expect(bounds.x).toBeGreaterThanOrEqual(0);
+      expect(bounds.x + bounds.width).toBeLessThanOrEqual((page.viewportSize()?.width ?? 0) + 1);
+      expect(await row.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
+    }
+  });
 });
 
 test("malformed request paths return a bad request response", async ({ request }) => {

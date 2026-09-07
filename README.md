@@ -6,7 +6,7 @@ deployed to GitHub Pages at <https://michaelmvh.com>.
 ## Architecture
 
 - `src/content/`: authored HTML fragments and project writeups
-- `src/data/`: site configuration and structured project, publication, and baking records
+- `src/data/`: site configuration and structured news, project, publication, and baking records
 - `src/assets/`: images and documents copied directly into the build
 - `src/client/`: browser TypeScript compiled to JavaScript during the build
 - `src/styles/`: ordered CSS partials for tokens, shared styles, pages, themes, and private previews
@@ -68,6 +68,7 @@ Site-wide settings and repeated content live in `src/data/`:
 - `pages.json`: page titles, metadata descriptions, headings, introductions, and page-specific labels
 - `projects.json`: project summaries, categories, tags, images, and external links
 - `publications.json`: publication metadata and citations
+- `news.json`: dated, one-line achievements for the homepage Recent News section
 - `baking.json`: baking cards, images, descriptions, and recipe links
 - `other.json`: ordered image-collection sections for the Other page
 
@@ -97,6 +98,26 @@ elaborate reference page under `/style-options/` remains available for private r
 
 All required JSON fields are checked by `npm run validate`. Text from JSON is escaped during rendering;
 trusted authored markup belongs in an HTML fragment.
+
+### Add a news entry
+
+Add a record to `src/data/news.json` with a unique lowercase hyphenated `id`, a `date`, and plain-text `text`.
+Dates support `YYYY`, `YYYY-MM`, or `YYYY-MM-DD`; use only the precision you know rather than inventing a
+month or day. For example:
+
+```json
+{
+  "id": "example-achievement",
+  "date": "2026-09",
+  "text": "A short sentence describing the achievement."
+}
+```
+
+The homepage renders all entries newest-first beneath the introduction, with authored order preserved for
+identical dates. Entries with more precise dates sort before year-only or month-only entries in the same
+period. Dates display as a year, month and year, or full date without shifting calendar days. Text is escaped,
+and long entries wrap on smaller screens. Edit the heading in `pages.json` (`home.newsHeading`). An empty
+`news.json` array hides the section. News is included in the generated HTML and does not require JavaScript.
 
 ### Add a project
 

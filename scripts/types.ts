@@ -76,6 +76,14 @@ export interface Publication {
   citation: string;
 }
 
+/** A dated homepage milestone from news.json. */
+export interface NewsEntry {
+  id: string;
+  /** ISO date with year, month, or day precision: YYYY, YYYY-MM, or YYYY-MM-DD. */
+  date: string;
+  text: string;
+}
+
 /** Baking card and detail-page metadata from baking.json. */
 export interface Bake {
   slug: string;
@@ -116,6 +124,7 @@ export interface PageCopy {
 export interface HomePageCopy extends PageCopy {
   /** Optional escaped paragraph; an empty string renders nothing. */
   introduction: string;
+  newsHeading: string;
 }
 
 export interface IndexPageCopy extends PageCopy {
@@ -177,6 +186,7 @@ export interface SiteData {
   pages: Pages;
   projects: Project[];
   publications: Publication[];
+  news: NewsEntry[];
   baking: Bake[];
   other: OtherSection[];
 }
