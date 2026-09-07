@@ -4,11 +4,29 @@
     "title": "Microsoft Sentinel Data Transformations",
     "summary": "Backend and frontend engineering for filter, split, and scope-tag transformations that route and govern security data at ingestion.",
     "category": "microsoft",
-    "image": "/assets/images/projects/sentinel-data-transformations.svg",
-    "width": 1200,
-    "height": 675,
-    "alt": "Abstract illustration of a security data stream splitting into multiple storage paths",
+    "image": "/assets/images/projects/sentinel-transformations-panel.webp",
+    "width": 1232,
+    "height": 702,
+    "alt": "Microsoft Sentinel Tables view with the AlertEvidence transformations panel showing scope-tag, filter, and split rules",
     "tags": ["Microsoft Sentinel", "Data pipelines", "Row-level RBAC"],
+    "screenshots": [
+      {
+        "id": "transformations-panel",
+        "image": "/assets/images/projects/sentinel-transformations-panel.webp",
+        "width": 1232,
+        "height": 702,
+        "alt": "AlertEvidence selected in the Tables view with scope-tag, filter, and split controls in its Transformations tab",
+        "caption": "Manage ingestion rules in the context of a selected table. The Transformations tab brings filter, split, and scope-tag controls into one panel."
+      },
+      {
+        "id": "scope-tag-rule",
+        "image": "/assets/images/projects/sentinel-scope-tag-rule.webp",
+        "width": 734,
+        "height": 1167,
+        "alt": "Scope-tag rule editor with enabled access controls, a KQL condition, a scope-tag selector, and Save and Cancel buttons",
+        "caption": "Define a scope-tag rule with a KQL condition and a tag for matching rows. Separate controls govern table-level scope tagging and whether the individual rule is enabled."
+      }
+    ],
     "links": [
       {
         "label": "Explore filter and split transformations",
@@ -17,6 +35,49 @@
       {
         "label": "Explore Sentinel scoping",
         "url": "https://learn.microsoft.com/en-us/defender-xdr/scoping"
+      }
+    ]
+  },
+  {
+    "slug": "sentinel-onboarding",
+    "title": "Microsoft Sentinel Simplified Onboarding",
+    "summary": "Automated Sentinel onboarding that reduced seven manual setup tasks across two portals to two clicks in Microsoft Defender.",
+    "category": "microsoft",
+    "image": "/assets/images/projects/sentinel-connect-workspace.webp",
+    "width": 1013,
+    "height": 1103,
+    "alt": "Connect Microsoft Sentinel to Defender dialog with subscription selection and default workspace settings",
+    "tags": ["Microsoft Sentinel", "Microsoft Defender", "Onboarding"],
+    "links": [
+      {
+        "label": "Explore Sentinel onboarding in Defender",
+        "url": "https://learn.microsoft.com/en-us/unified-secops/microsoft-sentinel-onboard"
+      }
+    ],
+    "screenshots": [
+      {
+        "id": "discover",
+        "image": "/assets/images/projects/sentinel-trial-benefits.webp",
+        "width": 1184,
+        "height": 1815,
+        "alt": "Microsoft Sentinel Trial panel listing security capabilities and a Start trial button",
+        "caption": "Discover: introduce Sentinel's security capabilities and provide a clear entry point into the trial."
+      },
+      {
+        "id": "connect",
+        "image": "/assets/images/projects/sentinel-connect-workspace.webp",
+        "width": 1013,
+        "height": 1103,
+        "alt": "Sentinel connection dialog showing an Azure subscription, proposed resource group and workspace, region, and Connect button",
+        "caption": "Connect: select a subscription, keep or edit the automatically supplied workspace and resource-group names, and let the service handle the remaining setup."
+      },
+      {
+        "id": "get-started",
+        "image": "/assets/images/projects/sentinel-getting-started.webp",
+        "width": 2338,
+        "height": 505,
+        "alt": "Microsoft Sentinel is here banner with actions to connect data sources, turn on behavior analytics, and manage threat intelligence",
+        "caption": "Get started: access entry points for connecting data sources, enabling behavior analytics, and managing threat intelligence."
       }
     ]
   },
