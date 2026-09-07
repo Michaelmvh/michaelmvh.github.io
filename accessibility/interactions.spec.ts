@@ -218,6 +218,26 @@ test("Other page lightbox works for every gallery section", async ({ page }) => 
   }
 });
 
+test("rapid lightbox reopening does not let a queued close clear the new image", async ({ page }) => {
+  await page.goto("/other/");
+  const trigger = page.locator("[data-lightbox-image]").nth(captionedImageIndex);
+  await trigger.click();
+  await trigger.evaluate((element) => {
+    const close = document.querySelector<HTMLButtonElement>(".lightbox-close");
+    if (!(element instanceof HTMLAnchorElement) || !close) throw new Error("Missing lightbox controls");
+    close.click();
+    element.click();
+  });
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+  const dialog = page.locator(".lightbox");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator(".lightbox-image")).toBeVisible();
+  await expect(dialog.locator(".lightbox-caption")).toHaveText(captionedImageCaption);
+  await dialog.locator(".lightbox-close").click();
+  await expect(dialog.locator(".lightbox-image")).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
 test("Other page gallery images load successfully", async ({ page }) => {
   await page.goto("/other/");
 

@@ -142,6 +142,10 @@ for each source image. Replacing an image later requires replacing the source fi
 
 The optional `scripts/process-card-image.py` utility perspective-corrects a photographed card, normalizes
 lighting, exports WebP, and can replace serial-number regions with nearby card texture before publication.
+The shared lightbox keeps its close control outside the image area and scrolls vertically when an image and
+caption exceed the available viewport height. Keyboard, touch, and wheel scrolling can reach long captions
+without scrolling the background page; closing restores focus to the image link.
+
 Install its image-processing dependency outside the project:
 
 ```sh

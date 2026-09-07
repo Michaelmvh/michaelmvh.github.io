@@ -81,6 +81,7 @@ document.querySelector("main")?.addEventListener("click", (event) => {
   lightboxCaption.textContent = caption ?? "";
   lightboxCaption.hidden = !caption;
   lightbox.showModal();
+  lightbox.scrollTop = 0;
 });
 
 lightboxClose?.addEventListener("click", () => lightbox?.close());
@@ -90,6 +91,8 @@ lightbox?.addEventListener("click", (event) => {
 });
 
 lightbox?.addEventListener("close", () => {
+  // A queued close event must not clear an image opened again before that event was delivered.
+  if (lightbox.open) return;
   if (lightboxImage) {
     lightboxImage.src = "/assets/images/favicon.svg";
     lightboxImage.alt = "";

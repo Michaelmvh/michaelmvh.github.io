@@ -148,11 +148,6 @@
 
   .lightbox {
     width: calc(100% - 2 * var(--space-xs));
-    max-height: calc(100% - 5rem);
-  }
-
-  .lightbox-image {
-    max-height: calc(100vh - 6rem);
   }
 
   .lightbox-close {

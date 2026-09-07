@@ -537,7 +537,7 @@ function galleryImageLink(
 
 /** Renders the single modal image viewer shared by galleries on a page. */
 function renderLightbox(): string {
-  return `<dialog class="lightbox" aria-labelledby="lightbox-title"><div class="lightbox-panel"><h2 id="lightbox-title" class="sr-only">Image preview</h2><button class="lightbox-close" type="button" aria-label="Close image preview">×</button><figure><img class="lightbox-image" src="/assets/images/favicon.svg" alt="" hidden><figcaption class="lightbox-caption" hidden></figcaption></figure></div></dialog>`;
+  return `<dialog class="lightbox" aria-labelledby="lightbox-title"><section class="lightbox-panel" aria-labelledby="lightbox-title" tabindex="0"><h2 id="lightbox-title" class="sr-only">Image preview</h2><button class="lightbox-close" type="button" aria-label="Close image preview" autofocus>×</button><figure><img class="lightbox-image" src="/assets/images/favicon.svg" alt="" hidden><figcaption class="lightbox-caption" hidden></figcaption></figure></section></dialog>`;
 }
 
 /**
