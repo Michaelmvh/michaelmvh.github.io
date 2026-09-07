@@ -9,6 +9,7 @@
       "heading": "Visible primary page heading.",
       "introduction": "Optional visible paragraph beneath the heading. Empty strings render nothing.",
       "detailLabel": "Small label shown on project detail pages.",
+      "screenshotsLabel": "Heading above an optional project screenshot collection.",
       "detailEyebrow": "Small label shown on baking detail pages.",
       "backLabel": "Text shown after the back arrow on detail pages.",
       "recipeLabel": "External recipe-link text on baking detail pages.",
@@ -36,7 +37,8 @@
     "heading": "Projects",
     "introduction": "A collection of my research, software, and community work across Microsoft Sentinel, medical imaging, machine learning, and computer vision.",
     "detailLabel": "Project",
-    "backLabel": "All projects"
+    "backLabel": "All projects",
+    "screenshotsLabel": "Inside the experience"
   },
   "baking": {
     "title": "Baking",

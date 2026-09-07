@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { assert, resolveWithin } from "./site.ts";
-import type { OtherImage, OtherSection } from "./types.ts";
+import type { OtherImage, OtherSection, Project, ProjectImage } from "./types.ts";
 
 export interface PreparedOtherImage extends OtherImage {
   width: number;
@@ -27,8 +27,8 @@ const responsiveImages: readonly ResponsiveImageSpec[] = [
   },
 ];
 
-/** Returns the generated widths used for an Other page source image. */
-export function otherImageWidths(sourceWidth: number): number[] {
+/** Returns the generated widths used for gallery images. */
+export function galleryImageWidths(sourceWidth: number): number[] {
   const maximumWidth = Math.min(sourceWidth, 1600);
   return [...new Set([480, 960, maximumWidth].filter((width) => width <= maximumWidth))];
 }
@@ -65,6 +65,7 @@ export async function generateResponsiveImages(
   sourceRoot: string,
   outputRoot: string,
   otherSections: PreparedOtherSection[],
+  projects: Project[] = [],
 ): Promise<void> {
   for (const image of responsiveImages) {
     const input = resolveWithin(sourceRoot, image.source);
@@ -90,24 +91,40 @@ export async function generateResponsiveImages(
     );
   }
 
-  for (const section of otherSections) {
-    for (const image of section.images) {
-      const input = resolveWithin(sourceRoot, image.image.replace(/^\//, ""));
+  const galleryImages: ProjectImage[] = [
+    ...otherSections.flatMap((section) => section.images),
+    ...projects.flatMap((project) => (project.screenshots?.length ? [project, ...project.screenshots] : [])),
+  ];
+  const uniqueImages = new Map<string, ProjectImage>();
+  for (const image of galleryImages) {
+    const existing = uniqueImages.get(image.image);
+    assert(
+      !existing || (existing.width === image.width && existing.height === image.height),
+      `${image.image} must use consistent intrinsic dimensions`,
+    );
+    uniqueImages.set(image.image, image);
+  }
+  for (const image of uniqueImages.values()) {
+    const input = resolveWithin(sourceRoot, image.image.replace(/^\//, ""));
+    const metadata = await sharp(input).metadata();
+    assert(
+      metadata.autoOrient.width === image.width && metadata.autoOrient.height === image.height,
+      `${image.image} dimensions must match the source image`,
+    );
 
-      await Promise.all(
-        otherImageWidths(image.width).map((width) => {
-          const output = resolveWithin(outputRoot, imageVariantPath(image.image, width).replace(/^\//, ""));
-          return fs
-            .mkdir(path.dirname(output), { recursive: true })
-            .then(() =>
-              sharp(input)
-                .rotate()
-                .resize({ width, withoutEnlargement: true })
-                .webp({ quality: 82, effort: 6 })
-                .toFile(output),
-            );
-        }),
-      );
-    }
+    await Promise.all(
+      galleryImageWidths(image.width).map((width) => {
+        const output = resolveWithin(outputRoot, imageVariantPath(image.image, width).replace(/^\//, ""));
+        return fs
+          .mkdir(path.dirname(output), { recursive: true })
+          .then(() =>
+            sharp(input)
+              .rotate()
+              .resize({ width, withoutEnlargement: true })
+              .webp({ quality: 82, effort: 6 })
+              .toFile(output),
+          );
+      }),
+    );
   }
 }

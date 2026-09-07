@@ -101,6 +101,23 @@ trusted authored markup belongs in an HTML fragment.
 3. Put its image in `src/assets/images/projects/` and use a root-relative path in the JSON.
 4. Run `npm run check`.
 
+Projects may include an optional ordered `screenshots` array in `projects.json`. Each screenshot requires a
+unique `id` within the project, a root-relative `image` path, accurate intrinsic `width` and `height`, useful
+`alt` text, and a visible `caption`. The detail page renders these figures after the project narrative; the
+section heading comes from `pages.json` (`projects.screenshotsLabel`). Portrait screenshots retain their
+proportions at a restrained width.
+
+For projects with screenshots, the build generates responsive WebP variants for both the main project image
+and the screenshot collection. Detail-page images reuse the Other page's keyboard-accessible lightbox; their
+links open the full-resolution asset when JavaScript is unavailable. Project images without screenshots keep
+their existing rendering behavior.
+
+Prepare publication-ready images before adding them to `src/assets/images/projects/`: crop unrelated portal
+UI, remove private account or environment details, and confirm that the material can be shared publicly. Use
+descriptive filenames, preserve legible text, and keep every source image within the 1 MiB budget. Only these
+prepared sources belong in the repository; responsive variants are generated in `dist/`. Keep original
+captures and recordings outside the repository.
+
 ### Add a publication or bake
 
 Add a record to the corresponding JSON file and put any image or PDF under `src/assets/`. Baking detail pages

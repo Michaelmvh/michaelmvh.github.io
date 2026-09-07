@@ -95,7 +95,16 @@ export function validateSiteData(data: SiteData): void {
   const pageFields = {
     home: ["title", "description", "introduction"],
     publications: ["title", "description", "eyebrow", "heading", "introduction"],
-    projects: ["title", "description", "eyebrow", "heading", "introduction", "detailLabel", "backLabel"],
+    projects: [
+      "title",
+      "description",
+      "eyebrow",
+      "heading",
+      "introduction",
+      "detailLabel",
+      "backLabel",
+      "screenshotsLabel",
+    ],
     baking: [
       "title",
       "description",
@@ -152,6 +161,16 @@ export function validateSiteData(data: SiteData): void {
     positiveInteger(entry.width, `${location}.width`);
     positiveInteger(entry.height, `${location}.height`);
     stringArray(entry.tags, `${location}.tags`, true);
+    if (entry.screenshots !== undefined) {
+      const screenshots = array(entry.screenshots, `${location}.screenshots`);
+      validateUniqueCollection(screenshots, `${location}.screenshots`, "id", (image, imageIndex) => {
+        const imageLocation = `${location}.screenshots[${imageIndex}]`;
+        validateGalleryImage(image, imageLocation);
+        requiredString(image, "caption", imageLocation);
+        positiveInteger(image.width, `${imageLocation}.width`);
+        positiveInteger(image.height, `${imageLocation}.height`);
+      });
+    }
     array(entry.links, `${location}.links`).forEach((value, linkIndex) => {
       const link = record(value, `${location}.links[${linkIndex}]`);
       requiredString(link, "label", `${location}.links[${linkIndex}]`);
@@ -194,12 +213,16 @@ export function validateSiteData(data: SiteData): void {
     assert(images.length > 0, `${location}.images must not be empty`);
     validateUniqueCollection(images, `${location}.images`, "id", (image, imageIndex) => {
       const imageLocation = `${location}.images[${imageIndex}]`;
-      safeIdentifier(requiredString(image, "id", imageLocation), `${imageLocation}.id`);
-      rootRelativeUrl(requiredString(image, "image", imageLocation), `${imageLocation}.image`);
-      requiredString(image, "alt", imageLocation);
-      if (image.caption !== undefined) requiredString(image, "caption", imageLocation);
+      validateGalleryImage(image, imageLocation);
     });
   });
+}
+
+function validateGalleryImage(image: Record<string, unknown>, location: string): void {
+  safeIdentifier(requiredString(image, "id", location), `${location}.id`);
+  rootRelativeUrl(requiredString(image, "image", location), `${location}.image`);
+  requiredString(image, "alt", location);
+  if (image.caption !== undefined) requiredString(image, "caption", location);
 }
 
 function validateUniqueCollection(

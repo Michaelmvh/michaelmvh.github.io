@@ -12,14 +12,19 @@ const firstBake = baking[0];
 if (!firstProject || !firstBake) throw new Error("Accessibility tests require a project and a bake");
 
 const sharedLayoutRoutes = [
-  "/",
-  "/publications/",
-  "/baking/",
-  "/other/",
-  `/bakes/${firstBake.slug}/`,
-  "/projects/",
-  `/projects/${firstProject.slug}/`,
-  "/accessibility-test-not-found",
+  ...new Set([
+    "/",
+    "/publications/",
+    "/baking/",
+    "/other/",
+    `/bakes/${firstBake.slug}/`,
+    "/projects/",
+    `/projects/${firstProject.slug}/`,
+    ...projects
+      .filter((project) => project.screenshots?.length)
+      .map((project) => `/projects/${project.slug}/`),
+    "/accessibility-test-not-found",
+  ]),
 ];
 
 const referenceRoutes = ["/style-options/", "/style-options/biotech-blueprint/"];

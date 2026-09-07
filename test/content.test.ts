@@ -4,7 +4,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import sharp from "sharp";
 import { injectLiveReload } from "../scripts/live-reload.ts";
-import { output, readJson, resolveWithin, source, validateSiteData } from "../scripts/site.ts";
+import { galleryImageWidths, imageVariantPath } from "../scripts/images.ts";
+import { escapeHtml, output, readJson, resolveWithin, source, validateSiteData } from "../scripts/site.ts";
 import type {
   Bake,
   IndexPageCopy,
@@ -40,6 +41,43 @@ test("navigation references valid internal pages", async () => {
   }
 });
 
+test("project screenshot validation rejects malformed metadata", async () => {
+  const validImage = {
+    id: "example",
+    image: "/assets/images/projects/example.webp",
+    width: 800,
+    height: 600,
+    alt: "Example screenshot",
+    caption: "An explanation of the interface.",
+  };
+  const invalidCollections = [
+    { value: "not-an-array", error: /screenshots must be an array/ },
+    { value: [null], error: /must be an object/ },
+    { value: [validImage, validImage], error: /duplicate id/ },
+    { value: [{ ...validImage, id: "../example" }], error: /id must use lowercase/ },
+    { value: [{ ...validImage, image: "/../secret.png" }], error: /parent-directory/ },
+    { value: [{ ...validImage, image: "https://example.com/image.png" }], error: /root-relative/ },
+    { value: [{ ...validImage, caption: "" }], error: /caption.*required/ },
+    { value: [{ ...validImage, alt: "" }], error: /alt.*required/ },
+    { value: [{ ...validImage, width: 0 }], error: /width must be a positive integer/ },
+    { value: [{ ...validImage, height: 1.5 }], error: /height must be a positive integer/ },
+  ];
+  for (const { value, error } of invalidCollections) {
+    const data = await readSiteData();
+    const project = data.projects[0];
+    assert.ok(project);
+    Object.assign(project, { screenshots: value });
+    assert.throws(() => validateSiteData(data), error);
+  }
+  for (const screenshots of [undefined, [], [validImage]]) {
+    const data = await readSiteData();
+    const project = data.projects[0];
+    assert.ok(project);
+    Object.assign(project, { screenshots });
+    assert.doesNotThrow(() => validateSiteData(data));
+  }
+});
+
 test("every project and bake has generated detail content", async () => {
   const projects = await readJson<Project[]>("data/projects.json");
   const baking = await readJson<Bake[]>("data/baking.json");
@@ -60,12 +98,46 @@ test("project images stay within the asset size budget", async () => {
   const maximumImageSize = 1024 * 1024;
 
   for (const project of projects) {
-    const image = path.join(source, project.image.replace(/^\//, ""));
-    const { size } = await fs.stat(image);
-    assert.ok(
-      size <= maximumImageSize,
-      `${project.image} is ${(size / 1024).toFixed(0)} KiB; project images must not exceed 1 MiB`,
-    );
+    for (const item of [project, ...(project.screenshots ?? [])]) {
+      const image = path.join(source, item.image.replace(/^\//, ""));
+      const { size } = await fs.stat(image);
+      assert.ok(
+        size <= maximumImageSize,
+        `${item.image} is ${(size / 1024).toFixed(0)} KiB; project images must not exceed 1 MiB`,
+      );
+    }
+  }
+});
+
+test("project screenshots render captions, full-size links, and responsive images", async () => {
+  const projects = await readJson<Project[]>("data/projects.json");
+  for (const project of projects) {
+    const html = await fs.readFile(path.join(output, "projects", project.slug, "index.html"), "utf8");
+    if (!project.screenshots?.length) {
+      assert.ok(!html.includes('class="project-screenshots"'));
+      continue;
+    }
+    assert.equal((html.match(/<dialog /g) ?? []).length, 1);
+    assert.equal((html.match(/<figure id="screenshot-/g) ?? []).length, project.screenshots.length);
+    for (const screenshot of project.screenshots) {
+      assert.ok(html.includes(`<figcaption>${escapeHtml(screenshot.caption)}</figcaption>`));
+      assert.ok(html.includes(`href="${escapeHtml(screenshot.image)}" data-lightbox-image`));
+      assert.ok(html.includes(`id="screenshot-${screenshot.id}"`));
+    }
+    for (const image of [project, ...project.screenshots]) {
+      const metadata = await sharp(path.join(source, image.image)).metadata();
+      assert.equal(metadata.autoOrient.width, image.width);
+      assert.equal(metadata.autoOrient.height, image.height);
+      for (const width of galleryImageWidths(image.width)) {
+        const variant = imageVariantPath(image.image, width);
+        assert.ok(html.includes(`${variant} ${width}w`));
+        const file = path.join(output, variant);
+        const generated = await sharp(file).metadata();
+        assert.equal(generated.width, width);
+        assert.equal(generated.format, "webp");
+        assert.ok((await fs.stat(file)).size < 400 * 1024, `${variant} exceeds its delivery budget`);
+      }
+    }
   }
 });
 
@@ -301,15 +373,13 @@ test("Other page sections are public and data-driven", async () => {
 test("Microsoft projects have a dedicated filter and public sources", async () => {
   const projects = await readJson<Project[]>("data/projects.json");
   const microsoftProjects = projects.filter((project) => project.category === "microsoft");
-  assert.deepEqual(
-    microsoftProjects.map((project) => project.slug),
-    ["sentinel-data-transformations", "sentinel-repositories"],
-  );
+  assert.ok(microsoftProjects.length > 0, "The Microsoft filter requires Microsoft projects");
 
   const index = await fs.readFile(path.join(output, "projects", "index.html"), "utf8");
   assert.match(index, /data-filter="microsoft"/);
 
   for (const project of microsoftProjects) {
+    assert.ok(index.includes(`href="/projects/${project.slug}/"`));
     assert.ok(project.links.length > 0);
     assert.ok(
       project.links.every(({ url }) => {

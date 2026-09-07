@@ -5,7 +5,7 @@ import { promisify } from "node:util";
 import {
   generateResponsiveImages,
   imageVariantPath,
-  otherImageWidths,
+  galleryImageWidths,
   prepareOtherSections,
 } from "./images.ts";
 import {
@@ -20,7 +20,7 @@ import {
   validateSiteData,
 } from "./site.ts";
 import type { PreparedOtherImage, PreparedOtherSection } from "./images.ts";
-import type { Bake, OtherSection, Page, Project, Publication, SiteData } from "./types.ts";
+import type { Bake, OtherSection, Page, Project, ProjectImage, Publication, SiteData } from "./types.ts";
 
 const data: SiteData = {
   site: await readJson<SiteData["site"]>("data/site.json"),
@@ -165,7 +165,7 @@ await fs.writeFile(
 );
 
 await fs.cp(path.join(source, "assets"), path.join(output, "assets"), { recursive: true });
-await generateResponsiveImages(source, output, preparedOther);
+await generateResponsiveImages(source, output, preparedOther, projects);
 await promisify(execFile)(
   process.execPath,
   [path.join(root, "node_modules", "typescript", "bin", "tsc"), "-p", "tsconfig.client.json"],
@@ -341,9 +341,12 @@ function renderProjects(entries: Project[]): string {
  */
 function projectCard(project: Project): string {
   return `<article class="card project-card" data-category="${escapeHtml(project.category)}">
-    <a class="card-image" href="/projects/${escapeHtml(project.slug)}/"><img src="${escapeHtml(
-      project.image,
-    )}" alt="${escapeHtml(project.alt)}" width="${project.width}" height="${project.height}" loading="lazy"></a>
+    <a class="card-image" href="/projects/${escapeHtml(project.slug)}/">${renderImage(
+      project,
+      Boolean(project.screenshots?.length),
+      "(max-width: 800px) 100vw, 33vw",
+      "lazy",
+    )}</a>
     <div class="card-body"><p class="card-kicker">${escapeHtml(
       project.category,
     )}</p><h2><a href="/projects/${escapeHtml(project.slug)}/">${escapeHtml(
@@ -362,6 +365,26 @@ function projectCard(project: Project): string {
  * @returns {string} Project-detail HTML.
  */
 function renderDetail(project: Project, body: string): string {
+  const screenshots = project.screenshots ?? [];
+  const hero = screenshots.length
+    ? galleryImageLink(project, "project-image-link", "(max-width: 800px) 100vw, 45vw", "eager", true)
+    : renderImage(project, false, "100vw", "eager");
+  const gallery = screenshots.length
+    ? `<section class="project-screenshots" aria-labelledby="screenshots-heading"><h2 id="screenshots-heading">${escapeHtml(
+        pageCopy.projects.screenshotsLabel,
+      )}</h2>${screenshots
+        .map(
+          (image) =>
+            `<figure id="screenshot-${escapeHtml(image.id)}" class="project-screenshot${image.height > image.width ? " project-screenshot-portrait" : ""}">${galleryImageLink(
+              image,
+              "project-image-link",
+              "(max-width: 800px) 100vw, 70vw",
+              "lazy",
+              true,
+            )}<figcaption>${escapeHtml(image.caption)}</figcaption></figure>`,
+        )
+        .join("")}</section>${renderLightbox()}`
+    : "";
   const links = (project.links ?? [])
     .map(
       (link) =>
@@ -378,11 +401,7 @@ function renderDetail(project: Project, body: string): string {
     pageCopy.projects.detailLabel,
   )} · ${escapeHtml(project.category)}</p><h1>${escapeHtml(project.title)}</h1><p class="lede">${escapeHtml(
     project.summary,
-  )}</p><div class="detail-links">${links}</div></div><img src="${escapeHtml(
-    project.image,
-  )}" alt="${escapeHtml(
-    project.alt,
-  )}" width="${project.width}" height="${project.height}"></header><div class="prose">${body}</div></article>`;
+  )}</p><div class="detail-links">${links}</div></div>${hero}</header><div class="prose">${body}</div>${gallery}</article>`;
 }
 
 /**
@@ -475,27 +494,48 @@ function renderOther(sections: PreparedOtherSection[]): string {
  * @returns {string} Responsive image link used by the shared lightbox.
  */
 function otherGalleryImage(image: PreparedOtherImage): string {
-  const widths = otherImageWidths(image.width);
-  const largestWidth = widths.at(-1);
-  assert(largestWidth, `${image.image} must have a responsive image width`);
-  const largeImage = imageVariantPath(image.image, largestWidth);
-  const srcset = widths
+  return galleryImageLink(
+    image,
+    "other-gallery-item",
+    "(max-width: 560px) calc(100vw - 2 * var(--space-m)), (max-width: 800px) 50vw, 33vw",
+  );
+}
+
+function renderImage(
+  image: ProjectImage,
+  responsive: boolean,
+  sizes: string,
+  loading: "lazy" | "eager",
+): string {
+  const img = `<img src="${escapeHtml(image.image)}" alt="${escapeHtml(image.alt)}" width="${image.width}" height="${image.height}" loading="${loading}">`;
+  if (!responsive) return img;
+  const srcset = galleryImageWidths(image.width)
     .map((width) => `${escapeHtml(imageVariantPath(image.image, width))} ${width}w`)
     .join(", ");
+  return `<picture><source type="image/webp" srcset="${srcset}" sizes="${escapeHtml(sizes)}">${img}</picture>`;
+}
+
+function galleryImageLink(
+  image: ProjectImage & { caption?: string },
+  className: string,
+  sizes: string,
+  loading: "lazy" | "eager" = "lazy",
+  fullResolution = false,
+): string {
+  const widths = galleryImageWidths(image.width);
+  const largestWidth = widths.at(-1);
+  assert(largestWidth, `${image.image} must have a responsive image width`);
+  const largeImage = fullResolution ? image.image : imageVariantPath(image.image, largestWidth);
   const caption = image.caption ? ` data-lightbox-caption="${escapeHtml(image.caption)}"` : "";
 
-  return `<a class="other-gallery-item" href="${escapeHtml(
+  return `<a class="${className}" href="${escapeHtml(
     largeImage,
   )}" data-lightbox-image data-lightbox-src="${escapeHtml(
     largeImage,
-  )}" data-lightbox-alt="${escapeHtml(image.alt)}"${caption}><picture><source type="image/webp" srcset="${srcset}" sizes="(max-width: 560px) calc(100vw - 2 * var(--space-m)), (max-width: 800px) 50vw, 33vw"><img src="${escapeHtml(
-    image.image,
-  )}" alt="${escapeHtml(image.alt)}" width="${image.width}" height="${
-    image.height
-  }" loading="lazy"></picture><span class="sr-only">Open larger view</span></a>`;
+  )}" data-lightbox-alt="${escapeHtml(image.alt)}"${caption}>${renderImage(image, true, sizes, loading)}<span class="sr-only">Open larger view</span></a>`;
 }
 
-/** Renders the single modal image viewer shared by every Other page gallery. */
+/** Renders the single modal image viewer shared by galleries on a page. */
 function renderLightbox(): string {
   return `<dialog class="lightbox" aria-labelledby="lightbox-title"><div class="lightbox-panel"><h2 id="lightbox-title" class="sr-only">Image preview</h2><button class="lightbox-close" type="button" aria-label="Close image preview">×</button><figure><img class="lightbox-image" src="/assets/images/favicon.svg" alt="" hidden><figcaption class="lightbox-caption" hidden></figcaption></figure></div></dialog>`;
 }

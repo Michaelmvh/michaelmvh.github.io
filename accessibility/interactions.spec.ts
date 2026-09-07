@@ -1,9 +1,12 @@
 import fs from "node:fs/promises";
 import { expect, test } from "@playwright/test";
-import type { OtherSection } from "../scripts/types.ts";
+import { AxeBuilder } from "@axe-core/playwright";
+import type { OtherSection, Project } from "../scripts/types.ts";
 
 const otherSections = JSON.parse(await fs.readFile("src/data/other.json", "utf8")) as OtherSection[];
 const otherImages = otherSections.flatMap((section) => section.images);
+const projects = JSON.parse(await fs.readFile("src/data/projects.json", "utf8")) as Project[];
+const screenshotProjects = projects.filter((project) => project.screenshots?.length);
 const captionedImageIndex = otherImages.findIndex((image) => image.caption);
 const uncaptionedImageIndex = otherImages.findIndex((image) => !image.caption);
 const captionedImage = otherImages[captionedImageIndex];
@@ -69,6 +72,72 @@ test("citation feedback resets after repeated copy attempts", async ({ page }) =
 
   await expect(button).toHaveText("Copied");
   await expect(button).toHaveText("Copy citation", { timeout: 2_500 });
+});
+
+for (const project of screenshotProjects) {
+  test(`${project.slug}: screenshots load, enlarge with the keyboard, and restore focus`, async ({
+    page,
+  }) => {
+    await page.goto(`/projects/${project.slug}/`);
+    const figures = page.locator(".project-screenshot");
+    await expect(figures).toHaveCount(project.screenshots?.length ?? 0);
+    for (const screenshot of project.screenshots ?? []) {
+      const figure = page.locator(`#screenshot-${screenshot.id}`);
+      await expect(figure.locator("figcaption")).toHaveText(screenshot.caption);
+      const trigger = figure.locator("a");
+      await trigger.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          trigger
+            .locator("img")
+            .evaluate(
+              (image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+            ),
+        )
+        .toBe(true);
+      await trigger.focus();
+      await trigger.press("Enter");
+      const lightbox = page.locator(".lightbox");
+      await expect(lightbox).toBeVisible();
+      await expect(lightbox.locator(".lightbox-caption")).toHaveText(screenshot.caption);
+      await expect(lightbox.locator("img")).toHaveAttribute("src", screenshot.image);
+      await expect
+        .poll(() =>
+          lightbox
+            .locator("img")
+            .evaluate(
+              (image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+            ),
+        )
+        .toBe(true);
+      const results = await new AxeBuilder({ page })
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+        .analyze();
+      expect(results.violations).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      await page.keyboard.press("Escape");
+      await expect(lightbox).not.toBeVisible();
+      await expect(trigger).toBeFocused();
+    }
+    await page.locator(".detail-header [data-lightbox-image]").click();
+    await expect(page.locator(".lightbox")).toBeVisible();
+    await page.locator(".lightbox-close").click();
+  });
+}
+
+test.describe("project screenshots without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+  for (const project of screenshotProjects) {
+    test(`${project.slug}: captions and full-resolution image links remain available`, async ({ page }) => {
+      await page.goto(`/projects/${project.slug}/`);
+      const screenshot = project.screenshots?.[0];
+      if (!screenshot) throw new Error("Screenshot project requires a screenshot");
+      const figure = page.locator(`#screenshot-${screenshot.id}`);
+      await expect(figure.locator("figcaption")).toHaveText(screenshot.caption);
+      await figure.locator("a").click();
+      await expect(page).toHaveURL(new RegExp(`${screenshot.image.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`));
+    });
+  }
 });
 
 test("citation copy failures show temporary feedback", async ({ page }) => {

@@ -33,8 +33,23 @@ export interface ExternalLink {
   url: string;
 }
 
+/** An image with authored intrinsic dimensions. */
+export interface ProjectImage {
+  /** Root-relative image path. */
+  image: string;
+  /** Intrinsic dimensions used to prevent layout shift. */
+  width: number;
+  height: number;
+  alt: string;
+}
+
+export interface ProjectScreenshot extends ProjectImage {
+  id: string;
+  caption: string;
+}
+
 /** Project card and detail-page metadata from projects.json. */
-export interface Project {
+export interface Project extends ProjectImage {
   /** URL segment and matching content-fragment filename. */
   slug: string;
   title: string;
@@ -42,14 +57,10 @@ export interface Project {
   summary: string;
   /** Filter identifier displayed in title case. */
   category: string;
-  /** Root-relative image path. */
-  image: string;
-  /** Intrinsic dimensions used to prevent layout shift. */
-  width: number;
-  height: number;
-  alt: string;
   tags: string[];
   links: ExternalLink[];
+  /** Ordered, captioned figures displayed after the project narrative. */
+  screenshots?: ProjectScreenshot[];
 }
 
 /** Scholarly publication metadata used to render citations and links. */
@@ -116,6 +127,7 @@ export interface IndexPageCopy extends PageCopy {
 export interface ProjectPageCopy extends IndexPageCopy {
   detailLabel: string;
   backLabel: string;
+  screenshotsLabel: string;
 }
 
 export interface BakingPageCopy extends IndexPageCopy {

@@ -61,10 +61,11 @@ const lightboxCaption = lightbox?.querySelector<HTMLElement>(".lightbox-caption"
 const lightboxClose = lightbox?.querySelector<HTMLButtonElement>(".lightbox-close");
 let lightboxTrigger: HTMLAnchorElement | null = null;
 
-document.querySelector(".other-page")?.addEventListener("click", (event) => {
+document.querySelector("main")?.addEventListener("click", (event) => {
   const trigger =
     event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("[data-lightbox-image]") : null;
   if (!trigger || !lightbox || !lightboxImage || !lightboxCaption) return;
+  if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
 
   const source = trigger.dataset.lightboxSrc;
   const alt = trigger.dataset.lightboxAlt;

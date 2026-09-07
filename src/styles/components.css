@@ -104,10 +104,12 @@
 
 .lightbox-caption {
   max-width: var(--reading);
-  padding: var(--space-s) var(--space-xs) var(--space-xs);
+  padding: var(--space-xs) var(--space-s);
+  border-radius: 0.35rem;
+  margin-top: var(--space-xs);
   margin-inline: auto;
+  background: #17141e;
   color: #fff;
-  text-shadow: 0 1px 3px rgb(0 0 0 / 80%);
   text-align: center;
 }
 
