@@ -49,6 +49,10 @@ Blueprint, and Sci-Fi themes, as well as strict TypeScript checking for the gene
 tests. Run only the accessibility scans with `npm run a11y`, or only the compiler with `npm run typecheck`.
 Install the pinned Chromium build once on a new machine with `npx playwright install chromium`.
 
+Browser regression coverage also exercises image loading and lightbox scrolling at narrow portrait, landscape,
+tablet, breakpoint-adjacent, desktop, and wide-screen sizes. Image cases are derived from the project and
+baking collections so newly added records receive the same coverage.
+
 Changes to behavior, content structures, rendering, accessibility interactions, or asset processing should add
 focused regression coverage when the existing suite would not catch likely failures. Keep tests resilient by
 checking data-driven behavior and durable invariants rather than fixed content counts, incidental ordering,
@@ -138,14 +142,14 @@ lightbox work for any number of sections without code changes. The build generat
 for each source image. Replacing an image later requires replacing the source file and updating its path in
 `other.json` if the filename changed.
 
-#### Prepare a photographed transit card
-
-The optional `scripts/process-card-image.py` utility perspective-corrects a photographed card, normalizes
-lighting, exports WebP, and can replace serial-number regions with nearby card texture before publication.
 The shared lightbox keeps its close control outside the image area and scrolls vertically when an image and
 caption exceed the available viewport height. Keyboard, touch, and wheel scrolling can reach long captions
 without scrolling the background page; closing restores focus to the image link.
 
+#### Prepare a photographed transit card
+
+The optional `scripts/process-card-image.py` utility perspective-corrects a photographed card, normalizes
+lighting, exports WebP, and can replace serial-number regions with nearby card texture before publication.
 Install its image-processing dependency outside the project:
 
 ```sh
@@ -174,6 +178,11 @@ The default card is 1600 pixels wide at the standard payment-card aspect ratio w
 surface retained on every side; change that margin with `--padding`. OpenCV does not reliably read HEIC, so
 convert iPhone sources first on macOS with `sips -s format tiff source.heic --out source.tiff`.
 
+After installing the optional OpenCV dependency, run the utility's synthetic-image regression tests with
+`python -m unittest discover -s test -p '*_test.py'`. An optional `image-utility` job is commented out in
+`.github/workflows/ci.yml`; uncomment it when automated coverage of utility changes is needed. Python is not
+required for normal CI, the site's Node.js build, or `npm run check`.
+
 Images retain their natural aspect ratio. The build detects intrinsic dimensions from each source image so the
 browser can reserve space without cropping or layout shift; dimensions do not need to be recorded in
 `other.json`.
@@ -184,11 +193,6 @@ the build uses Sharp to generate derivatives in `dist/`, so only original images
 Regression tests verify generated formats, dimensions, and conservative file-size budgets.
 
 ### Add a top-level page
-
-After installing the optional OpenCV dependency, run the utility's synthetic-image regression tests with
-`python -m unittest discover -s test -p '*_test.py'`. An optional `image-utility` job is commented out in
-`.github/workflows/ci.yml`; uncomment it when automated coverage of utility changes is needed. Python is not
-required for normal CI, the site's Node.js build, or `npm run check`.
 
 Add an HTML fragment under `src/content/`, add the page definition in `scripts/build.ts`, and add its
 navigation record to `src/data/site.json` if it belongs in the main navigation.
