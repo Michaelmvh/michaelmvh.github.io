@@ -220,13 +220,8 @@
 
 .card-image img {
   width: 100%;
-  aspect-ratio: 10 / 7;
-  transition: transform 300ms ease;
-}
-
-.project-card .card-image img {
   height: auto;
-  aspect-ratio: auto;
+  transition: transform 300ms ease;
 }
 
 .card-image:hover img {
@@ -269,11 +264,6 @@
 
 .bake-card:nth-child(3n + 2) {
   transform: translateY(var(--space-m));
-}
-
-.bake-card .card-image img {
-  height: auto;
-  aspect-ratio: auto;
 }
 
 .other-page {
@@ -387,18 +377,8 @@
 
 .detail-header img {
   width: 100%;
-  aspect-ratio: 10 / 7;
+  height: auto;
   border-radius: 1rem;
-}
-
-.detail:not(.bake-detail) .detail-header img {
-  height: auto;
-  aspect-ratio: auto;
-}
-
-.bake-detail .detail-header img {
-  height: auto;
-  aspect-ratio: auto;
 }
 
 .lede,

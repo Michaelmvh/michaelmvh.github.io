@@ -121,7 +121,10 @@ captures and recordings outside the repository.
 ### Add a publication or bake
 
 Add a record to the corresponding JSON file and put any image or PDF under `src/assets/`. Baking detail pages
-are generated from JSON; publications appear on the publication index.
+are generated from JSON; publications appear on the publication index. Baking image dimensions are read at
+build time with EXIF orientation applied, so no dimensions need to be entered in `baking.json`. Cards load
+images lazily; detail headers load eagerly. The build copies these images unchanged, without enlarging or
+re-encoding them. Keep baking sources within 400 KiB and 1600 pixels on their longest edge.
 
 ### Add an Other page section or image
 

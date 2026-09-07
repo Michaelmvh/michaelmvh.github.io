@@ -4,7 +4,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import sharp from "sharp";
 import { injectLiveReload } from "../scripts/live-reload.ts";
-import { galleryImageWidths, imageVariantPath } from "../scripts/images.ts";
+import { galleryImageWidths, imageVariantPath, prepareImages } from "../scripts/images.ts";
 import { escapeHtml, output, readJson, resolveWithin, source, validateSiteData } from "../scripts/site.ts";
 import type {
   Bake,
@@ -106,6 +106,53 @@ test("project images stay within the asset size budget", async () => {
         `${item.image} is ${(size / 1024).toFixed(0)} KiB; project images must not exceed 1 MiB`,
       );
     }
+  }
+});
+
+test("baking images reserve oriented dimensions without increasing delivered assets", async () => {
+  const baking = await readJson<Bake[]>("data/baking.json");
+  const index = await fs.readFile(path.join(output, "baking", "index.html"), "utf8");
+  for (const bake of baking) {
+    const original = await fs.readFile(path.join(source, bake.image));
+    const delivered = await fs.readFile(path.join(output, bake.image));
+    assert.deepEqual(delivered, original, `${bake.image} must be copied without enlargement or re-encoding`);
+    assert.ok(delivered.length <= 400 * 1024, `${bake.image} exceeds its delivery budget`);
+    const { width, height } = (await sharp(original).metadata()).autoOrient;
+    assert.ok(Math.max(width, height) <= 1600, `${bake.image} exceeds its dimension budget`);
+    const detail = await fs.readFile(path.join(output, "bakes", bake.slug, "index.html"), "utf8");
+    for (const [html, loading] of [
+      [index, "lazy"],
+      [detail, "eager"],
+    ] as const) {
+      const image = `<img src="${escapeHtml(bake.image)}" alt="${escapeHtml(bake.alt)}" width="${width}" height="${height}" loading="${loading}">`;
+      assert.ok(
+        html.includes(image),
+        `${bake.slug} must reserve oriented dimensions and retain ${loading} loading`,
+      );
+    }
+  }
+});
+
+test("image preparation respects EXIF orientation and retains record metadata", async (context) => {
+  const directory = await fs.mkdtemp(path.join(source, ".image-test-"));
+  context.after(() => fs.rm(directory, { recursive: true, force: true }));
+  for (const orientation of [1, 6, 8]) {
+    const image = `/rotated-${orientation}.jpg`;
+    await sharp({ create: { width: 120, height: 80, channels: 3, background: "#abcdef" } })
+      .withMetadata({ orientation })
+      .jpeg()
+      .toFile(path.join(directory, image));
+    const record = { image, title: "Example" };
+    const records = [record];
+    const prepared = await prepareImages(directory, records);
+    assert.deepEqual(prepared, [
+      {
+        ...record,
+        width: orientation === 1 ? 120 : 80,
+        height: orientation === 1 ? 80 : 120,
+      },
+    ]);
+    assert.equal("width" in record, false);
   }
 });
 

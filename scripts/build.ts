@@ -6,6 +6,7 @@ import {
   generateResponsiveImages,
   imageVariantPath,
   galleryImageWidths,
+  prepareImages,
   prepareOtherSections,
 } from "./images.ts";
 import {
@@ -34,6 +35,7 @@ validateSiteData(data);
 
 const { site, pages: pageCopy, projects, publications, baking, other } = data;
 const preparedOther = await prepareOtherSections(source, other);
+const preparedBaking = await prepareImages(source, baking);
 const stylesheetSources = [
   "tokens.css",
   "base.css",
@@ -71,7 +73,7 @@ const pages = [
     id: "baking",
     title: pageCopy.baking.title,
     description: pageCopy.baking.description,
-    content: renderBaking(baking),
+    content: renderBaking(preparedBaking),
   },
   {
     route: "other",
@@ -122,7 +124,7 @@ for (const project of projects) {
   );
 }
 
-for (const bake of baking) {
+for (const bake of preparedBaking) {
   await writePage(
     `bakes/${bake.slug}`,
     layout({
@@ -438,10 +440,10 @@ function renderPublications(entries: Publication[]): string {
 /**
  * Builds the baking index from structured records and optional centralized introductory copy.
  *
- * @param {Bake[]} entries - Bakes in their intended display order.
+ * @param {(Bake & ProjectImage)[]} entries - Bakes with detected dimensions in their intended display order.
  * @returns {string} Baking intro and card-grid HTML.
  */
-function renderBaking(entries: Bake[]): string {
+function renderBaking(entries: Array<Bake & ProjectImage>): string {
   return `<header class="page-intro playful"><p class="eyebrow">${escapeHtml(
     pageCopy.baking.eyebrow,
   )}</p><h1>${escapeHtml(pageCopy.baking.heading)}</h1>${renderOptionalIntroduction(
@@ -451,9 +453,7 @@ function renderBaking(entries: Bake[]): string {
       (item) =>
         `<article class="card bake-card"><a class="card-image" href="/bakes/${escapeHtml(
           item.slug,
-        )}/"><img src="${escapeHtml(item.image)}" alt="${escapeHtml(
-          item.alt,
-        )}" width="1200" height="900" loading="lazy"></a><div class="card-body"><h2><a href="/bakes/${escapeHtml(
+        )}/">${renderImage(item, false, "100vw", "lazy")}</a><div class="card-body"><h2><a href="/bakes/${escapeHtml(
           item.slug,
         )}/">${escapeHtml(item.title)}</a></h2><p>${escapeHtml(item.description)}</p></div></article>`,
     )
@@ -543,10 +543,10 @@ function renderLightbox(): string {
 /**
  * Builds a bake detail page from one validated record.
  *
- * @param {Bake} item - Bake metadata and optional external recipe URL.
+ * @param {Bake & ProjectImage} item - Bake metadata with detected image dimensions.
  * @returns {string} Bake-detail HTML.
  */
-function renderBakeDetail(item: Bake): string {
+function renderBakeDetail(item: Bake & ProjectImage): string {
   return `<article class="detail bake-detail"><a class="back-link" href="/baking/">← ${escapeHtml(
     pageCopy.baking.backLabel,
   )}</a><header class="detail-header"><div><p class="eyebrow">${escapeHtml(
@@ -559,9 +559,7 @@ function renderBakeDetail(item: Bake): string {
           pageCopy.baking.recipeLabel,
         )} <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>`
       : ""
-  }</div><img src="${escapeHtml(item.image)}" alt="${escapeHtml(
-    item.alt,
-  )}" width="1200" height="900"></header></article>`;
+  }</div>${renderImage(item, false, "100vw", "eager")}</header></article>`;
 }
 
 /**

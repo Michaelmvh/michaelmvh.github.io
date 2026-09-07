@@ -40,6 +40,21 @@ export function imageVariantPath(sourcePath: string, width: number): string {
 }
 
 /** Reads source dimensions once so rendering and image generation share the same metadata. */
+export async function prepareImages<T extends { image: string }>(
+  sourceRoot: string,
+  images: T[],
+): Promise<Array<T & { width: number; height: number }>> {
+  return Promise.all(
+    images.map(async (image) => {
+      const input = resolveWithin(sourceRoot, image.image.replace(/^\//, ""));
+      const metadata = await sharp(input).metadata();
+      const { width, height } = metadata.autoOrient;
+      assert(width > 0 && height > 0, `${image.image} must have valid intrinsic dimensions`);
+      return { ...image, width, height };
+    }),
+  );
+}
+
 export async function prepareOtherSections(
   sourceRoot: string,
   sections: OtherSection[],
@@ -47,15 +62,7 @@ export async function prepareOtherSections(
   return Promise.all(
     sections.map(async (section) => ({
       ...section,
-      images: await Promise.all(
-        section.images.map(async (image) => {
-          const input = resolveWithin(sourceRoot, image.image.replace(/^\//, ""));
-          const metadata = await sharp(input).metadata();
-          const { width, height } = metadata.autoOrient;
-          assert(width > 0 && height > 0, `${image.image} must have valid intrinsic dimensions`);
-          return { ...image, width, height };
-        }),
-      ),
+      images: await prepareImages(sourceRoot, section.images),
     })),
   );
 }
