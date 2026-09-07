@@ -306,7 +306,7 @@ def main() -> None:
         default=[],
         type=parse_rectangle,
         metavar="LEFT,TOP,RIGHT,BOTTOM",
-        help="blur an output-coordinate rectangle; may be repeated",
+        help="blend nearby texture over a final output-coordinate rectangle; may be repeated",
     )
     parser.add_argument("--quality", type=int, default=88, help="WebP/JPEG quality (default: 88)")
     args = parser.parse_args()
@@ -356,10 +356,6 @@ def main() -> None:
     adjusted = adjust_lighting(rectified, args.gamma)
 
     for left, top, right, bottom in args.redact:
-        left += args.padding
-        right += args.padding
-        top += args.padding
-        bottom += args.padding
         if right > canvas_width or bottom > canvas_height:
             parser.error(f"redaction {left},{top},{right},{bottom} exceeds output dimensions")
         region_width = right - left

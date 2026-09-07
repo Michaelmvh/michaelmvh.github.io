@@ -8,6 +8,24 @@ permissions:
   contents: read
 
 jobs:
+  # Optional: uncomment this job when changing the photographed-card utility.
+  # image-utility:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v7
+  #
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v6
+  #       with:
+  #         python-version: "3.13"
+  #
+  #     - name: Install image utility dependency
+  #       run: python -m pip install opencv-python
+  #
+  #     - name: Test blended image redaction
+  #       run: python -m unittest discover -s test -p '*_test.py'
+
   validate:
     runs-on: ubuntu-latest
     steps:

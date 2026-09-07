@@ -159,7 +159,10 @@ edge support. It exits without creating an image when confidence is too low. For
 surface, glare, or a partially hidden edge, open the source in an image editor and provide the four corners
 clockwise from the top left with `--corners "410,520 3600,540 3650,2540 390,2520"` instead.
 
-Values below `1` for `--gamma` brighten shadows. `--redact` uses output-image coordinates and may be repeated.
+Values below `1` for `--gamma` brighten shadows. `--redact` uses final output-image coordinates, measured from
+the top-left of the entire image including its padding, and may be repeated. Rectangles blend nearby card
+texture over the selected area rather than using an opaque block. Choose a region with a margin around the
+text and inspect the exported image before publication to confirm the blending removed all sensitive details.
 The default card is 1600 pixels wide at the standard payment-card aspect ratio with 36 pixels of surrounding
 surface retained on every side; change that margin with `--padding`. OpenCV does not reliably read HEIC, so
 convert iPhone sources first on macOS with `sips -s format tiff source.heic --out source.tiff`.
@@ -174,6 +177,11 @@ the build uses Sharp to generate derivatives in `dist/`, so only original images
 Regression tests verify generated formats, dimensions, and conservative file-size budgets.
 
 ### Add a top-level page
+
+After installing the optional OpenCV dependency, run the utility's synthetic-image regression tests with
+`python -m unittest discover -s test -p '*_test.py'`. An optional `image-utility` job is commented out in
+`.github/workflows/ci.yml`; uncomment it when automated coverage of utility changes is needed. Python is not
+required for normal CI, the site's Node.js build, or `npm run check`.
 
 Add an HTML fragment under `src/content/`, add the page definition in `scripts/build.ts`, and add its
 navigation record to `src/data/site.json` if it belongs in the main navigation.
