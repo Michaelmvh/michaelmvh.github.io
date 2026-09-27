@@ -19,6 +19,24 @@ interface ResponsiveImageSpec {
   quality: number;
 }
 
+export async function generateTouchIcons(sourceRoot: string, outputRoot: string): Promise<void> {
+  await Promise.all(
+    [
+      ["site-touch-icon.svg", "apple-touch-icon.png"],
+      ["tools-touch-icon.svg", "tools/apple-touch-icon.png"],
+    ].map(async ([file, target]) => {
+      assert(file && target, "Missing touch icon source or target");
+      const destination = resolveWithin(outputRoot, target);
+      await fs.mkdir(path.dirname(destination), { recursive: true });
+      await sharp(resolveWithin(sourceRoot, "assets/images", file))
+        .resize(180, 180)
+        .removeAlpha()
+        .png()
+        .toFile(destination);
+    }),
+  );
+}
+
 const responsiveImages: readonly ResponsiveImageSpec[] = [
   {
     source: "assets/images/profile.jpg",

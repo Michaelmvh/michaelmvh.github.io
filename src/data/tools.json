@@ -13,5 +13,10 @@
     "slug": "text-diff",
     "name": "Text diff",
     "description": "Compare two text snippets with live, character-level change highlighting."
+  },
+  {
+    "slug": "mermaid",
+    "name": "Mermaid diagram editor",
+    "description": "Build diagrams visually with drag-and-drop and live, editable Mermaid code."
   }
 ]

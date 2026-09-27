@@ -6,8 +6,10 @@ import { build as bundle } from "esbuild";
 import { renderNews } from "./news.ts";
 import { renderQrCode, renderTools } from "./tools.ts";
 import { renderDocumentTool } from "./document-tools.ts";
+import { buildMermaidEditor, renderMermaid } from "./mermaid.ts";
 import {
   generateResponsiveImages,
+  generateTouchIcons,
   imageVariantPath,
   galleryImageWidths,
   prepareImages,
@@ -49,6 +51,7 @@ const stylesheetSources = [
   "components.css",
   "tools.css",
   "document-tools.css",
+  "mermaid-tool.css",
   "themes/blueprint.css",
   "themes/scifi.css",
   "style-options.css",
@@ -93,6 +96,12 @@ const pages = [
 ];
 
 const toolDefinitions: Record<string, Pick<Page, "title" | "description" | "head" | "content">> = {
+  mermaid: {
+    title: pageCopy.mermaid.title,
+    description: pageCopy.mermaid.description,
+    head: '<script type="module" src="/assets/js/mermaid-tool.js"></script>',
+    content: renderMermaid(pageCopy.mermaid, pageCopy.tools.backLabel),
+  },
   json: {
     title: pageCopy.jsonFormatter.title,
     description: pageCopy.jsonFormatter.description,
@@ -218,6 +227,8 @@ await fs.writeFile(
 );
 
 await fs.cp(path.join(source, "assets"), path.join(output, "assets"), { recursive: true });
+await generateTouchIcons(source, output);
+await buildMermaidEditor(pageCopy.mermaid);
 await generateResponsiveImages(source, output, preparedOther, projects);
 await promisify(execFile)(
   process.execPath,
@@ -332,6 +343,7 @@ function layout(page: Page): string {
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#f5eee3">
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" sizes="180x180" href="${page.id === "tools" || page.id.startsWith("tool-") ? "/tools/apple-touch-icon.png" : "/apple-touch-icon.png"}">
     <script>
       document.documentElement.classList.add("js");
       if (!location.pathname.startsWith("/style-options/")) {

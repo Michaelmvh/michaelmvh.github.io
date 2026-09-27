@@ -38,6 +38,27 @@ test("authored news records pass date and content validation", async () => {
   validateSiteData(await readSiteData());
 });
 
+test("iOS bookmark icons are opaque PNGs and tool pages use their own icon", async () => {
+  const siteIcon = await fs.readFile(path.join(output, "apple-touch-icon.png"));
+  const toolsIcon = await fs.readFile(path.join(output, "tools/apple-touch-icon.png"));
+  for (const icon of [siteIcon, toolsIcon]) {
+    const metadata = await sharp(icon).metadata();
+    assert.equal(metadata.format, "png");
+    assert.equal(metadata.width, 180);
+    assert.equal(metadata.height, 180);
+    assert.equal(metadata.hasAlpha, false);
+  }
+  assert.notDeepEqual(siteIcon, toolsIcon);
+  for await (const file of fs.glob("**/*.html", { cwd: output })) {
+    const html = await fs.readFile(path.join(output, file), "utf8");
+    const iconPath = file.startsWith("tools/") ? "/tools/apple-touch-icon.png" : "/apple-touch-icon.png";
+    assert.ok(
+      html.includes(`<link rel="apple-touch-icon" sizes="180x180" href="${iconPath}">`),
+      `${file} must declare the correct bookmark icon`,
+    );
+  }
+});
+
 test("tool registry validation rejects unsafe routes, duplicates, and missing copy", async () => {
   const tool = { slug: "qr-code", name: "QR code generator", description: "Generate a code." };
   for (const [value, error] of [

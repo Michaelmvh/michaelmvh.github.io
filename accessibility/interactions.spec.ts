@@ -29,6 +29,41 @@ test("local previews do not load production analytics", async ({ page }) => {
   expect(analyticsRequests).toEqual([]);
 });
 
+test("the skip link stays clipped while scrolling and remains keyboard-accessible in dark device mode", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/tools/");
+  const skip = page.getByRole("link", { name: "Skip to main content" });
+  await expect(skip).toHaveCSS("clip-path", "inset(50%)");
+  await expect(skip).toHaveCSS("transform", "none");
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
+  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  await expect(skip).toHaveCSS("clip-path", "inset(50%)");
+  await skip.focus();
+  await expect(skip).toBeFocused();
+  await expect(skip).toHaveCSS("clip-path", "none");
+  await skip.press("Enter");
+  await expect(page).toHaveURL(/#main$/);
+  await page.getByRole("heading", { level: 1 }).click();
+  await expect(skip).toHaveCSS("clip-path", "inset(50%)");
+});
+
+test("bookmark icon declarations resolve to PNGs for both the site and tools", async ({ page, request }) => {
+  for (const [route, expected] of [
+    ["/", "/apple-touch-icon.png"],
+    ["/tools/", "/tools/apple-touch-icon.png"],
+    ["/tools/mermaid/", "/tools/apple-touch-icon.png"],
+  ]) {
+    if (!route || !expected) throw new Error("Missing bookmark icon test case");
+    await page.goto(route);
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveAttribute("href", expected);
+    const response = await request.get(expected);
+    expect(response.ok()).toBe(true);
+    expect(response.headers()["content-type"]).toBe("image/png");
+  }
+});
+
 test.describe("homepage news without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 

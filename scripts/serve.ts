@@ -18,6 +18,7 @@ const mimeTypes: Record<string, string> = {
   ".pdf": "application/pdf",
   ".png": "image/png",
   ".svg": "image/svg+xml",
+  ".txt": "text/plain; charset=utf-8",
   ".webp": "image/webp",
   ".xml": "application/xml; charset=utf-8",
 };
@@ -62,7 +63,9 @@ const server = http.createServer(async (request, response) => {
   try {
     const content = await readBuiltFile(filePath);
     const body =
-      liveReloadEnabled && path.extname(filePath) === ".html"
+      liveReloadEnabled &&
+      path.extname(filePath) === ".html" &&
+      !pathname.startsWith("/tools/mermaid/editor/")
         ? injectLiveReload(content.toString("utf8"))
         : content;
     response.writeHead(200, {

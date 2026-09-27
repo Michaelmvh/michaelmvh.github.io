@@ -63,6 +63,18 @@ exact pixel geometry, or implementation details; use reasonable ranges for media
 
 Generated files are written to `dist/` and are not committed.
 
+### iOS bookmarks and Safari
+
+The build renders the font-independent SVG artwork in `src/assets/images/site-touch-icon.svg` and
+`tools-touch-icon.svg` into opaque 180x180 PNGs. Public pages declare `/apple-touch-icon.png` (the MVH
+monogram); the tools directory and every tool declare `/tools/apple-touch-icon.png` (the utility tiles). The
+existing scientist SVG favicon remains unchanged. These are bookmark/Home Screen icons, not a PWA or an
+offline cache. iOS may cache an existing bookmark's icon until the bookmark is recreated.
+
+The keyboard skip link is clipped in place until focused rather than translated above the viewport. This
+avoids placing a dark fixed layer behind iPhone Safari's translucent status bar when scrolling, including when
+the device is in dark mode but the site uses its default light theme.
+
 ## Editing content
 
 Site-wide settings and repeated content live in `src/data/`:
@@ -154,7 +166,52 @@ header, into local assets; a page-scoped import map loads it without a CDN or ru
 do not load the QR module. Browser regressions decode downloaded images with `jsqr` to verify their contents.
 Document comparisons use `diff`; strict JSON parsing uses `jsonc-parser` without converting number tokens back
 through JavaScript numbers. Their license files are copied to the local vendor assets. No tool needs a
-backend, CDN, framework, or external API.
+backend, CDN, or external API.
+
+`/tools/mermaid/` embeds the pinned `archyne@1.0.0-alpha.1` static application, providing visual diagram
+creation, drag-to-connect, automatic layout, editable Mermaid source, undo/redo, file open/save, and image
+exports. Archyne supports visual editing for several diagram families; other supported Mermaid diagrams remain
+text-editable with a preview. This is an alpha editor: keep original imported files, since visual edits can
+normalize syntax. Mermaid versions and layout may differ in Obsidian.
+
+Archyne is a build-only dependency. `scripts/mermaid.ts` copies its already-built assets unchanged to
+`dist/tools/mermaid/editor/` and generates a small standalone shell with local-only network policy, noindex,
+and no analytics. The upstream demo page and social metadata are not shipped. Its React runtime and styles
+stay inside the iframe and are never loaded by the portfolio or other tools. The package's MIT license, NOTICE
+(including separate icon terms), and third-party notices are preserved alongside the editor. The shell blocks
+external icon/image requests; bundled icons and local files remain usable. The iframe allows scripts,
+same-origin assets, and downloads, but not popups or top-level navigation.
+
+`src/client/mermaid-tool.ts` starts Archyne in embed mode with the exact host origin, validates the source and
+origin of editor messages, and provides full-screen expansion where supported. A compact header, collapsed
+instructions, and a nearly full-width workspace prioritize editing space without changing other pages.
+Expanding instructions or entering full screen keeps the existing editor instance. Page labels and guidance
+live in `pages.json`; upstream editor labels remain upstream-owned. Local live reload is injected only into
+the outer page, not the CSP-restricted shell.
+
+Archyne itself does not persist diagrams in embed mode. The host's `src/client/mermaid-recovery.ts` adds
+opt-in recovery through its existing `getCode`, `change`, and `load` messages. It stores one raw Mermaid
+draft, including incomplete syntax and layout comments, under `mermaid-recovery-v1` in localStorage. Updates
+arrive about 300 ms after edits. On returning, explicitly restore or forget the draft; startup examples never
+overwrite it. Restoring enables continued recovery, while disabling recovery or choosing Forget draft deletes
+the stored copy without clearing the canvas. A change from another tab pauses saving here and offers that
+draft for restoration instead.
+
+Recovery is limited to 500,000 UTF-16 code units and the current diagram, not Archyne's entire multi-document
+workspace. Storage failures or oversized input pause recovery with visible feedback, retaining any previous
+saved copy. Browser storage can be cleared or unavailable, and recent edits may not yet have reached the host
+when a tab closes. Use Save .mmd for durable files and Open to resume; recovery is not a substitute for
+saving. No diagrams are uploaded and recovery is off until explicitly enabled.
+
+To update Archyne, deliberately change its exact package version and lockfile, then run all checks. The build
+rejects unrecognized entry-point markup instead of guessing at a changed package layout. Recheck visual/source
+round trips, file downloads/reopening, local-only requests, embed persistence, and desktop and mobile
+accessibility against the actual packaged build before accepting an update. No separate fork or editor
+repository is required for this integration.
+
+The small `src/client/mermaid-embed.ts` adapter makes the source and export preview scrollers keyboard
+focusable, including in Safari, without modifying upstream bundles. Keep its selectors covered when upgrading
+Archyne; no accessibility rules are excluded for the embedded application.
 
 To add a utility, add its unique lowercase hyphenated `slug`, card `name`, and `description` to `tools.json`;
 add its page copy to `pages.json` with corresponding types and validation; and register its renderer and

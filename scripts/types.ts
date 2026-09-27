@@ -167,6 +167,34 @@ export interface DocumentToolPageCopy extends IndexPageCopy {
   optionLabel: string;
 }
 
+export interface MermaidPageCopy extends IndexPageCopy {
+  helpLabel: string;
+  recoveryLabel: string;
+  restoreLabel: string;
+  forgetLabel: string;
+  recoveryOffMessage: string;
+  recoveryPendingMessage: string;
+  recoverySavedMessage: string;
+  recoveryErrorMessage: string;
+  recoveryLimitMessage: string;
+  recoveryRestoringMessage: string;
+  recoveryRestoreErrorMessage: string;
+  instructions: string;
+  privacyHint: string;
+  compatibilityHint: string;
+  editorLabel: string;
+  fullscreenLabel: string;
+  exitFullscreenLabel: string;
+  attributionLabel: string;
+  licenseLabel: string;
+  noScriptMessage: string;
+  loadingMessage: string;
+  readyMessage: string;
+  loadErrorMessage: string;
+  editorErrorMessage: string;
+  fullscreenErrorMessage: string;
+}
+
 export interface Tool {
   slug: string;
   name: string;
@@ -218,6 +246,7 @@ export interface Pages {
   notFound: NotFoundPageCopy;
   styleOptions: PageCopy;
   styleBlueprint: PageCopy;
+  mermaid: MermaidPageCopy;
   tools: ToolsPageCopy;
   qrCode: QrCodePageCopy;
   jsonFormatter: DocumentToolPageCopy;

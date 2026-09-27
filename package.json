@@ -23,6 +23,7 @@
     "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.63.0",
     "@types/node": "26.6.3",
+    "archyne": "1.0.0-alpha.1",
     "esbuild": "0.28.2",
     "html-validate": "11.16.1",
     "jsqr": "1.4.0",

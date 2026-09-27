@@ -1,0 +1,141 @@
+body[data-page="tool-mermaid"] main {
+  width: calc(100% - 2 * clamp(0.75rem, 2vw, 2rem));
+}
+
+.mermaid-intro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-m);
+  padding-block: var(--space-s);
+}
+
+.mermaid-intro h1 {
+  margin: 0;
+  font-size: var(--step-2);
+}
+
+.mermaid-intro .tools-back {
+  margin: 0;
+}
+
+.mermaid-intro p {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.mermaid-tool {
+  margin-bottom: var(--space-xl);
+}
+
+.mermaid-tool > p,
+.mermaid-hint {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.mermaid-help {
+  font-size: var(--step--1);
+}
+
+.mermaid-help summary {
+  width: fit-content;
+  padding-block: var(--space-xs);
+  cursor: pointer;
+}
+
+.mermaid-help p {
+  max-width: 85ch;
+  margin-block: var(--space-s);
+}
+
+.mermaid-workspace {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  margin-block: var(--space-s);
+  background: var(--paper);
+}
+
+.mermaid-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+  padding: var(--space-s);
+}
+
+.mermaid-recovery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-s);
+  padding: 0 var(--space-s) var(--space-s);
+  font-size: var(--step--1);
+}
+
+.mermaid-recovery label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mermaid-recovery input {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.mermaid-recovery .button {
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font: inherit;
+}
+
+#mermaid-recovery-status {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+#mermaid-status {
+  flex: 1 1 15rem;
+  margin: 0;
+  font-size: var(--step--1);
+}
+
+#mermaid-fullscreen {
+  cursor: pointer;
+  font: inherit;
+}
+
+#mermaid-editor {
+  display: block;
+  width: 100%;
+  height: max(32rem, calc(100dvh - 18rem));
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.mermaid-workspace:fullscreen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+}
+
+.mermaid-workspace:fullscreen iframe {
+  flex: 1;
+  min-height: 0;
+}
+
+#mermaid-editor[hidden],
+#mermaid-fullscreen[hidden],
+.mermaid-recovery [hidden] {
+  display: none;
+}

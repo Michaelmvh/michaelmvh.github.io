@@ -10,7 +10,10 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
   const tools = await readJson<Tool[]>("data/tools.json");
   const site = await readJson<Site>("data/site.json");
   const index = await fs.readFile(path.join(output, "tools/index.html"), "utf8");
-  assert.doesNotMatch(index, /qr-code.js|qrcode-generator|document-tools.js|<textarea/);
+  assert.doesNotMatch(
+    index,
+    /qr-code.js|qrcode-generator|document-tools.js|mermaid-tool.js|<iframe|<textarea/,
+  );
   for (const tool of tools) {
     assert.ok(index.includes(`href="/tools/${tool.slug}/"`));
     assert.ok(index.includes(escapeHtml(tool.name)));
@@ -45,7 +48,10 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
     if (file.startsWith("tools/")) continue;
     const publicPage = await fs.readFile(path.join(output, file), "utf8");
     assert.doesNotMatch(publicPage, /href="\/tools(?:\/|")/, `${file} links to unlisted tools`);
-    assert.doesNotMatch(publicPage, /assets\/js\/(?:tools|qr-code|document-tools).js|qrcode-generator/);
+    assert.doesNotMatch(
+      publicPage,
+      /assets\/js\/(?:tools|qr-code|document-tools|mermaid-tool).js|qrcode-generator/,
+    );
   }
 });
 
