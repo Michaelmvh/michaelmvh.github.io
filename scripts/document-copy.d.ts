@@ -1,0 +1,29 @@
+export interface DocumentEditorCopy {
+  clearLabel: string;
+  formatLabel: string;
+  minifyLabel: string;
+  copyLabel: string;
+  downloadLabel: string;
+  formattedHeading: string;
+  diffHeading: string;
+  addedLabel: string;
+  removedLabel: string;
+  unchangedLabel: string;
+  noNewlineLabel: string;
+  noScriptMessage: string;
+  readyMessage: string;
+  editedMessage: string;
+  waitingMessage: string;
+  loadErrorMessage: string;
+  errorMessage: string;
+  syntaxMessage: string;
+  duplicateMessage: string;
+  depthMessage: string;
+  limitMessage: string;
+  comparisonLimitMessage: string;
+  formattedMessage: string;
+  identicalMessage: string;
+  summaryMessage: string;
+  copiedMessage: string;
+  copyErrorMessage: string;
+}

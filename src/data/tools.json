@@ -3,5 +3,15 @@
     "slug": "qr-code",
     "name": "QR code generator",
     "description": "Turn text or a link into a QR code, then download it as PNG or SVG."
+  },
+  {
+    "slug": "json",
+    "name": "JSON formatter & diff",
+    "description": "Validate, format, minify, sort keys, and compare two JSON documents."
+  },
+  {
+    "slug": "text-diff",
+    "name": "Text diff",
+    "description": "Compare two text snippets with live, character-level change highlighting."
   }
 ]

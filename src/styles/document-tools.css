@@ -1,0 +1,159 @@
+.document-tool {
+  padding: var(--space-m);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  margin-bottom: var(--space-l);
+  background: var(--white);
+}
+
+.document-tool fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+}
+
+.document-inputs {
+  display: grid;
+  gap: var(--space-m);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.document-input label {
+  display: block;
+  margin-bottom: var(--space-xs);
+  font-weight: 600;
+}
+
+.document-tool textarea {
+  display: block;
+  width: 100%;
+  padding: var(--space-s);
+  border: 1px solid var(--ink-soft);
+  border-radius: 0.5rem;
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    1rem / 1.5 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  tab-size: 2;
+  resize: vertical;
+}
+
+.document-hint,
+#document-status,
+#document-output-status,
+#diff-summary {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.document-option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  width: fit-content;
+  padding-block: var(--space-s);
+  cursor: pointer;
+}
+
+.document-option input {
+  flex-shrink: 0;
+  accent-color: var(--moss-dark);
+}
+
+.document-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+  margin-block: var(--space-xs) var(--space-s);
+}
+
+.document-actions .button {
+  cursor: pointer;
+  font: 600 var(--step--1) / 1.5 var(--sans);
+}
+
+.document-tool :disabled {
+  cursor: default;
+}
+
+.document-tool h2 {
+  margin-top: var(--space-m);
+  font-size: var(--step-2);
+}
+
+.document-tool [hidden] {
+  display: none;
+}
+
+.diff-lines {
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  margin: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+.diff-lines:empty {
+  display: none;
+}
+
+.diff-line {
+  display: grid;
+  padding: 0.15rem var(--space-xs);
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    0.9rem / 1.6 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+
+.diff-line code {
+  font: inherit;
+  tab-size: 2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.diff-added {
+  background: #eef7f0;
+  color: #164a2a;
+}
+
+.diff-removed {
+  background: #fff1f1;
+  color: #7a2020;
+}
+
+.diff-highlight {
+  border-radius: 0.15rem;
+}
+
+.diff-added .diff-highlight {
+  background: #ace1b7;
+  text-decoration: underline;
+}
+
+.diff-removed .diff-highlight {
+  background: #f7b7b7;
+  text-decoration: line-through;
+}
+
+.diff-eof {
+  grid-column: 2;
+  font-family: var(--sans);
+  font-style: italic;
+}
+
+@media (max-width: 800px) {
+  .document-inputs {
+    grid-template-columns: 1fr;
+  }
+}

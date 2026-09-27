@@ -10,7 +10,7 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
   const tools = await readJson<Tool[]>("data/tools.json");
   const site = await readJson<Site>("data/site.json");
   const index = await fs.readFile(path.join(output, "tools/index.html"), "utf8");
-  assert.doesNotMatch(index, /qr-code.js|qrcode-generator|<textarea/);
+  assert.doesNotMatch(index, /qr-code.js|qrcode-generator|document-tools.js|<textarea/);
   for (const tool of tools) {
     assert.ok(index.includes(`href="/tools/${tool.slug}/"`));
     assert.ok(index.includes(escapeHtml(tool.name)));
@@ -27,6 +27,14 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
   assert.match(qr, /type="module" src="\/assets\/js\/qr-code.js"/);
   assert.match(qr, /"qrcode-generator":"\/assets\/js\/vendor\/qrcode.mjs"/);
   await fs.access(path.join(output, "assets/js/vendor/qrcode.mjs"));
+  await fs.access(path.join(output, "assets/js/vendor/diff-LICENSE.txt"));
+  await fs.access(path.join(output, "assets/js/vendor/jsonc-parser-LICENSE.txt"));
+  for (const slug of ["json", "text-diff"]) {
+    const html = await fs.readFile(path.join(output, `tools/${slug}/index.html`), "utf8");
+    assert.match(html, /type="module" src="\/assets\/js\/document-tools.js"/);
+    assert.doesNotMatch(html, /qr-code.js|qrcode-generator/);
+  }
+  assert.doesNotMatch(qr, /document-tools.js/);
   assert.ok(site.navigation.every((item) => !item.url.startsWith("/tools")));
   const sitemap = await fs.readFile(path.join(output, "sitemap.xml"), "utf8");
   assert.doesNotMatch(sitemap, /\/tools(?:\/|<)/);
@@ -37,7 +45,7 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
     if (file.startsWith("tools/")) continue;
     const publicPage = await fs.readFile(path.join(output, file), "utf8");
     assert.doesNotMatch(publicPage, /href="\/tools(?:\/|")/, `${file} links to unlisted tools`);
-    assert.doesNotMatch(publicPage, /assets\/js\/(?:tools|qr-code).js|qrcode-generator/);
+    assert.doesNotMatch(publicPage, /assets\/js\/(?:tools|qr-code|document-tools).js|qrcode-generator/);
   }
 });
 

@@ -18,7 +18,10 @@ deployed to GitHub Pages at <https://michaelmvh.com>.
 The small Node.js generator is written in strict TypeScript and renders complete semantic HTML. Browser
 TypeScript is compiled to plain JavaScript and provides progressive enhancements such as the mobile menu; it
 does not supply essential page content. The generator concatenates the ordered files in `src/styles/` into one
-`dist/assets/css/site.css`, preserving one browser request without requiring a CSS bundler.
+`dist/assets/css/site.css`, preserving one browser request without requiring a CSS bundler. The document tools
+additionally use esbuild to bundle their browser-only npm dependencies into local ES modules. Code splitting
+loads the JSON parser only on the JSON page. Browser source imports may use `.ts` extensions; the client
+compiler rewrites them to `.js`.
 
 Platform-neutral contributor and automation guidance lives in [`AGENTS.md`](AGENTS.md). Keep this README
 updated in the same change whenever the architecture, commands, prerequisites, editing workflow, validation,
@@ -111,15 +114,47 @@ It preserves input exactly (including Unicode, spaces, and line breaks), accepts
 uses medium error correction with a four-module white border. Input is not uploaded or persisted, and
 analytics are omitted from this page.
 
+`/tools/json/` formats or minifies the Original JSON input and compares it with Revised JSON. Comparison
+normalizes indentation and string escaping; optional key sorting also ignores object-property order. Arrays
+retain their order and numeric tokens retain their exact spelling and precision, so `1` and `1.0` still
+compare differently. The parser rejects comments, trailing commas, and duplicate keys and reports syntax
+locations. Output can be copied or downloaded without modifying the original input.
+
+`/tools/text-diff/` compares snippets with inline character-level highlights within added and removed lines.
+Empty inputs are valid. Windows/Unix line endings compare equally; final-newline differences are marked. An
+option ignores leading/trailing whitespace, including the final newline, but not internal word spacing. When
+ignored whitespace differs, unchanged lines display the revised text.
+
+Both document tools keep content in page memory only and compare automatically 200 ms after the last input or
+option change, pausing during IME composition. The previous diff stays visible with an updating status until
+the new result is ready; invalid or incomplete JSON clears it. JSON comparison waits for both inputs, while
+text comparison supports an empty side. Clearing cancels pending work. Formatting remains an explicit action,
+and editing Revised JSON does not invalidate formatted output from Original JSON.
+
+Both tools use line alignment for context, then compare characters across each replacement block. Matching
+text stays unhighlighted; precise insertions and deletions use stronger backgrounds and semantic `ins`/`del`
+markup. Unicode grapheme clusters keep emoji and combining characters intact. Summaries remain line-based, and
+final-newline differences retain their explicit markers.
+
+Inputs and formatted JSON output are limited to 100,000 UTF-16 code units and 2,000 lines. JSON nesting is
+capped at 100 levels. Line and character matching share a 200 ms diff budget, with a 2,000-line edit-distance
+limit and a 2,000-grapheme edit-distance limit per replacement block. Exceeding these limits shows visible
+feedback rather than blocking or silently reverting to whole-line highlighting.
+
 The directory and all tool pages are excluded from main navigation and the sitemap and include
 `noindex, nofollow`. They remain publicly accessible by URL: this is discovery control, not authentication.
 Crawling is allowed so search engines can read the noindex directive.
 
-Page copy lives in `src/data/pages.json`, markup in `scripts/tools.ts`, QR behavior in
-`src/client/qr-code.ts`, and styling in `src/styles/tools.css`. The build copies the pinned `qrcode-generator`
-ES module, preserving its license header, into local assets; a page-scoped import map loads it without a CDN
-or runtime framework. Other pages do not load the QR module. Browser regressions decode downloaded images with
-`jsqr` to verify their contents.
+Page copy lives in `src/data/pages.json`; shared document labels are under `tools.documentEditor`. Markup
+lives in `scripts/tools.ts` and `scripts/document-tools.ts`, browser behavior in `src/client/qr-code.ts` and
+the `src/client/document-*.ts` / `json-format.ts` modules, and styling in `src/styles/tools.css` and
+`src/styles/document-tools.css`. The shared browser/server document-copy interface lives in
+`scripts/document-copy.d.ts`. The build copies the pinned `qrcode-generator` ES module, preserving its license
+header, into local assets; a page-scoped import map loads it without a CDN or runtime framework. Other pages
+do not load the QR module. Browser regressions decode downloaded images with `jsqr` to verify their contents.
+Document comparisons use `diff`; strict JSON parsing uses `jsonc-parser` without converting number tokens back
+through JavaScript numbers. Their license files are copied to the local vendor assets. No tool needs a
+backend, CDN, framework, or external API.
 
 To add a utility, add its unique lowercase hyphenated `slug`, card `name`, and `description` to `tools.json`;
 add its page copy to `pages.json` with corresponding types and validation; and register its renderer and

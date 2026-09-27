@@ -1,5 +1,14 @@
 import { escapeHtml } from "./site.ts";
-import type { QrCodePageCopy, Tool, ToolsPageCopy } from "./types.ts";
+import type { IndexPageCopy, QrCodePageCopy, Tool, ToolsPageCopy } from "./types.ts";
+
+export function renderToolHeader(copy: IndexPageCopy, backLabel: string, headingId: string): string {
+  return `<header class="page-intro tools-intro">
+    <a class="tools-back" href="/tools/"><span aria-hidden="true">&larr;</span> ${escapeHtml(backLabel)}</a>
+    <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
+    <h1 id="${escapeHtml(headingId)}">${escapeHtml(copy.heading)}</h1>
+    <p>${escapeHtml(copy.introduction)}</p>
+  </header>`;
+}
 
 export function renderTools(copy: ToolsPageCopy, tools: Tool[]): string {
   return `<header class="page-intro tools-intro">
@@ -20,12 +29,7 @@ export function renderTools(copy: ToolsPageCopy, tools: Tool[]): string {
 }
 
 export function renderQrCode(copy: QrCodePageCopy, backLabel: string): string {
-  return `<header class="page-intro tools-intro">
-    <a class="tools-back" href="/tools/"><span aria-hidden="true">&larr;</span> ${escapeHtml(backLabel)}</a>
-    <p class="eyebrow">${escapeHtml(copy.eyebrow)}</p>
-    <h1 id="qr-heading">${escapeHtml(copy.heading)}</h1>
-    <p>${escapeHtml(copy.introduction)}</p>
-  </header>
+  return `${renderToolHeader(copy, backLabel, "qr-heading")}
   <section class="qr-tool" aria-labelledby="qr-heading"
     data-empty-message="${escapeHtml(copy.emptyMessage)}"
     data-ready-message="${escapeHtml(copy.readyMessage)}"

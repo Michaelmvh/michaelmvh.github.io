@@ -51,6 +51,9 @@ test("tool registry validation rejects unsafe routes, duplicates, and missing co
     Object.assign(data, { tools: value });
     assert.throws(() => validateSiteData(data), error);
   }
+  const data = await readSiteData();
+  data.pages.tools.documentEditor.waitingMessage = "";
+  assert.throws(() => validateSiteData(data), /documentEditor.*waitingMessage.*required/);
 });
 
 test("news validation accepts precise calendar dates and rejects malformed records", async () => {

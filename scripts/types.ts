@@ -1,3 +1,6 @@
+import type { DocumentEditorCopy } from "./document-copy.js";
+export type { DocumentEditorCopy } from "./document-copy.js";
+
 /** One shared destination in primary navigation or the footer. */
 export interface LinkItem {
   /** Human-readable link text. */
@@ -154,6 +157,14 @@ export interface CvPageCopy extends PageCopy {
 
 export interface ToolsPageCopy extends IndexPageCopy {
   backLabel: string;
+  documentEditor: DocumentEditorCopy;
+}
+
+export interface DocumentToolPageCopy extends IndexPageCopy {
+  originalLabel: string;
+  revisedLabel: string;
+  inputHint: string;
+  optionLabel: string;
 }
 
 export interface Tool {
@@ -209,6 +220,8 @@ export interface Pages {
   styleBlueprint: PageCopy;
   tools: ToolsPageCopy;
   qrCode: QrCodePageCopy;
+  jsonFormatter: DocumentToolPageCopy;
+  textDiff: DocumentToolPageCopy;
 }
 
 /** Complete validated content model consumed by the static generator. */

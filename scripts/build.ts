@@ -2,8 +2,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { build as bundle } from "esbuild";
 import { renderNews } from "./news.ts";
 import { renderQrCode, renderTools } from "./tools.ts";
+import { renderDocumentTool } from "./document-tools.ts";
 import {
   generateResponsiveImages,
   imageVariantPath,
@@ -46,6 +48,7 @@ const stylesheetSources = [
   "pages.css",
   "components.css",
   "tools.css",
+  "document-tools.css",
   "themes/blueprint.css",
   "themes/scifi.css",
   "style-options.css",
@@ -90,6 +93,18 @@ const pages = [
 ];
 
 const toolDefinitions: Record<string, Pick<Page, "title" | "description" | "head" | "content">> = {
+  json: {
+    title: pageCopy.jsonFormatter.title,
+    description: pageCopy.jsonFormatter.description,
+    head: '<script type="module" src="/assets/js/document-tools.js"></script>',
+    content: renderDocumentTool(pageCopy.jsonFormatter, pageCopy.tools, "json"),
+  },
+  "text-diff": {
+    title: pageCopy.textDiff.title,
+    description: pageCopy.textDiff.description,
+    head: '<script type="module" src="/assets/js/document-tools.js"></script>',
+    content: renderDocumentTool(pageCopy.textDiff, pageCopy.tools, "text"),
+  },
   "qr-code": {
     title: pageCopy.qrCode.title,
     description: pageCopy.qrCode.description,
@@ -209,6 +224,18 @@ await promisify(execFile)(
   [path.join(root, "node_modules", "typescript", "bin", "tsc"), "-p", "tsconfig.client.json"],
   { cwd: root },
 );
+await bundle({
+  entryPoints: [path.join(source, "client", "document-tools.ts")],
+  outdir: path.join(output, "assets", "js"),
+  chunkNames: "chunks/[name]-[hash]",
+  bundle: true,
+  splitting: true,
+  format: "esm",
+  platform: "browser",
+  target: "es2023",
+  minify: true,
+  legalComments: "linked",
+});
 const stylesheet = await Promise.all(
   stylesheetSources.map((file) => fs.readFile(path.join(source, "styles", file), "utf8")),
 );
@@ -218,6 +245,15 @@ await fs.copyFile(
   path.join(root, "node_modules", "qrcode-generator", "dist", "qrcode.mjs"),
   path.join(vendorOutput, "qrcode.mjs"),
 );
+for (const [packageName, license] of [
+  ["diff", "LICENSE"],
+  ["jsonc-parser", "LICENSE.md"],
+] as const) {
+  await fs.copyFile(
+    path.join(root, "node_modules", packageName, license),
+    path.join(vendorOutput, `${packageName}-LICENSE.txt`),
+  );
+}
 const cssOutput = path.join(output, "assets", "css");
 await fs.mkdir(cssOutput, { recursive: true });
 await fs.writeFile(path.join(cssOutput, "site.css"), `${stylesheet.join("\n")}\n`);

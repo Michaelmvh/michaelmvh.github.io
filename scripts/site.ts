@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Pages, SiteData } from "./types.ts";
+import type { DocumentEditorCopy, Pages, SiteData } from "./types.ts";
 
 export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const source = path.join(root, "src");
@@ -92,6 +92,17 @@ export function validateSiteData(data: SiteData): void {
   });
 
   type PageName = Exclude<keyof Pages, "_instructions">;
+  const documentPageFields = [
+    "title",
+    "description",
+    "eyebrow",
+    "heading",
+    "introduction",
+    "originalLabel",
+    "revisedLabel",
+    "inputHint",
+    "optionLabel",
+  ];
   const pageFields = {
     home: ["title", "description", "introduction", "newsHeading"],
     publications: ["title", "description", "eyebrow", "heading", "introduction"],
@@ -121,6 +132,8 @@ export function validateSiteData(data: SiteData): void {
     styleOptions: ["title", "description"],
     styleBlueprint: ["title", "description"],
     tools: ["title", "description", "eyebrow", "heading", "introduction", "backLabel"],
+    jsonFormatter: documentPageFields,
+    textDiff: documentPageFields,
     qrCode: [
       "title",
       "description",
@@ -172,6 +185,43 @@ export function validateSiteData(data: SiteData): void {
       if (optionalPageFields.has(`${pageName}.${field}`)) string(page[field], location);
       else requiredString(page, field, `pages.json: "${pageName}"`);
     }
+  }
+
+  const documentEditor = record(
+    record(pages.tools, "pages.json: tools").documentEditor,
+    "pages.json: tools.documentEditor",
+  );
+  const editorFields = {
+    clearLabel: true,
+    formatLabel: true,
+    minifyLabel: true,
+    copyLabel: true,
+    downloadLabel: true,
+    formattedHeading: true,
+    diffHeading: true,
+    addedLabel: true,
+    removedLabel: true,
+    unchangedLabel: true,
+    noNewlineLabel: true,
+    noScriptMessage: true,
+    readyMessage: true,
+    editedMessage: true,
+    waitingMessage: true,
+    loadErrorMessage: true,
+    errorMessage: true,
+    syntaxMessage: true,
+    duplicateMessage: true,
+    depthMessage: true,
+    limitMessage: true,
+    comparisonLimitMessage: true,
+    formattedMessage: true,
+    identicalMessage: true,
+    summaryMessage: true,
+    copiedMessage: true,
+    copyErrorMessage: true,
+  } satisfies Record<keyof DocumentEditorCopy, true>;
+  for (const field of Object.keys(editorFields)) {
+    requiredString(documentEditor, field, "pages.json: tools.documentEditor");
   }
 
   const tools = array(data.tools, "tools.json");

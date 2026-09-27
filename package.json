@@ -21,15 +21,18 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
-    "@playwright/test": "1.62.1",
-    "@types/node": "24.13.3",
-    "html-validate": "11.6.2",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.3",
+    "esbuild": "0.28.2",
+    "html-validate": "11.16.1",
     "jsqr": "1.4.0",
-    "prettier": "3.9.6",
-    "sharp": "0.35.3",
+    "prettier": "3.9.9",
+    "sharp": "0.35.5",
     "typescript": "7.0.2"
   },
   "dependencies": {
+    "diff": "9.0.0",
+    "jsonc-parser": "3.3.1",
     "qrcode-generator": "2.0.4"
   }
 }
