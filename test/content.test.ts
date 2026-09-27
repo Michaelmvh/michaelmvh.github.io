@@ -38,6 +38,21 @@ test("authored news records pass date and content validation", async () => {
   validateSiteData(await readSiteData());
 });
 
+test("tool registry validation rejects unsafe routes, duplicates, and missing copy", async () => {
+  const tool = { slug: "qr-code", name: "QR code generator", description: "Generate a code." };
+  for (const [value, error] of [
+    [null, /tools.json must be an array/],
+    [[tool, tool], /duplicate id/],
+    [[{ ...tool, slug: "../outside" }], /slug must use lowercase/],
+    [[{ ...tool, name: "" }], /name.*required/],
+    [[{ ...tool, description: 1 }], /description.*must be a string/],
+  ] as const) {
+    const data = await readSiteData();
+    Object.assign(data, { tools: value });
+    assert.throws(() => validateSiteData(data), error);
+  }
+});
+
 test("news validation accepts precise calendar dates and rejects malformed records", async () => {
   const entry = { id: "milestone", date: "2026-09", text: "A recent achievement." };
   const invalidCollections = [
@@ -563,5 +578,6 @@ async function readSiteData(): Promise<SiteData> {
     news: await readJson<NewsEntry[]>("data/news.json"),
     baking: await readJson<Bake[]>("data/baking.json"),
     other: await readJson<OtherSection[]>("data/other.json"),
+    tools: await readJson<SiteData["tools"]>("data/tools.json"),
   };
 }

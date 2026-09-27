@@ -9,6 +9,7 @@ const data: SiteData = {
   news: await readJson<NewsEntry[]>("data/news.json"),
   baking: await readJson<Bake[]>("data/baking.json"),
   other: await readJson<OtherSection[]>("data/other.json"),
+  tools: await readJson<SiteData["tools"]>("data/tools.json"),
 };
 
 validateSiteData(data);

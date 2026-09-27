@@ -58,6 +58,18 @@
     display: flex;
   }
 
+  html:not(.js) .site-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-s);
+    padding-block: var(--space-s);
+  }
+
+  html:not(.js) .site-nav {
+    position: static;
+    box-shadow: none;
+  }
+
   .site-nav a {
     padding: 0.5rem;
   }

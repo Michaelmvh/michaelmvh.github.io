@@ -82,5 +82,36 @@
   "styleBlueprint": {
     "title": "Biotech Blueprint homepage",
     "description": "Private homepage design exploration."
+  },
+  "tools": {
+    "title": "Tools",
+    "description": "Small browser-based utilities for everyday tasks.",
+    "eyebrow": "Personal utilities",
+    "heading": "Tools",
+    "introduction": "A few useful things, kept close at hand. Bookmark this page to find it again.",
+    "backLabel": "All tools"
+  },
+  "qrCode": {
+    "title": "QR code generator",
+    "description": "Generate QR codes in your browser and download them as PNG or SVG.",
+    "eyebrow": "Personal utilities",
+    "heading": "QR code generator",
+    "introduction": "Turn a link or some text into a QR code. Everything is generated in your browser; your input is not uploaded or saved.",
+    "inputLabel": "Text or URL",
+    "inputHint": "Use a full URL, including https://, for a website. Up to 2,000 UTF-8 bytes; spaces and line breaks are preserved.",
+    "placeholder": "https://example.com",
+    "previewLabel": "Generated QR code",
+    "emptyPreview": "Your QR code will appear here.",
+    "pngLabel": "Download PNG",
+    "svgLabel": "Download SVG",
+    "clearLabel": "Clear",
+    "downloadHint": "Black on white, with a scan-safe border. PNG for sharing; SVG for printing at any size.",
+    "loadingMessage": "Loading the QR generator...",
+    "emptyMessage": "Enter text or a URL to get started.",
+    "readyMessage": "QR code ready to download.",
+    "tooLongMessage": "This text is too long. Shorten it to 2,000 UTF-8 bytes or fewer.",
+    "errorMessage": "The QR code could not be generated. Try changing the text or reloading the page.",
+    "loadErrorMessage": "The QR generator could not load. Reload the page to try again.",
+    "noScriptMessage": "Enable JavaScript to generate QR codes. Your input stays in your browser."
   }
 }

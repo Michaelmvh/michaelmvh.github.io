@@ -1,0 +1,7 @@
+[
+  {
+    "slug": "qr-code",
+    "name": "QR code generator",
+    "description": "Turn text or a link into a QR code, then download it as PNG or SVG."
+  }
+]

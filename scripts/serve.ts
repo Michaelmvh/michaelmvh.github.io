@@ -13,6 +13,7 @@ const mimeTypes: Record<string, string> = {
   ".jpeg": "image/jpeg",
   ".jpg": "image/jpeg",
   ".js": "text/javascript; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".pdf": "application/pdf",
   ".png": "image/png",

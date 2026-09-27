@@ -152,6 +152,35 @@ export interface CvPageCopy extends PageCopy {
   linkLabel: string;
 }
 
+export interface ToolsPageCopy extends IndexPageCopy {
+  backLabel: string;
+}
+
+export interface Tool {
+  slug: string;
+  name: string;
+  description: string;
+}
+
+export interface QrCodePageCopy extends IndexPageCopy {
+  inputLabel: string;
+  inputHint: string;
+  placeholder: string;
+  previewLabel: string;
+  emptyPreview: string;
+  pngLabel: string;
+  svgLabel: string;
+  clearLabel: string;
+  downloadHint: string;
+  loadingMessage: string;
+  emptyMessage: string;
+  readyMessage: string;
+  tooLongMessage: string;
+  errorMessage: string;
+  loadErrorMessage: string;
+  noScriptMessage: string;
+}
+
 export interface NotFoundPageCopy extends PageCopy {
   eyebrow: string;
   heading: string;
@@ -178,6 +207,8 @@ export interface Pages {
   notFound: NotFoundPageCopy;
   styleOptions: PageCopy;
   styleBlueprint: PageCopy;
+  tools: ToolsPageCopy;
+  qrCode: QrCodePageCopy;
 }
 
 /** Complete validated content model consumed by the static generator. */
@@ -189,6 +220,7 @@ export interface SiteData {
   news: NewsEntry[];
   baking: Bake[];
   other: OtherSection[];
+  tools: Tool[];
 }
 
 /** One fully assembled page passed to the shared document layout. */
@@ -203,4 +235,6 @@ export interface Page {
   canonicalPath?: string;
   /** Trusted page-specific head markup such as noindex metadata. */
   head?: string;
+  /** Whether production analytics are allowed; defaults to true. */
+  analytics?: boolean;
 }

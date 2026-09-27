@@ -120,6 +120,30 @@ export function validateSiteData(data: SiteData): void {
     notFound: ["title", "description", "eyebrow", "heading", "message", "linkLabel"],
     styleOptions: ["title", "description"],
     styleBlueprint: ["title", "description"],
+    tools: ["title", "description", "eyebrow", "heading", "introduction", "backLabel"],
+    qrCode: [
+      "title",
+      "description",
+      "eyebrow",
+      "heading",
+      "introduction",
+      "inputLabel",
+      "inputHint",
+      "placeholder",
+      "previewLabel",
+      "emptyPreview",
+      "pngLabel",
+      "svgLabel",
+      "clearLabel",
+      "downloadHint",
+      "loadingMessage",
+      "emptyMessage",
+      "readyMessage",
+      "tooLongMessage",
+      "errorMessage",
+      "loadErrorMessage",
+      "noScriptMessage",
+    ],
   } satisfies Record<PageName, readonly string[]>;
   const optionalPageFields = new Set([
     "home.description",
@@ -149,6 +173,14 @@ export function validateSiteData(data: SiteData): void {
       else requiredString(page, field, `pages.json: "${pageName}"`);
     }
   }
+
+  const tools = array(data.tools, "tools.json");
+  validateUniqueCollection(tools, "tools.json", "slug", (entry, index) => {
+    const location = `tools.json[${index}]`;
+    safeIdentifier(requiredString(entry, "slug", location), `${location}.slug`);
+    requiredString(entry, "name", location);
+    requiredString(entry, "description", location);
+  });
 
   const projects = array(data.projects, "projects.json");
   validateUniqueCollection(projects, "projects.json", "slug", (entry, index) => {

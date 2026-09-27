@@ -3,10 +3,11 @@ import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import type { AxeResults } from "axe-core";
 import type { Page } from "@playwright/test";
-import type { Bake, Project } from "../scripts/types.ts";
+import type { Bake, Project, Tool } from "../scripts/types.ts";
 
 const projects = JSON.parse(await fs.readFile("src/data/projects.json", "utf8")) as Project[];
 const baking = JSON.parse(await fs.readFile("src/data/baking.json", "utf8")) as Bake[];
+const tools = JSON.parse(await fs.readFile("src/data/tools.json", "utf8")) as Tool[];
 const firstProject = projects[0];
 const firstBake = baking[0];
 if (!firstProject || !firstBake) throw new Error("Accessibility tests require a project and a bake");
@@ -17,6 +18,8 @@ const sharedLayoutRoutes = [
     "/publications/",
     "/baking/",
     "/other/",
+    "/tools/",
+    ...tools.map((tool) => `/tools/${tool.slug}/`),
     `/bakes/${firstBake.slug}/`,
     "/projects/",
     `/projects/${firstProject.slug}/`,

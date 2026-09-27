@@ -71,6 +71,7 @@ Site-wide settings and repeated content live in `src/data/`:
 - `news.json`: dated, one-line achievements for the homepage Recent News section
 - `baking.json`: baking cards, images, descriptions, and recipe links
 - `other.json`: ordered image-collection sections for the Other page
+- `tools.json`: ordered tool-directory cards and slugs for unlisted utility pages
 
 Long-form content lives in `src/content/`. Home is an HTML fragment. Each project has an HTML fragment under
 `src/content/projects/` whose filename matches its `slug` in `projects.json`.
@@ -98,6 +99,32 @@ elaborate reference page under `/style-options/` remains available for private r
 
 All required JSON fields are checked by `npm run validate`. Text from JSON is escaped during rendering;
 trusted authored markup belongs in an HTML fragment.
+
+### Unlisted tools
+
+`/tools/` is a directory generated from the ordered registry in `src/data/tools.json`. Each card links to a
+separate, bookmarkable page with an "All tools" link back to the directory. Navigation works without
+JavaScript.
+
+`/tools/qr-code/` contains a browser-only QR code generator with a live canvas preview and PNG/SVG downloads.
+It preserves input exactly (including Unicode, spaces, and line breaks), accepts up to 2,000 UTF-8 bytes, and
+uses medium error correction with a four-module white border. Input is not uploaded or persisted, and
+analytics are omitted from this page.
+
+The directory and all tool pages are excluded from main navigation and the sitemap and include
+`noindex, nofollow`. They remain publicly accessible by URL: this is discovery control, not authentication.
+Crawling is allowed so search engines can read the noindex directive.
+
+Page copy lives in `src/data/pages.json`, markup in `scripts/tools.ts`, QR behavior in
+`src/client/qr-code.ts`, and styling in `src/styles/tools.css`. The build copies the pinned `qrcode-generator`
+ES module, preserving its license header, into local assets; a page-scoped import map loads it without a CDN
+or runtime framework. Other pages do not load the QR module. Browser regressions decode downloaded images with
+`jsqr` to verify their contents.
+
+To add a utility, add its unique lowercase hyphenated `slug`, card `name`, and `description` to `tools.json`;
+add its page copy to `pages.json` with corresponding types and validation; and register its renderer and
+page-specific scripts in `toolDefinitions` in `scripts/build.ts`. The build derives `/tools/<slug>/` routes,
+applies noindex and disables analytics for every tool, and rejects registry entries without an implementation.
 
 ### Add a news entry
 

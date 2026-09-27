@@ -3,6 +3,7 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { renderNews } from "./news.ts";
+import { renderQrCode, renderTools } from "./tools.ts";
 import {
   generateResponsiveImages,
   imageVariantPath,
@@ -32,10 +33,11 @@ const data: SiteData = {
   news: await readJson<SiteData["news"]>("data/news.json"),
   baking: await readJson<Bake[]>("data/baking.json"),
   other: await readJson<OtherSection[]>("data/other.json"),
+  tools: await readJson<SiteData["tools"]>("data/tools.json"),
 };
 validateSiteData(data);
 
-const { site, pages: pageCopy, projects, publications, baking, other } = data;
+const { site, pages: pageCopy, projects, publications, baking, other, tools } = data;
 const preparedOther = await prepareOtherSections(source, other);
 const preparedBaking = await prepareImages(source, baking);
 const stylesheetSources = [
@@ -43,6 +45,7 @@ const stylesheetSources = [
   "base.css",
   "pages.css",
   "components.css",
+  "tools.css",
   "themes/blueprint.css",
   "themes/scifi.css",
   "style-options.css",
@@ -86,7 +89,38 @@ const pages = [
   },
 ];
 
-const styleOptions = [
+const toolDefinitions: Record<string, Pick<Page, "title" | "description" | "head" | "content">> = {
+  "qr-code": {
+    title: pageCopy.qrCode.title,
+    description: pageCopy.qrCode.description,
+    head: `<script type="importmap">{"imports":{"qrcode-generator":"/assets/js/vendor/qrcode.mjs"}}</script>
+    <script type="module" src="/assets/js/qr-code.js"></script>`,
+    content: renderQrCode(pageCopy.qrCode, pageCopy.tools.backLabel),
+  },
+};
+const toolPages = tools.map((tool) => {
+  const definition = Object.hasOwn(toolDefinitions, tool.slug) ? toolDefinitions[tool.slug] : undefined;
+  assert(definition, `No page implementation for tools.json slug "${tool.slug}"`);
+  return {
+    ...definition,
+    route: `tools/${tool.slug}`,
+    id: `tool-${tool.slug}`,
+    head: `<meta name="robots" content="noindex, nofollow">${definition.head ? `\n    ${definition.head}` : ""}`,
+    analytics: false,
+  };
+});
+
+const unlistedPages = [
+  {
+    route: "tools",
+    id: "tools",
+    title: pageCopy.tools.title,
+    description: pageCopy.tools.description,
+    head: '<meta name="robots" content="noindex, nofollow">',
+    analytics: false,
+    content: renderTools(pageCopy.tools, tools),
+  },
+  ...toolPages,
   {
     route: "style-options",
     id: "style-options",
@@ -108,7 +142,7 @@ const styleOptions = [
 await fs.rm(output, { recursive: true, force: true });
 await fs.mkdir(output, { recursive: true });
 
-for (const page of [...pages, ...styleOptions]) {
+for (const page of [...pages, ...unlistedPages]) {
   await writePage(page.route, layout(page));
 }
 
@@ -178,6 +212,12 @@ await promisify(execFile)(
 const stylesheet = await Promise.all(
   stylesheetSources.map((file) => fs.readFile(path.join(source, "styles", file), "utf8")),
 );
+const vendorOutput = path.join(output, "assets", "js", "vendor");
+await fs.mkdir(vendorOutput, { recursive: true });
+await fs.copyFile(
+  path.join(root, "node_modules", "qrcode-generator", "dist", "qrcode.mjs"),
+  path.join(vendorOutput, "qrcode.mjs"),
+);
 const cssOutput = path.join(output, "assets", "css");
 await fs.mkdir(cssOutput, { recursive: true });
 await fs.writeFile(path.join(cssOutput, "site.css"), `${stylesheet.join("\n")}\n`);
@@ -196,7 +236,7 @@ await fs.writeFile(
 );
 
 console.log(
-  `Built ${pages.length + styleOptions.length + projects.length + baking.length + 2} pages in dist/.`,
+  `Built ${pages.length + unlistedPages.length + projects.length + baking.length + 2} pages in dist/.`,
 );
 
 /**
@@ -266,7 +306,7 @@ function layout(page: Page): string {
       }
     </script>
     <link rel="stylesheet" href="/assets/css/site.css">
-${page.head ? `    ${page.head}\n` : ""}    ${analytics()}
+${page.head ? `    ${page.head}\n` : ""}${page.analytics === false ? "" : `    ${analytics()}`}
     <script type="application/ld+json">${personSchema()}</script>
     <script src="/assets/js/site.js" defer></script>
   </head>
