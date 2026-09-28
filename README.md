@@ -67,9 +67,10 @@ Generated files are written to `dist/` and are not committed.
 
 The build renders the font-independent SVG artwork in `src/assets/images/site-touch-icon.svg` and
 `tools-touch-icon.svg` into opaque 180x180 PNGs. Public pages declare `/apple-touch-icon.png` (the MVH
-monogram); the tools directory and every tool declare `/tools/apple-touch-icon.png` (the utility tiles). The
-existing scientist SVG favicon remains unchanged. These are bookmark/Home Screen icons, not a PWA or an
-offline cache. iOS may cache an existing bookmark's icon until the bookmark is recreated.
+monogram); the tools directory and every tool declare `/tools/apple-touch-icon.png` (a dark wrench pointing
+upper-right on the homepage's off-white background). The existing scientist SVG favicon remains unchanged.
+These are bookmark/Home Screen icons, not a PWA or an offline cache. iOS may cache an existing bookmark's icon
+until the bookmark is recreated.
 
 The keyboard skip link is clipped in place until focused rather than translated above the viewport. This
 avoids placing a dark fixed layer behind iPhone Safari's translucent status bar when scrolling, including when
