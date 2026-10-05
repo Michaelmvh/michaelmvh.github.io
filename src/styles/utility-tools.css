@@ -1,0 +1,96 @@
+#utility-status,
+#utility-feedback {
+  color: var(--ink-soft);
+  font-size: var(--step--1);
+}
+
+.utility-options {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-s);
+  margin-block: var(--space-s);
+}
+
+.utility-options select {
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--ink-soft);
+  border-radius: 0.4rem;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+}
+
+.url-components {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-s);
+}
+
+.url-components dt {
+  font-weight: 600;
+}
+
+.url-components dd {
+  min-height: 1.5em;
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.url-parameters {
+  padding: 0;
+  list-style: none;
+}
+
+.url-parameter {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--space-s);
+  padding-block: var(--space-s);
+  border-bottom: 1px solid var(--line);
+}
+
+.url-parameter label {
+  min-width: 0;
+  font-weight: 600;
+}
+
+.url-parameter textarea {
+  margin-top: var(--space-xs);
+}
+
+.url-parameter-select {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.url-parameter-select input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--moss-dark);
+}
+
+.url-tracking {
+  grid-column: 2 / -1;
+  color: var(--moss-dark);
+  font-size: var(--step--1);
+}
+
+@media (max-width: 800px) {
+  .url-components {
+    grid-template-columns: 1fr;
+  }
+
+  .url-parameter {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .url-parameter > label:not(.url-parameter-select),
+  .url-tracking {
+    grid-column: 2;
+  }
+}

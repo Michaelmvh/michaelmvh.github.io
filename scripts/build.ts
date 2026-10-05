@@ -6,6 +6,7 @@ import { build as bundle } from "esbuild";
 import { renderNews } from "./news.ts";
 import { renderQrCode, renderTools } from "./tools.ts";
 import { renderDocumentTool } from "./document-tools.ts";
+import { renderUrlInspector, renderTextUtilities } from "./utility-tools.ts";
 import { buildMermaidEditor, renderMermaid } from "./mermaid.ts";
 import {
   generateResponsiveImages,
@@ -51,6 +52,7 @@ const stylesheetSources = [
   "components.css",
   "tools.css",
   "document-tools.css",
+  "utility-tools.css",
   "mermaid-tool.css",
   "themes/blueprint.css",
   "themes/scifi.css",
@@ -96,6 +98,18 @@ const pages = [
 ];
 
 const toolDefinitions: Record<string, Pick<Page, "title" | "description" | "head" | "content">> = {
+  "url-inspector": {
+    title: pageCopy.urlInspector.title,
+    description: pageCopy.urlInspector.description,
+    head: '<script type="module" src="/assets/js/url-inspector.js"></script>',
+    content: renderUrlInspector(pageCopy.urlInspector, pageCopy.tools.backLabel),
+  },
+  "text-utilities": {
+    title: pageCopy.textUtilities.title,
+    description: pageCopy.textUtilities.description,
+    head: '<script type="module" src="/assets/js/text-utilities.js"></script>',
+    content: renderTextUtilities(pageCopy.textUtilities, pageCopy.tools.backLabel),
+  },
   mermaid: {
     title: pageCopy.mermaid.title,
     description: pageCopy.mermaid.description,

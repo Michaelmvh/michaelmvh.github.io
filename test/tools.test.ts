@@ -12,7 +12,7 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
   const index = await fs.readFile(path.join(output, "tools/index.html"), "utf8");
   assert.doesNotMatch(
     index,
-    /qr-code.js|qrcode-generator|document-tools.js|mermaid-tool.js|<iframe|<textarea/,
+    /qr-code.js|qrcode-generator|document-tools.js|mermaid-tool.js|url-inspector.js|text-utilities.js|<iframe|<textarea/,
   );
   for (const tool of tools) {
     assert.ok(index.includes(`href="/tools/${tool.slug}/"`));
@@ -50,7 +50,7 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
     assert.doesNotMatch(publicPage, /href="\/tools(?:\/|")/, `${file} links to unlisted tools`);
     assert.doesNotMatch(
       publicPage,
-      /assets\/js\/(?:tools|qr-code|document-tools|mermaid-tool).js|qrcode-generator/,
+      /assets\/js\/(?:tools|qr-code|document-tools|mermaid-tool|url-inspector|text-utilities).js|qrcode-generator/,
     );
   }
 });

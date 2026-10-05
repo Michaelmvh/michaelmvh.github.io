@@ -1,12 +1,7 @@
 import { checkDocumentLimits, DocumentInputError } from "./document-limits.ts";
+import { message, required } from "./utility-common.ts";
 import type { DocumentEditorCopy } from "../../scripts/document-copy.js";
 import type { ComparedLine } from "./document-diff.ts";
-
-function required<T extends HTMLElement>(selector: string, type: { new (): T }): T {
-  const element = document.querySelector(selector);
-  if (!(element instanceof type)) throw new Error(`Missing tool element: ${selector}`);
-  return element;
-}
 
 const tool = required(".document-tool", HTMLElement);
 const controls = required("#document-controls", HTMLFieldSetElement);
@@ -32,10 +27,6 @@ let downloadUrl: string | undefined;
 let revision = 0;
 let comparisonTimer: ReturnType<typeof setTimeout> | undefined;
 let composing = false;
-
-function message(template: string, values: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (token: string, key: string) => String(values[key] ?? token));
-}
 
 function clearErrors(): void {
   original.removeAttribute("aria-invalid");

@@ -219,6 +219,38 @@ add its page copy to `pages.json` with corresponding types and validation; and r
 page-specific scripts in `toolDefinitions` in `scripts/build.ts`. The build derives `/tools/<slug>/` routes,
 applies noindex and disables analytics for every tool, and rejects registry entries without an implementation.
 
+`/tools/url-inspector/` breaks down absolute HTTP(S) URLs and exposes ordered, decoded query parameters. It
+never navigates to or requests the URL. Editing names/values or adding entries updates a separate output;
+duplicate names, blank names, and multiline decoded values are supported. Original input is not overwritten.
+Untouched query segments are taken directly from the trimmed input, preserving literal characters (including
+apostrophes), raw encoding, ordering, bare flags, and separators. Changed entries use `encodeURIComponent` and
+`name=value` syntax. Browser URL normalization still applies to the host/path; outer whitespace is trimmed,
+malformed query encoding is rejected, and credentials are retained with a visible warning. URL edits can
+invalidate signatures.
+
+Tracking detection recognizes `utm_*`, `gclid`, `dclid`, `fbclid`, `msclkid`, `mc_cid`, `mc_eid`, `igshid`,
+`_ga`, `_gl`, `yclid`, and `ttclid`, case-insensitively. Selection is explicit and removal is a separate
+action; generic keys such as `ref` and `source` are not automatically treated as trackers. Removing every
+parameter also removes the query delimiter, preserving the fragment. Inputs and encoded outputs are limited to
+16,384 UTF-16 code units and 200 parameters.
+
+`/tools/text-utilities/` applies live, composable transformations in this order: Unicode case conversion,
+per-line trimming, removal of whitespace-only lines, case-sensitive deduplication, then ascending/descending
+Unicode code-unit sorting (not locale-aware or numeric sorting). Deduplication keeps the first occurrence.
+Line endings normalize to LF; a final newline is retained unless no lines remain. Input remains unchanged.
+Case options include lowercase, uppercase, and Capitalize Each Word, which uppercases each word's first letter
+and lowercases the remainder using Unicode word boundaries, preserving punctuation and spacing. Counts report
+Unicode graphemes, word-like segments from `Intl.Segmenter`, and logical lines; a terminal newline does not
+add an extra counted line. Input and output share the document tools' 100,000-code-unit and
+2,000-newline-separated-line limits, including case conversions that expand output.
+
+Text transformations update after a 200 ms pause, wait for IME composition to finish, and disable exports
+while pending. Clear cancels pending work but preserves chosen options. Both utilities provide plain-text
+downloads and clipboard copying with manual-copy guidance on failure. They keep data only in page memory.
+Their page-scoped modules share `src/client/utility-common.ts` for output/clipboard handling; pure logic lives
+in `url-inspector-model.ts` and `text-utilities-model.ts`. Markup is in `scripts/utility-tools.ts`, copy
+contracts in `scripts/utility-copy.d.ts`, and labels in `pages.json`. No additional dependencies are needed.
+
 ### Add a news entry
 
 Add a record to `src/data/news.json` with a unique lowercase hyphenated `id`, a `date`, and plain-text `text`.

@@ -1,4 +1,5 @@
 import type { DocumentEditorCopy } from "./document-copy.js";
+import type { UrlInspectorCopy, TextUtilitiesCopy } from "./utility-copy.js";
 export type { DocumentEditorCopy } from "./document-copy.js";
 
 /** One shared destination in primary navigation or the footer. */
@@ -259,6 +260,8 @@ export interface Pages {
   qrCode: QrCodePageCopy;
   jsonFormatter: DocumentToolPageCopy;
   textDiff: DocumentToolPageCopy;
+  urlInspector: IndexPageCopy & UrlInspectorCopy;
+  textUtilities: IndexPageCopy & TextUtilitiesCopy;
 }
 
 /** Complete validated content model consumed by the static generator. */

@@ -18,5 +18,15 @@
     "slug": "mermaid",
     "name": "Mermaid diagram editor",
     "description": "Build diagrams visually with drag-and-drop and live, editable Mermaid code."
+  },
+  {
+    "slug": "url-inspector",
+    "name": "URL inspector",
+    "description": "Inspect a URL, edit decoded query parameters, and selectively remove trackers."
+  },
+  {
+    "slug": "text-utilities",
+    "name": "Text utilities",
+    "description": "Change case, tidy whitespace, sort and deduplicate lines, and count text."
   }
 ]
