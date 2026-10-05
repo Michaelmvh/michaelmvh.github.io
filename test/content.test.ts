@@ -38,6 +38,21 @@ test("authored news records pass date and content validation", async () => {
   validateSiteData(await readSiteData());
 });
 
+test("shared lightbox messages are required", async () => {
+  for (const field of [
+    "heading",
+    "openLabel",
+    "closeLabel",
+    "loadingMessage",
+    "errorMessage",
+    "retryLabel",
+  ]) {
+    const data = await readSiteData();
+    Object.assign(data.pages.lightbox, { [field]: "" });
+    assert.throws(() => validateSiteData(data), new RegExp(`lightbox.*${field}.*required`));
+  }
+});
+
 test("iOS bookmark icons are opaque PNGs and tool pages use their own icon", async () => {
   const siteIcon = await fs.readFile(path.join(output, "apple-touch-icon.png"));
   const toolsIcon = await fs.readFile(path.join(output, "tools/apple-touch-icon.png"));

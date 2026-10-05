@@ -622,12 +622,13 @@ function galleryImageLink(
     largeImage,
   )}" data-lightbox-image data-lightbox-src="${escapeHtml(
     largeImage,
-  )}" data-lightbox-alt="${escapeHtml(image.alt)}"${caption}>${renderImage(image, true, sizes, loading)}<span class="sr-only">Open larger view</span></a>`;
+  )}" data-lightbox-alt="${escapeHtml(image.alt)}"${caption}>${renderImage(image, true, sizes, loading)}<span class="sr-only">${escapeHtml(pageCopy.lightbox.openLabel)}</span></a>`;
 }
 
 /** Renders the single modal image viewer shared by galleries on a page. */
 function renderLightbox(): string {
-  return `<dialog class="lightbox" aria-labelledby="lightbox-title"><section class="lightbox-panel" aria-labelledby="lightbox-title" tabindex="0"><h2 id="lightbox-title" class="sr-only">Image preview</h2><button class="lightbox-close" type="button" aria-label="Close image preview" autofocus>×</button><figure><img class="lightbox-image" src="/assets/images/favicon.svg" alt="" hidden><figcaption class="lightbox-caption" hidden></figcaption></figure></section></dialog>`;
+  const copy = pageCopy.lightbox;
+  return `<dialog class="lightbox" aria-labelledby="lightbox-title" data-loading-message="${escapeHtml(copy.loadingMessage)}" data-error-message="${escapeHtml(copy.errorMessage)}"><section class="lightbox-panel" aria-labelledby="lightbox-title" tabindex="0"><h2 id="lightbox-title" class="sr-only">${escapeHtml(copy.heading)}</h2><button class="lightbox-close" type="button" aria-label="${escapeHtml(copy.closeLabel)}" autofocus>×</button><figure><div class="lightbox-media"><div class="lightbox-feedback"><p class="lightbox-status" role="status"></p><button class="lightbox-retry" type="button" hidden>${escapeHtml(copy.retryLabel)}</button></div></div><figcaption class="lightbox-caption" hidden></figcaption></figure></section></dialog>`;
 }
 
 /**

@@ -237,6 +237,14 @@ export interface PageInstructions {
 /** All centralized page copy and its embedded editing instructions. */
 export interface Pages {
   _instructions: PageInstructions;
+  lightbox: {
+    heading: string;
+    openLabel: string;
+    closeLabel: string;
+    loadingMessage: string;
+    errorMessage: string;
+    retryLabel: string;
+  };
   home: HomePageCopy;
   publications: IndexPageCopy;
   projects: ProjectPageCopy;

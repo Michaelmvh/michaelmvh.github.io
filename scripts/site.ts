@@ -104,6 +104,7 @@ export function validateSiteData(data: SiteData): void {
     "optionLabel",
   ];
   const pageFields = {
+    lightbox: ["heading", "openLabel", "closeLabel", "loadingMessage", "errorMessage", "retryLabel"],
     home: ["title", "description", "introduction", "newsHeading"],
     publications: ["title", "description", "eyebrow", "heading", "introduction"],
     projects: [

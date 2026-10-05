@@ -285,7 +285,10 @@ for each source image. Replacing an image later requires replacing the source fi
 
 The shared lightbox keeps its close control outside the image area and scrolls vertically when an image and
 caption exceed the available viewport height. Keyboard, touch, and wheel scrolling can reach long captions
-without scrolling the background page; closing restores focus to the image link.
+without scrolling the background page; closing restores focus to the image link. It immediately previews the
+selected gallery thumbnail at the photo's reserved aspect ratio, then replaces it only after the larger image
+has loaded and decoded. Slow loads show a delayed status; failures retain the preview and offer a retry.
+Shared viewer labels and messages live under `lightbox` in `pages.json`.
 
 #### Prepare a photographed transit card
 

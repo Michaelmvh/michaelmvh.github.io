@@ -276,8 +276,7 @@ test("Other page lightbox works for every gallery section", async ({ page }) => 
 
     await lightbox.locator(".lightbox-close").click();
     await expect(lightbox).not.toBeVisible();
-    await expect(lightboxImage).toHaveAttribute("src", "/assets/images/favicon.svg");
-    await expect(lightboxImage).toBeHidden();
+    await expect(lightboxImage).toHaveCount(0);
     await expect(trigger).toBeFocused();
   }
 });

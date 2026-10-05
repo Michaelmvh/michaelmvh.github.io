@@ -56,32 +56,88 @@ document.querySelectorAll<HTMLButtonElement>(".citation-button").forEach((button
 });
 
 const lightbox = document.querySelector<HTMLDialogElement>(".lightbox");
-const lightboxImage = lightbox?.querySelector<HTMLImageElement>(".lightbox-image");
+const lightboxMedia = lightbox?.querySelector<HTMLElement>(".lightbox-media");
 const lightboxCaption = lightbox?.querySelector<HTMLElement>(".lightbox-caption");
 const lightboxClose = lightbox?.querySelector<HTMLButtonElement>(".lightbox-close");
+const lightboxStatus = lightbox?.querySelector<HTMLElement>(".lightbox-status");
+const lightboxRetry = lightbox?.querySelector<HTMLButtonElement>(".lightbox-retry");
+let lightboxImage: HTMLImageElement | null = null;
 let lightboxTrigger: HTMLAnchorElement | null = null;
+let lightboxAttempt = 0;
+let lightboxLoadingTimer: number | undefined;
+
+async function loadLargerImage(): Promise<void> {
+  if (!lightbox || !lightboxImage || !lightboxStatus || !lightboxRetry || !lightboxTrigger) return;
+  const source = lightboxTrigger.dataset.lightboxSrc;
+  const { loadingMessage, errorMessage } = lightbox.dataset;
+  if (!source || !loadingMessage || !errorMessage) throw new Error("Lightbox is missing loading data");
+
+  const attempt = ++lightboxAttempt;
+  window.clearTimeout(lightboxLoadingTimer);
+  lightboxStatus.textContent = "";
+  lightboxRetry.hidden = true;
+  lightboxLoadingTimer = window.setTimeout(() => {
+    if (lightbox.open && attempt === lightboxAttempt) lightboxStatus.textContent = loadingMessage;
+  }, 400);
+
+  const image = new Image();
+  image.src = source;
+  try {
+    await image.decode();
+  } catch {
+    if (!lightbox.open || attempt !== lightboxAttempt) return;
+    window.clearTimeout(lightboxLoadingTimer);
+    lightboxStatus.textContent = errorMessage;
+    lightboxRetry.hidden = false;
+    return;
+  }
+  // A completed request must not replace a different photo or reopen a closed viewer.
+  if (!lightbox.open || attempt !== lightboxAttempt) return;
+  window.clearTimeout(lightboxLoadingTimer);
+  lightboxImage.src = source;
+  lightboxStatus.textContent = "";
+}
 
 document.querySelector("main")?.addEventListener("click", (event) => {
   const trigger =
     event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("[data-lightbox-image]") : null;
-  if (!trigger || !lightbox || !lightboxImage || !lightboxCaption) return;
+  if (!trigger || !lightbox || !lightboxMedia || !lightboxCaption) return;
   if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
 
   const source = trigger.dataset.lightboxSrc;
   const alt = trigger.dataset.lightboxAlt;
-  if (!source || alt === undefined) throw new Error("Lightbox trigger is missing image data");
+  const thumbnail = trigger.querySelector("img");
+  if (!source || alt === undefined || !thumbnail || !thumbnail.width || !thumbnail.height) {
+    throw new Error("Lightbox trigger is missing image data");
+  }
 
   event.preventDefault();
   lightboxTrigger = trigger;
-  lightboxImage.src = source;
+  lightboxImage?.remove();
+  lightboxImage = new Image();
+  lightboxImage.className = "lightbox-image";
+  lightboxImage.src = thumbnail.currentSrc || thumbnail.src;
   lightboxImage.alt = alt;
-  lightboxImage.hidden = false;
+  const width = Number(thumbnail.getAttribute("width"));
+  const height = Number(thumbnail.getAttribute("height"));
+  if (!width || !height) throw new Error("Lightbox thumbnail is missing intrinsic dimensions");
+  lightboxImage.width = width;
+  lightboxImage.height = height;
+  lightboxMedia.style.setProperty("--lightbox-width", `${width}px`);
+  lightboxMedia.style.setProperty("--lightbox-aspect", String(width / height));
+  lightboxMedia.prepend(lightboxImage);
 
   const caption = trigger.dataset.lightboxCaption;
   lightboxCaption.textContent = caption ?? "";
   lightboxCaption.hidden = !caption;
   lightbox.showModal();
   lightbox.scrollTop = 0;
+  void loadLargerImage();
+});
+
+lightboxRetry?.addEventListener("click", () => {
+  lightboxClose?.focus();
+  void loadLargerImage();
 });
 
 lightboxClose?.addEventListener("click", () => lightbox?.close());
@@ -93,11 +149,12 @@ lightbox?.addEventListener("click", (event) => {
 lightbox?.addEventListener("close", () => {
   // A queued close event must not clear an image opened again before that event was delivered.
   if (lightbox.open) return;
-  if (lightboxImage) {
-    lightboxImage.src = "/assets/images/favicon.svg";
-    lightboxImage.alt = "";
-    lightboxImage.hidden = true;
-  }
+  lightboxAttempt++;
+  window.clearTimeout(lightboxLoadingTimer);
+  lightboxImage?.remove();
+  lightboxImage = null;
+  if (lightboxStatus) lightboxStatus.textContent = "";
+  if (lightboxRetry) lightboxRetry.hidden = true;
   if (lightboxCaption) {
     lightboxCaption.textContent = "";
     lightboxCaption.hidden = true;

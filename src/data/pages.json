@@ -16,8 +16,17 @@
       "recipeLabel": "External recipe-link text on baking detail pages.",
       "fallbackText": "Text shown before the fallback CV link.",
       "linkLabel": "Page-specific link text.",
-      "message": "Main explanatory sentence on the 404 page."
+      "message": "Main explanatory sentence on the 404 page.",
+      "lightbox": "Shared image-viewer heading, open/close labels, loading/error messages, and retry label."
     }
+  },
+  "lightbox": {
+    "heading": "Image preview",
+    "openLabel": "Open larger view",
+    "closeLabel": "Close image preview",
+    "loadingMessage": "Loading larger image...",
+    "errorMessage": "The larger image could not load.",
+    "retryLabel": "Retry"
   },
   "home": {
     "title": "CSE PhD student at the University of Washington",

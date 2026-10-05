@@ -109,14 +109,61 @@ html:has(.lightbox[open]) {
   justify-items: center;
 }
 
+.lightbox-media {
+  position: relative;
+  display: grid;
+  width: 100%;
+  justify-items: center;
+}
+
 .lightbox-image {
-  width: auto;
+  width: min(100%, var(--lightbox-width), calc((100vh - 2 * var(--lightbox-inset)) * var(--lightbox-aspect)));
+  width: min(
+    100%,
+    var(--lightbox-width),
+    calc((100dvh - 2 * var(--lightbox-inset)) * var(--lightbox-aspect))
+  );
+  aspect-ratio: var(--lightbox-aspect);
   max-width: 100%;
   height: auto;
   max-height: calc(100vh - 2 * var(--lightbox-inset));
   max-height: calc(100dvh - 2 * var(--lightbox-inset));
   margin-inline: auto;
   object-fit: contain;
+}
+
+.lightbox-feedback {
+  position: absolute;
+  bottom: var(--space-xs);
+  display: flex;
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.lightbox-status,
+.lightbox-retry {
+  padding: var(--space-xs) var(--space-s);
+  border-radius: 0.35rem;
+  margin: 0;
+  background: #17141e;
+  color: #fff;
+  text-align: center;
+}
+
+.lightbox-retry[hidden] {
+  display: none;
+}
+
+.lightbox-status:empty {
+  padding: 0;
+  background: transparent;
+}
+
+.lightbox-retry {
+  min-height: 44px;
+  cursor: pointer;
 }
 
 .lightbox-caption {
