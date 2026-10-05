@@ -390,8 +390,8 @@ convert iPhone sources first on macOS with `sips -s format tiff source.heic --ou
 
 After installing the optional OpenCV dependency, run the utility's synthetic-image regression tests with
 `python -m unittest discover -s test -p '*_test.py'`. An optional `image-utility` job is commented out in
-`.github/workflows/ci.yml`; uncomment it when automated coverage of utility changes is needed. Python is not
-required for normal CI, the site's Node.js build, or `npm run check`.
+`.github/workflows/deploy.yml`; uncomment it when automated coverage of utility changes is needed. Python is
+not required for normal CI, the site's Node.js build, or `npm run check`.
 
 Images retain their natural aspect ratio. The build detects intrinsic dimensions from each source image so the
 browser can reserve space without cropping or layout shift; dimensions do not need to be recorded in
@@ -451,13 +451,19 @@ generate a replacement with the same repository access and permission, then upda
 
 ## Deployment
 
-Pull requests and branch pushes run formatting, content validation, build, generated-page tests, and
-browser-based axe accessibility scans. Merges to `main` repeat those checks before publishing `dist/` through
-GitHub's official Pages actions, so accessibility violations block production deployment. The deployment
-artifact includes `CNAME`, preserving `michaelmvh.com`.
+The single workflow in `.github/workflows/deploy.yml` handles pull requests, branch pushes, manual runs, and
+`cv-published` dispatches. All runs use the same build job for formatting, type checking, content validation,
+build, generated-page tests, and browser-based axe accessibility scans.
+
+Only non-pull-request runs on `main` synchronize the current CV and upload a deployment artifact. The deploy
+job depends on that complete build job, so formatting failures and accessibility violations both block
+publication. It publishes the already-checked artifact through GitHub's official Pages actions; there is no
+separate validation workflow repeating the main-branch build. Pages write and OIDC permissions belong only to
+the deploy job. The artifact includes `CNAME`, preserving `michaelmvh.com`.
 
 GitHub Pages is configured to use **GitHub Actions**, not a deployment branch. Production deploys can be
-monitored in the repository's **Actions** tab under **Deploy to GitHub Pages**.
+monitored in the repository's **Actions** tab under **Validate and deploy site**. If branch protection names
+the retired validation workflow's status check, update that required check to this workflow's `build` job.
 
 To roll back, revert the production commit on `main` or rerun the deployment for a known-good commit. The
 pre-migration history, including the previous Jekyll site, is preserved in the private
