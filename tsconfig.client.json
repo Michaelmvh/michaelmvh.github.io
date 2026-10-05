@@ -8,8 +8,9 @@
     "module": "ES2022",
     "moduleResolution": "Bundler",
     "noEmit": false,
-    "outDir": "dist/assets/js",
-    "rootDir": "src/client",
+    "noEmitOnError": true,
+    "outDir": "dist/assets",
+    "rootDir": "src",
     "types": []
   },
   "include": ["src/client/**/*.ts"]

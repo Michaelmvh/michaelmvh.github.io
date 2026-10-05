@@ -1,5 +1,7 @@
 {
   "name": "Michael Vanden Heuvel",
+  "wordmark": ["Michael", "Vanden Heuvel"],
+  "knowsAbout": ["machine learning", "computational biology", "medical imaging", "protein engineering"],
   "siteUrl": "https://michaelmvh.com",
   "description": "Michael Vanden Heuvel is a Computer Science & Engineering PhD student at the University of Washington, advised by Jeff Nivala, and an NSF CSGrad4US Fellow.",
   "currentRole": "CSE PhD student",

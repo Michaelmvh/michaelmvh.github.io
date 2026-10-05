@@ -32,6 +32,8 @@ document.querySelectorAll<HTMLButtonElement>(".citation-button").forEach((button
   const originalLabel = button.textContent;
   const citation = button.dataset.citation;
   if (!citation) throw new Error("Citation button is missing data-citation");
+  const { copiedMessage, errorMessage } = button.dataset;
+  if (!copiedMessage || !errorMessage) throw new Error("Citation button is missing feedback messages");
 
   let feedbackTimer: number | undefined;
   let copyAttempt = 0;
@@ -43,10 +45,10 @@ document.querySelectorAll<HTMLButtonElement>(".citation-button").forEach((button
     try {
       await navigator.clipboard.writeText(citation);
       if (currentAttempt !== copyAttempt) return;
-      button.textContent = "Copied";
+      button.textContent = copiedMessage;
     } catch {
       if (currentAttempt !== copyAttempt) return;
-      button.textContent = "Copy failed";
+      button.textContent = errorMessage;
     }
 
     feedbackTimer = window.setTimeout(() => {
@@ -185,10 +187,12 @@ function applySiteTheme(theme: string | null | undefined): SiteTheme {
   });
 
   if (themeReset) {
+    const { defaultMessage, returnMessage } = themeReset.dataset;
+    if (!defaultMessage || !returnMessage) throw new Error("Theme control is missing accessible labels");
     themeReset.hidden = activeTheme === "museum";
     themeReset.setAttribute(
       "aria-label",
-      activeTheme === "museum" ? "Default theme active" : `Return from ${activeTheme} to the default theme`,
+      activeTheme === "museum" ? defaultMessage : returnMessage.replaceAll("{theme}", activeTheme),
     );
   }
 

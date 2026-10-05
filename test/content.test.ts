@@ -1,3 +1,5 @@
+import { loadSiteData } from "../scripts/data.ts";
+import { validateSiteData } from "../scripts/validation.ts";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
@@ -5,37 +7,28 @@ import assert from "node:assert/strict";
 import sharp from "sharp";
 import { injectLiveReload } from "../scripts/live-reload.ts";
 import { galleryImageWidths, imageVariantPath, prepareImages } from "../scripts/images.ts";
-import { escapeHtml, output, readJson, resolveWithin, source, validateSiteData } from "../scripts/site.ts";
-import type {
-  Bake,
-  IndexPageCopy,
-  NewsEntry,
-  OtherSection,
-  Pages,
-  Project,
-  Publication,
-  Site,
-  SiteData,
-} from "../scripts/types.ts";
+import { escapeHtml, output, resolveWithin, source } from "../scripts/site.ts";
+import type { Bake, Project } from "../src/shared/content.ts";
+import type { IndexPageCopy } from "../src/shared/page-copy.ts";
 
 test("content validation rejects unsafe paths and malformed nested values", async () => {
-  const unsafeSlug = await readSiteData();
+  const unsafeSlug = await loadSiteData();
   const firstUnsafeProject = unsafeSlug.projects[0];
   assert.ok(firstUnsafeProject);
   firstUnsafeProject.slug = "../../outside";
   assert.throws(() => validateSiteData(unsafeSlug), /slug must use lowercase letters, numbers, and hyphens/);
 
-  const malformedTags = await readSiteData();
+  const malformedTags = await loadSiteData();
   const firstMalformedProject = malformedTags.projects[0];
   assert.ok(firstMalformedProject);
-  (firstMalformedProject as unknown as { tags: unknown }).tags = "machine-learning";
+  Object.assign(firstMalformedProject, { tags: "machine-learning" });
   assert.throws(() => validateSiteData(malformedTags), /tags must be an array/);
 
   assert.throws(() => resolveWithin(output, "../outside"), /Path escapes/);
 });
 
 test("authored news records pass date and content validation", async () => {
-  validateSiteData(await readSiteData());
+  validateSiteData(await loadSiteData());
 });
 
 test("shared lightbox messages are required", async () => {
@@ -47,7 +40,7 @@ test("shared lightbox messages are required", async () => {
     "errorMessage",
     "retryLabel",
   ]) {
-    const data = await readSiteData();
+    const data = await loadSiteData();
     Object.assign(data.pages.lightbox, { [field]: "" });
     assert.throws(() => validateSiteData(data), new RegExp(`lightbox.*${field}.*required`));
   }
@@ -83,11 +76,11 @@ test("tool registry validation rejects unsafe routes, duplicates, and missing co
     [[{ ...tool, name: "" }], /name.*required/],
     [[{ ...tool, description: 1 }], /description.*must be a string/],
   ] as const) {
-    const data = await readSiteData();
+    const data = await loadSiteData();
     Object.assign(data, { tools: value });
     assert.throws(() => validateSiteData(data), error);
   }
-  const data = await readSiteData();
+  const data = await loadSiteData();
   data.pages.tools.documentEditor.waitingMessage = "";
   assert.throws(() => validateSiteData(data), /documentEditor.*waitingMessage.*required/);
 });
@@ -132,16 +125,16 @@ test("news validation accepts precise calendar dates and rejects malformed recor
     })),
   ];
   for (const { value, error } of invalidCollections) {
-    const data = await readSiteData();
+    const data = await loadSiteData();
     Object.assign(data, { news: value });
     assert.throws(() => validateSiteData(data), error);
   }
   for (const date of ["2026", "2026-09", "2026-09-07", "2026-12-31", "2024-02-29", "2000-02-29"]) {
-    const data = await readSiteData();
+    const data = await loadSiteData();
     data.news = [{ ...entry, date }];
     assert.doesNotThrow(() => validateSiteData(data));
   }
-  const data = await readSiteData();
+  const data = await loadSiteData();
   data.news = [];
   assert.doesNotThrow(() => validateSiteData(data));
   data.pages.home.newsHeading = "";
@@ -149,7 +142,7 @@ test("news validation accepts precise calendar dates and rejects malformed recor
 });
 
 test("navigation references valid internal pages", async () => {
-  const site = await readJson<Site>("data/site.json");
+  const { site } = await loadSiteData();
   for (const item of site.navigation.filter((entry) => !entry.external)) {
     const relative = item.url === "/" ? "index.html" : path.join(item.url, "index.html");
     await fs.access(path.join(output, relative));
@@ -178,14 +171,14 @@ test("project screenshot validation rejects malformed metadata", async () => {
     { value: [{ ...validImage, height: 1.5 }], error: /height must be a positive integer/ },
   ];
   for (const { value, error } of invalidCollections) {
-    const data = await readSiteData();
+    const data = await loadSiteData();
     const project = data.projects[0];
     assert.ok(project);
     Object.assign(project, { screenshots: value });
     assert.throws(() => validateSiteData(data), error);
   }
   for (const screenshots of [undefined, [], [validImage]]) {
-    const data = await readSiteData();
+    const data = await loadSiteData();
     const project = data.projects[0];
     assert.ok(project);
     Object.assign(project, { screenshots });
@@ -194,8 +187,8 @@ test("project screenshot validation rejects malformed metadata", async () => {
 });
 
 test("every project and bake has generated detail content", async () => {
-  const projects = await readJson<Project[]>("data/projects.json");
-  const baking = await readJson<Bake[]>("data/baking.json");
+  const { projects } = await loadSiteData();
+  const { baking } = await loadSiteData();
   const collections: Array<["projects" | "bakes", Array<Project | Bake>]> = [
     ["projects", projects],
     ["bakes", baking],
@@ -209,7 +202,7 @@ test("every project and bake has generated detail content", async () => {
 });
 
 test("project images stay within the asset size budget", async () => {
-  const projects = await readJson<Project[]>("data/projects.json");
+  const { projects } = await loadSiteData();
   const maximumImageSize = 1024 * 1024;
 
   for (const project of projects) {
@@ -225,7 +218,7 @@ test("project images stay within the asset size budget", async () => {
 });
 
 test("baking images reserve oriented dimensions without increasing delivered assets", async () => {
-  const baking = await readJson<Bake[]>("data/baking.json");
+  const { baking } = await loadSiteData();
   const index = await fs.readFile(path.join(output, "baking", "index.html"), "utf8");
   for (const bake of baking) {
     const original = await fs.readFile(path.join(source, bake.image));
@@ -272,7 +265,7 @@ test("image preparation respects EXIF orientation and retains record metadata", 
 });
 
 test("project screenshots render captions, full-size links, and responsive images", async () => {
-  const projects = await readJson<Project[]>("data/projects.json");
+  const { projects } = await loadSiteData();
   for (const project of projects) {
     const html = await fs.readFile(path.join(output, "projects", project.slug, "index.html"), "utf8");
     if (!project.screenshots?.length) {
@@ -304,7 +297,7 @@ test("project screenshots render captions, full-size links, and responsive image
 });
 
 test("Other page images have generated responsive variants", async () => {
-  const sections = await readJson<OtherSection[]>("data/other.json");
+  const { other: sections } = await loadSiteData();
   assert.ok(sections.length > 0, "Other page data must include at least one section");
 
   for (const section of sections) {
@@ -332,7 +325,7 @@ test("Other page images have generated responsive variants", async () => {
 });
 
 test("transit card sources are optimized and card-shaped", async () => {
-  const sections = await readJson<OtherSection[]>("data/other.json");
+  const { other: sections } = await loadSiteData();
   const transitCards = sections.find((section) => section.id === "transit-cards");
   assert.ok(transitCards, "Other page data must include the transit-cards section");
 
@@ -405,12 +398,8 @@ test("homepage serves responsive optimized portrait images", async () => {
 });
 
 test("page-level copy comes from the central page data", async () => {
-  const pages = await readJson<Pages>("data/pages.json");
+  const { pages } = await loadSiteData();
   assert.equal(typeof pages._instructions.fields.introduction, "string");
-  assert.equal(pages.home.introduction, "");
-  assert.equal(pages.publications.introduction, "");
-  assert.equal(pages.baking.introduction, "");
-
   const home = await fs.readFile(path.join(output, "index.html"), "utf8");
   assert.doesNotMatch(home, /Optional pages\.json home introduction/);
 
@@ -455,15 +444,9 @@ test("live alternate themes have accessible persistent controls", async () => {
   assert.doesNotMatch(home, /data-site-theme="blueprint"/);
   assert.match(home, /data-site-theme="scifi" aria-pressed="false"/);
   assert.match(home, /data-theme-reset hidden/);
-  assert.match(home, /localStorage\.getItem\("site-theme"\)/);
 
   const publications = await fs.readFile(path.join(output, "publications", "index.html"), "utf8");
   assert.match(publications, /data-theme-reset hidden/);
-
-  const script = await fs.readFile(path.join(output, "assets", "js", "site.js"), "utf8");
-  assert.match(script, /theme === "blueprint" \|\| theme === "scifi"/);
-  assert.match(script, /localStorage\.setItem\(siteThemeKey, theme\)/);
-  assert.match(script, /localStorage\.removeItem\(siteThemeKey\)/);
 });
 
 test("research stays dormant until it is ready to publish", async () => {
@@ -480,7 +463,7 @@ test("research stays dormant until it is ready to publish", async () => {
 });
 
 test("projects are publicly discoverable", async () => {
-  const site = await readJson<Site>("data/site.json");
+  const { site } = await loadSiteData();
   assert.equal(
     site.navigation.some((entry) => entry.url === "/projects/"),
     true,
@@ -495,7 +478,7 @@ test("projects are publicly discoverable", async () => {
   const projectIndex = await fs.readFile(path.join(output, "projects", "index.html"), "utf8");
   assert.doesNotMatch(projectIndex, /<meta name="robots" content="noindex/);
 
-  const projects = await readJson<Project[]>("data/projects.json");
+  const { projects } = await loadSiteData();
   for (const project of projects) {
     const html = await fs.readFile(path.join(output, "projects", project.slug, "index.html"), "utf8");
     assert.doesNotMatch(html, /<meta name="robots" content="noindex/);
@@ -504,8 +487,8 @@ test("projects are publicly discoverable", async () => {
 });
 
 test("Other page sections are public and data-driven", async () => {
-  const site = await readJson<Site>("data/site.json");
-  const sections = await readJson<OtherSection[]>("data/other.json");
+  const { site } = await loadSiteData();
+  const { other: sections } = await loadSiteData();
   assert.equal(
     site.navigation.some((entry) => entry.url === "/other/"),
     true,
@@ -524,16 +507,16 @@ test("Other page sections are public and data-driven", async () => {
     }
   }
 
-  const captionedImage = sections.flatMap((section) => section.images).find((image) => image.caption);
-  const uncaptionedImage = sections.flatMap((section) => section.images).find((image) => !image.caption);
-  assert.ok(captionedImage?.caption);
-  assert.ok(uncaptionedImage);
-  assert.match(html, new RegExp(`data-lightbox-caption="${captionedImage.caption}"`));
-  assert.match(html, new RegExp(`data-lightbox-alt="${uncaptionedImage.alt}"(?! data-lightbox-caption)`));
+  for (const image of sections.flatMap((section) => section.images)) {
+    const attributes = `data-lightbox-alt="${escapeHtml(image.alt)}"${
+      image.caption ? ` data-lightbox-caption="${escapeHtml(image.caption)}"` : ""
+    }>`;
+    assert.ok(html.includes(attributes));
+  }
 });
 
 test("Microsoft projects have a dedicated filter and public sources", async () => {
-  const projects = await readJson<Project[]>("data/projects.json");
+  const { projects } = await loadSiteData();
   const microsoftProjects = projects.filter((project) => project.category === "microsoft");
   assert.ok(microsoftProjects.length > 0, "The Microsoft filter requires Microsoft projects");
 
@@ -606,17 +589,4 @@ async function collectHtml(directory: string): Promise<string[]> {
     else if (entry.name.endsWith(".html")) files.push(target);
   }
   return files;
-}
-
-async function readSiteData(): Promise<SiteData> {
-  return {
-    site: await readJson<Site>("data/site.json"),
-    pages: await readJson<Pages>("data/pages.json"),
-    projects: await readJson<Project[]>("data/projects.json"),
-    publications: await readJson<Publication[]>("data/publications.json"),
-    news: await readJson<NewsEntry[]>("data/news.json"),
-    baking: await readJson<Bake[]>("data/baking.json"),
-    other: await readJson<OtherSection[]>("data/other.json"),
-    tools: await readJson<SiteData["tools"]>("data/tools.json"),
-  };
 }

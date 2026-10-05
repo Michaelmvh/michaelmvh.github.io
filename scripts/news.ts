@@ -1,5 +1,5 @@
 import { escapeHtml } from "./site.ts";
-import type { NewsEntry } from "./types.ts";
+import type { NewsEntry } from "../src/shared/content.ts";
 
 /** Renders validated milestones newest-first without changing their authored order. */
 export function renderNews(entries: readonly NewsEntry[], heading: string): string {

@@ -1,4 +1,4 @@
-import type { UrlInspectorCopy } from "../../scripts/utility-copy.js";
+import type { UrlInspectorCopy } from "../shared/utility-copy.ts";
 import { createOutput, message, required } from "./utility-common.ts";
 import {
   inspectUrl,

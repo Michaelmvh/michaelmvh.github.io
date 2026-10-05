@@ -1,11 +1,11 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import type { FrameLocator, Page } from "@playwright/test";
-import type { Pages } from "../scripts/types.ts";
 import { recoveryKey, recoveryLimit } from "../src/client/mermaid-recovery.ts";
 
-const { mermaid: copy } = JSON.parse(await fs.readFile("src/data/pages.json", "utf8")) as Pages;
+const { mermaid: copy } = (await loadSiteData()).pages;
 
 async function openEditor(page: Page): Promise<FrameLocator> {
   await page.goto("/tools/mermaid/");

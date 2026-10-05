@@ -1,6 +1,6 @@
 import { checkDocumentLimits, DocumentInputError } from "./document-limits.ts";
 import { message, required } from "./utility-common.ts";
-import type { DocumentEditorCopy } from "../../scripts/document-copy.js";
+import type { DocumentEditorCopy } from "../shared/document-copy.ts";
 import type { ComparedLine } from "./document-diff.ts";
 
 const tool = required(".document-tool", HTMLElement);

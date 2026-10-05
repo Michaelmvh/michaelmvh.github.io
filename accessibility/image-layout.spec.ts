@@ -1,10 +1,8 @@
-import fs from "node:fs/promises";
+import { loadSiteData } from "../scripts/data.ts";
 import { expect, test } from "@playwright/test";
 import type { Locator, Page } from "@playwright/test";
-import type { Bake, Project } from "../scripts/types.ts";
 
-const projects = JSON.parse(await fs.readFile("src/data/projects.json", "utf8")) as Project[];
-const baking = JSON.parse(await fs.readFile("src/data/baking.json", "utf8")) as Bake[];
+const { projects, baking } = await loadSiteData();
 const portraitProject = projects.find((project) =>
   project.screenshots?.some((image) => image.height > image.width),
 );

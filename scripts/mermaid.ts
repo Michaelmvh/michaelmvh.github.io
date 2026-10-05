@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { assert, escapeHtml, output, root } from "./site.ts";
-import type { MermaidPageCopy } from "./types.ts";
+import type { MermaidPageCopy } from "../src/shared/page-copy.ts";
 
 export const mermaidEditorRoute = "tools/mermaid/editor";
 

@@ -1,5 +1,6 @@
 import { escapeHtml } from "./site.ts";
-import type { IndexPageCopy, QrCodePageCopy, Tool, ToolsPageCopy } from "./types.ts";
+import type { IndexPageCopy, QrCodePageCopy, ToolsPageCopy } from "../src/shared/page-copy.ts";
+import type { Tool } from "../src/shared/content.ts";
 
 export function renderToolHeader(copy: IndexPageCopy, backLabel: string, headingId: string): string {
   return `<header class="page-intro tools-intro">

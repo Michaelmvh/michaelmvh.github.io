@@ -1,10 +1,10 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
-import type { Pages } from "../scripts/types.ts";
 
-const pages = JSON.parse(await fs.readFile("src/data/pages.json", "utf8")) as Pages;
+const { pages } = await loadSiteData();
 const copy = pages.tools.documentEditor;
 const modes = [
   { route: "/tools/json/", pageCopy: pages.jsonFormatter },

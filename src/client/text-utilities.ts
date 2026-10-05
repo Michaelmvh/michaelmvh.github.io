@@ -1,4 +1,4 @@
-import type { TextUtilitiesCopy } from "../../scripts/utility-copy.js";
+import type { TextUtilitiesCopy } from "../shared/utility-copy.ts";
 import { DocumentInputError } from "./document-limits.ts";
 import { createOutput, message, required } from "./utility-common.ts";
 import { countText, transformText } from "./text-utilities-model.ts";

@@ -1,6 +1,6 @@
 import { escapeHtml } from "./site.ts";
 import { renderToolHeader } from "./tools.ts";
-import type { DocumentToolPageCopy, ToolsPageCopy } from "./types.ts";
+import type { DocumentToolPageCopy, ToolsPageCopy } from "../src/shared/page-copy.ts";
 
 export function renderDocumentTool(
   page: DocumentToolPageCopy,

@@ -1,7 +1,7 @@
 import { escapeHtml } from "./site.ts";
 import { renderToolHeader } from "./tools.ts";
-import type { IndexPageCopy } from "./types.ts";
-import type { UtilityCopy, UrlInspectorCopy, TextUtilitiesCopy } from "./utility-copy.js";
+import type { IndexPageCopy } from "../src/shared/page-copy.ts";
+import type { UtilityCopy, UrlInspectorCopy, TextUtilitiesCopy } from "../src/shared/utility-copy.ts";
 
 function renderUtility(
   page: IndexPageCopy & UtilityCopy,

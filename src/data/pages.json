@@ -17,8 +17,21 @@
       "fallbackText": "Text shown before the fallback CV link.",
       "linkLabel": "Page-specific link text.",
       "message": "Main explanatory sentence on the 404 page.",
-      "lightbox": "Shared image-viewer heading, open/close labels, loading/error messages, and retry label."
+      "lightbox": "Shared image-viewer heading, open/close labels, loading/error messages, and retry label.",
+      "shared": "Shared navigation, skip-link, theme-control, and external-link labels. returnToDefaultTheme uses {theme}.",
+      "filterLabel": "Accessible project-filter group label; allLabel names the unfiltered option.",
+      "copiedMessage": "Feedback after a successful clipboard copy; copyErrorMessage describes failure."
     }
+  },
+  "shared": {
+    "skipLink": "Skip to main content",
+    "defaultThemeLabel": "Default theme",
+    "defaultThemeActive": "Default theme active",
+    "returnToDefaultTheme": "Return from {theme} to the default theme",
+    "menuLabel": "Menu",
+    "navigationLabel": "Main navigation",
+    "socialNavigationLabel": "Social and contact links",
+    "externalLinkHint": "(opens in a new tab)"
   },
   "lightbox": {
     "heading": "Image preview",
@@ -39,7 +52,12 @@
     "description": "Peer-reviewed publications by Michael Vanden Heuvel.",
     "eyebrow": "Peer-reviewed work",
     "heading": "Publications",
-    "introduction": ""
+    "introduction": "",
+    "doiLabel": "DOI",
+    "pdfLabel": "PDF",
+    "copyLabel": "Copy citation",
+    "copiedMessage": "Copied",
+    "copyErrorMessage": "Copy failed"
   },
   "projects": {
     "title": "Projects",
@@ -47,6 +65,8 @@
     "eyebrow": "Selected work",
     "heading": "Projects",
     "introduction": "A collection of my research, software, and community work across Microsoft Sentinel, medical imaging, machine learning, and computer vision.",
+    "filterLabel": "Filter projects",
+    "allLabel": "All",
     "detailLabel": "Project",
     "backLabel": "All projects",
     "screenshotsLabel": "Inside the experience"

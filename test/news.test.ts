@@ -1,10 +1,11 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { renderNews } from "../scripts/news.ts";
-import { output, readJson } from "../scripts/site.ts";
-import type { NewsEntry, Pages } from "../scripts/types.ts";
+import { output } from "../scripts/site.ts";
+import type { NewsEntry } from "../src/shared/content.ts";
 
 test("news sorts newest-first, preserves ties, and does not mutate input", () => {
   const entries: NewsEntry[] = [
@@ -50,8 +51,8 @@ test("an empty news collection does not render an empty section", () => {
 });
 
 test("homepage includes the generated news between the hero and the story", async () => {
-  const entries = await readJson<NewsEntry[]>("data/news.json");
-  const pages = await readJson<Pages>("data/pages.json");
+  const { news: entries } = await loadSiteData();
+  const { pages } = await loadSiteData();
   const html = await fs.readFile(path.join(output, "index.html"), "utf8");
   assert.ok(html.includes(renderNews(entries, pages.home.newsHeading)));
   assert.ok(!html.includes("<!-- Recent news from news.json -->"));

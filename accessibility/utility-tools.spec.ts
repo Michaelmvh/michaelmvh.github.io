@@ -1,11 +1,11 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import type { Pages } from "../scripts/types.ts";
 import { maximumUrlLength } from "../src/client/url-inspector-model.ts";
 import { maximumCharacters } from "../src/client/document-limits.ts";
 
-const pages = JSON.parse(await fs.readFile("src/data/pages.json", "utf8")) as Pages;
+const { pages } = await loadSiteData();
 const urlCopy = pages.urlInspector;
 const textCopy = pages.textUtilities;
 

@@ -9,10 +9,12 @@ deployed to GitHub Pages at <https://michaelmvh.com>.
 - `src/data/`: site configuration and structured news, project, publication, and baking records
 - `src/assets/`: images and documents copied directly into the build
 - `src/client/`: browser TypeScript compiled to JavaScript during the build
+- `src/shared/`: content models and copy contracts shared by rendering, browser code, and tests
 - `src/styles/`: ordered CSS partials for tokens, shared styles, pages, themes, and private previews
 - `scripts/`: content validation, static generation, local serving, and CV synchronization
+- `scripts/rendering/`: side-effect-free portfolio renderers, shared layout, and rendered-page types
 - `accessibility/`: Playwright and axe browser accessibility tests
-- `test/`: generated-site regression tests
+- `test/`: model, validation, rendering-fixture, and generated-site regression tests
 - `dist/`: generated deployment artifact; ignored by Git
 
 The small Node.js generator is written in strict TypeScript and renders complete semantic HTML. Browser
@@ -22,6 +24,27 @@ does not supply essential page content. The generator concatenates the ordered f
 additionally use esbuild to bundle their browser-only npm dependencies into local ES modules. Code splitting
 loads the JSON parser only on the JSON page. Browser source imports may use `.ts` extensions; the client
 compiler rewrites them to `.js`.
+
+`scripts/build.ts` orchestrates validated data loading, page registration, asset processing, and output
+writing. `scripts/data.ts` exposes `loadSiteData()`, which parses JSON as `unknown` and returns `SiteData`
+only after `scripts/validation.ts` validates it. The build, validation command, and tests use this same
+loader. Each call returns independent data so fixture changes cannot leak into another caller.
+
+Portfolio renderers receive page copy and news through `createPortfolioRenderer`; the shared layout receives
+site configuration and shared labels through `createLayout`. Importing either module does not build or delete
+output. Tests can render controlled content without changing production JSON or running the build.
+
+Type ownership follows the code that uses it:
+
+- `src/shared/content.ts`: `SiteConfig`, collection records, `ImageWithDimensions`, and `SiteData`
+- `src/shared/page-copy.ts`: page-copy contracts and `PageCopyMap`
+- `src/shared/document-copy.ts` and `utility-copy.ts`: shared browser/rendering message contracts
+- `scripts/rendering/types.ts`: the `RenderedPage` contract
+- Client model types and build-prepared image types stay beside their implementations.
+
+Shared contracts are ordinary `.ts` modules, imported with `import type`, not ambient declarations or a global
+types barrel. Browser compilation is rooted at `src/` to include shared contracts; the build places compiled
+client entry points at the existing `/assets/js/` URLs. Type-only imports add no browser requests.
 
 Platform-neutral contributor and automation guidance lives in [`AGENTS.md`](AGENTS.md). Keep this README
 updated in the same change whenever the architecture, commands, prerequisites, editing workflow, validation,
@@ -59,7 +82,10 @@ baking collections so newly added records receive the same coverage.
 Changes to behavior, content structures, rendering, accessibility interactions, or asset processing should add
 focused regression coverage when the existing suite would not catch likely failures. Keep tests resilient by
 checking data-driven behavior and durable invariants rather than fixed content counts, incidental ordering,
-exact pixel geometry, or implementation details; use reasonable ranges for media and layout assertions.
+exact pixel geometry, or implementation details; use reasonable ranges for media and layout assertions. Use
+controlled fixtures for optional introductions, caption states, and multiple publications rather than
+requiring production content to contain those examples. Test browser behavior directly instead of matching the
+compiler's emitted JavaScript syntax.
 
 Generated files are written to `dist/` and are not committed.
 
@@ -80,7 +106,8 @@ the device is in dark mode but the site uses its default light theme.
 
 Site-wide settings and repeated content live in `src/data/`:
 
-- `site.json`: navigation, external links, CV URL, analytics ID, and shared descriptions
+- `site.json`: identity, wordmark segments, structured-data topics, navigation, external links, CV URL,
+  analytics ID, and shared descriptions
 - `pages.json`: page titles, metadata descriptions, headings, introductions, and page-specific labels
 - `projects.json`: project summaries, categories, tags, images, and external links
 - `publications.json`: publication metadata and citations
@@ -94,7 +121,14 @@ Long-form content lives in `src/content/`. Home is an HTML fragment. Each projec
 
 As an editing rule, authored wording belongs in `src/content/` or `src/data/`, not in `scripts/build.ts`.
 Generator functions should contain only reusable markup and rendering behavior. Shared data interfaces live in
-`scripts/types.ts`; runtime validation still checks the external JSON content before rendering.
+`src/shared/`; runtime validation still checks the external JSON content before rendering. Page-copy
+validation uses exhaustive, nested field maps checked against the copy interfaces: adding a required copy
+field requires updating its validation rule as well as its JSON value. Rules distinguish required nonempty
+strings from supported empty strings.
+
+Shared navigation, skip-link, external-link, and theme-control labels live under `pages.json.shared`.
+Publication labels and clipboard feedback live under `pages.json.publications`; project-filter labels live
+under `pages.json.projects`. Renderers pass browser feedback through escaped data attributes.
 
 `pages.json` begins with an `_instructions` reference explaining every supported field. Optional introduction
 fields for Home, Publications, and Baking are included as empty strings; populate one and the build renders it
@@ -162,12 +196,12 @@ Page copy lives in `src/data/pages.json`; shared document labels are under `tool
 lives in `scripts/tools.ts` and `scripts/document-tools.ts`, browser behavior in `src/client/qr-code.ts` and
 the `src/client/document-*.ts` / `json-format.ts` modules, and styling in `src/styles/tools.css` and
 `src/styles/document-tools.css`. The shared browser/server document-copy interface lives in
-`scripts/document-copy.d.ts`. The build copies the pinned `qrcode-generator` ES module, preserving its license
-header, into local assets; a page-scoped import map loads it without a CDN or runtime framework. Other pages
-do not load the QR module. Browser regressions decode downloaded images with `jsqr` to verify their contents.
-Document comparisons use `diff`; strict JSON parsing uses `jsonc-parser` without converting number tokens back
-through JavaScript numbers. Their license files are copied to the local vendor assets. No tool needs a
-backend, CDN, or external API.
+`src/shared/document-copy.ts`. The build copies the pinned `qrcode-generator` ES module, preserving its
+license header, into local assets; a page-scoped import map loads it without a CDN or runtime framework. Other
+pages do not load the QR module. Browser regressions decode downloaded images with `jsqr` to verify their
+contents. Document comparisons use `diff`; strict JSON parsing uses `jsonc-parser` without converting number
+tokens back through JavaScript numbers. Their license files are copied to the local vendor assets. No tool
+needs a backend, CDN, or external API.
 
 `/tools/mermaid/` embeds the pinned `archyne@1.0.0-alpha.1` static application, providing visual diagram
 creation, drag-to-connect, automatic layout, editable Mermaid source, undo/redo, file open/save, and image
@@ -249,7 +283,7 @@ while pending. Clear cancels pending work but preserves chosen options. Both uti
 downloads and clipboard copying with manual-copy guidance on failure. They keep data only in page memory.
 Their page-scoped modules share `src/client/utility-common.ts` for output/clipboard handling; pure logic lives
 in `url-inspector-model.ts` and `text-utilities-model.ts`. Markup is in `scripts/utility-tools.ts`, copy
-contracts in `scripts/utility-copy.d.ts`, and labels in `pages.json`. No additional dependencies are needed.
+contracts in `src/shared/utility-copy.ts`, and labels in `pages.json`. No additional dependencies are needed.
 
 ### Add a news entry
 
@@ -433,9 +467,9 @@ history.
 ## Analytics and metadata
 
 The Google Analytics measurement ID is configured in `src/data/site.json`. Analytics loads on deployed pages
-with IP anonymization enabled. Page titles, descriptions, canonical URLs, Open Graph metadata, structured
-data, `sitemap.xml`, and `robots.txt` are generated by `scripts/build.ts`; the social sharing image is
-`src/assets/images/social-preview.jpg`.
+with IP anonymization enabled. Page titles, descriptions, canonical URLs, Open Graph metadata, structured data
+and sitemap markup are rendered in `scripts/rendering/layout.ts`; `scripts/build.ts` writes these pages,
+`sitemap.xml`, and `robots.txt`. The social sharing image is `src/assets/images/social-preview.jpg`.
 
 ## License
 

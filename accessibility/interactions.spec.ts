@@ -1,20 +1,48 @@
-import fs from "node:fs/promises";
+import { loadSiteData } from "../scripts/data.ts";
 import { expect, test } from "@playwright/test";
 import { AxeBuilder } from "@axe-core/playwright";
-import type { NewsEntry, OtherSection, Pages, Project } from "../scripts/types.ts";
+import type { Page } from "@playwright/test";
+import { createLayout } from "../scripts/rendering/layout.ts";
+import { createPortfolioRenderer } from "../scripts/rendering/portfolio.ts";
+import type { Publication } from "../src/shared/content.ts";
 
-const otherSections = JSON.parse(await fs.readFile("src/data/other.json", "utf8")) as OtherSection[];
+const { site, other: otherSections, projects, news, pages: pageCopy } = await loadSiteData();
 const otherImages = otherSections.flatMap((section) => section.images);
-const projects = JSON.parse(await fs.readFile("src/data/projects.json", "utf8")) as Project[];
-const news = JSON.parse(await fs.readFile("src/data/news.json", "utf8")) as NewsEntry[];
-const pageCopy = JSON.parse(await fs.readFile("src/data/pages.json", "utf8")) as Pages;
 const screenshotProjects = projects.filter((project) => project.screenshots?.length);
-const captionedImageIndex = otherImages.findIndex((image) => image.caption);
-const uncaptionedImageIndex = otherImages.findIndex((image) => !image.caption);
-const captionedImage = otherImages[captionedImageIndex];
-const captionedImageCaption = captionedImage?.caption;
-if (!captionedImage || !captionedImageCaption || uncaptionedImageIndex < 0) {
-  throw new Error("Lightbox tests require captioned and uncaptioned Other page images");
+const fixtureCaption = "A caption used to exercise the image viewer.";
+const citationCopy = {
+  ...pageCopy.publications,
+  copyLabel: "Copy reference",
+  copiedMessage: "Reference copied",
+  copyErrorMessage: "Reference unavailable",
+};
+
+async function openCitationFixture(page: Page): Promise<void> {
+  const entries: Publication[] = ["first", "second"].map((id) => ({
+    id,
+    title: `Example ${id} publication`,
+    authors: "Example author",
+    venue: "Example journal",
+    volume: "1",
+    year: 2026,
+    doi: `10.1234/${id}`,
+    pdf: "/assets/documents/CV.pdf",
+    citation: `Citation for ${id}`,
+  }));
+  const renderer = createPortfolioRenderer({ ...pageCopy, publications: citationCopy }, []);
+  const body = createLayout(
+    site,
+    pageCopy.shared,
+  )({
+    id: "publications",
+    title: citationCopy.title,
+    description: citationCopy.description,
+    content: renderer.renderPublications(entries),
+    analytics: false,
+  });
+  await page.route("**/publications/", (route) => route.fulfill({ contentType: "text/html", body }));
+  await page.goto("/publications/");
+  await expect(page.locator(".citation-button")).toHaveCount(entries.length);
 }
 
 test("local previews do not load production analytics", async ({ page }) => {
@@ -122,20 +150,40 @@ test("project filters show only the selected category", async ({ page }) => {
 });
 
 test("citation feedback resets after repeated copy attempts", async ({ page }) => {
-  await page.goto("/publications/");
+  await openCitationFixture(page);
   await page.evaluate(() => {
     navigator.clipboard.writeText = async () => undefined;
   });
 
-  const button = page.locator(".citation-button");
+  const button = page.locator(".citation-button").first();
   await button.evaluate((element) => {
     if (!(element instanceof HTMLElement)) throw new Error("Citation control is not an HTML element");
     element.click();
     element.click();
   });
 
-  await expect(button).toHaveText("Copied");
-  await expect(button).toHaveText("Copy citation", { timeout: 2_500 });
+  await expect(button).toHaveText(citationCopy.copiedMessage);
+  await expect(page.locator(".citation-button").nth(1)).toHaveText(citationCopy.copyLabel);
+  await expect(button).toHaveText(citationCopy.copyLabel, { timeout: 2_500 });
+});
+
+test("theme selection persists across pages and reloads and can be reset", async ({ page }) => {
+  await page.goto("/");
+  await page.locator('.theme-trigger[data-site-theme="scifi"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-site-theme", "scifi");
+  await expect(page.locator("[data-theme-reset]")).toHaveAccessibleName(
+    pageCopy.shared.returnToDefaultTheme.replaceAll("{theme}", "scifi"),
+  );
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-site-theme", "scifi");
+  await page.goto("/publications/");
+  await expect(page.locator("html")).toHaveAttribute("data-site-theme", "scifi");
+  await page.locator("[data-theme-reset]").click();
+  await expect(page.locator("html")).not.toHaveAttribute("data-site-theme");
+  expect(await page.evaluate(() => localStorage.getItem("site-theme"))).toBeNull();
+  await page.reload();
+  await expect(page.locator("[data-theme-reset]")).toBeHidden();
+  await expect(page.locator("html")).not.toHaveAttribute("data-site-theme");
 });
 
 for (const project of screenshotProjects) {
@@ -207,39 +255,45 @@ test.describe("project screenshots without JavaScript", () => {
 test("citation copy failures show temporary feedback", async ({ page }) => {
   const pageErrors: string[] = [];
   page.on("pageerror", (error) => pageErrors.push(error.message));
-  await page.goto("/publications/");
+  await openCitationFixture(page);
   await page.evaluate(() => {
     navigator.clipboard.writeText = async () => Promise.reject(new Error("Clipboard unavailable"));
   });
 
-  const button = page.locator(".citation-button");
+  const button = page.locator(".citation-button").first();
   await button.evaluate((element) => {
     if (!(element instanceof HTMLElement)) throw new Error("Citation control is not an HTML element");
     element.click();
   });
 
-  await expect(button).toHaveText("Copy failed");
-  await expect(button).toHaveText("Copy citation", { timeout: 2_500 });
+  await expect(button).toHaveText(citationCopy.copyErrorMessage);
+  await expect(button).toHaveText(citationCopy.copyLabel, { timeout: 2_500 });
   expect(pageErrors).toEqual([]);
 });
 
 test("Other page lightbox opens, clears captions, closes, and restores focus", async ({ page }) => {
   await page.goto("/other/");
 
-  const captionedTrigger = page.locator("[data-lightbox-image]").nth(captionedImageIndex);
+  const captionedTrigger = page.locator("[data-lightbox-image]").first();
+  await captionedTrigger.evaluate((element, caption) => {
+    element.setAttribute("data-lightbox-caption", caption);
+  }, fixtureCaption);
+  const expectedAlt = await captionedTrigger.getAttribute("data-lightbox-alt");
+  if (expectedAlt === null) throw new Error("Lightbox trigger is missing alt text");
   await captionedTrigger.focus();
   await captionedTrigger.press("Enter");
 
   const lightbox = page.locator(".lightbox");
   await expect(lightbox).toBeVisible();
-  await expect(lightbox.locator(".lightbox-image")).toHaveAttribute("alt", captionedImage.alt);
-  await expect(lightbox.locator(".lightbox-caption")).toHaveText(captionedImageCaption);
+  await expect(lightbox.locator(".lightbox-image")).toHaveAttribute("alt", expectedAlt);
+  await expect(lightbox.locator(".lightbox-caption")).toHaveText(fixtureCaption);
 
   await page.keyboard.press("Escape");
   await expect(lightbox).not.toBeVisible();
   await expect(captionedTrigger).toBeFocused();
 
-  const uncaptionedTrigger = page.locator("[data-lightbox-image]").nth(uncaptionedImageIndex);
+  const uncaptionedTrigger = captionedTrigger;
+  await uncaptionedTrigger.evaluate((element) => element.removeAttribute("data-lightbox-caption"));
   await uncaptionedTrigger.click();
   await expect(lightbox.locator(".lightbox-caption")).toBeHidden();
   await lightbox.locator(".lightbox-close").click();
@@ -283,7 +337,10 @@ test("Other page lightbox works for every gallery section", async ({ page }) => 
 
 test("rapid lightbox reopening does not let a queued close clear the new image", async ({ page }) => {
   await page.goto("/other/");
-  const trigger = page.locator("[data-lightbox-image]").nth(captionedImageIndex);
+  const trigger = page.locator("[data-lightbox-image]").first();
+  await trigger.evaluate((element, caption) => {
+    element.setAttribute("data-lightbox-caption", caption);
+  }, fixtureCaption);
   await trigger.click();
   await trigger.evaluate((element) => {
     const close = document.querySelector<HTMLButtonElement>(".lightbox-close");
@@ -295,7 +352,7 @@ test("rapid lightbox reopening does not let a queued close clear the new image",
   const dialog = page.locator(".lightbox");
   await expect(dialog).toBeVisible();
   await expect(dialog.locator(".lightbox-image")).toBeVisible();
-  await expect(dialog.locator(".lightbox-caption")).toHaveText(captionedImageCaption);
+  await expect(dialog.locator(".lightbox-caption")).toHaveText(fixtureCaption);
   await dialog.locator(".lightbox-close").click();
   await expect(dialog.locator(".lightbox-image")).toBeHidden();
   await expect(trigger).toBeFocused();

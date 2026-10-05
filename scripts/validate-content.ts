@@ -1,16 +1,4 @@
-import { readJson, validateSiteData } from "./site.ts";
-import type { Bake, NewsEntry, OtherSection, Pages, Project, Publication, Site, SiteData } from "./types.ts";
+import { loadSiteData } from "./data.ts";
 
-const data: SiteData = {
-  site: await readJson<Site>("data/site.json"),
-  pages: await readJson<Pages>("data/pages.json"),
-  projects: await readJson<Project[]>("data/projects.json"),
-  publications: await readJson<Publication[]>("data/publications.json"),
-  news: await readJson<NewsEntry[]>("data/news.json"),
-  baking: await readJson<Bake[]>("data/baking.json"),
-  other: await readJson<OtherSection[]>("data/other.json"),
-  tools: await readJson<SiteData["tools"]>("data/tools.json"),
-};
-
-validateSiteData(data);
+await loadSiteData();
 console.log("Content validation passed.");

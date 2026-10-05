@@ -1,3 +1,4 @@
+import { loadSiteData } from "../scripts/data.ts";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -13,8 +14,7 @@ import {
 import { countText, transformText } from "../src/client/text-utilities-model.ts";
 import type { TextOptions } from "../src/client/text-utilities-model.ts";
 import { DocumentInputError, maximumCharacters, maximumLines } from "../src/client/document-limits.ts";
-import { output, readJson } from "../scripts/site.ts";
-import type { Pages } from "../scripts/types.ts";
+import { output } from "../scripts/site.ts";
 import { renderTextUtilities, renderUrlInspector } from "../scripts/utility-tools.ts";
 
 const unchanged: TextOptions = {
@@ -199,7 +199,7 @@ test("text limits cover input, expanded output, and newline counts", () => {
 });
 
 test("utility pages use local isolated scripts and escape authored copy", async () => {
-  const pages = await readJson<Pages>("data/pages.json");
+  const { pages } = await loadSiteData();
   for (const [slug, entry, forbidden] of [
     ["url-inspector", "url-inspector", "text-utilities"],
     ["text-utilities", "text-utilities", "url-inspector"],

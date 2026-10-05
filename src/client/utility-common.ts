@@ -1,4 +1,4 @@
-import type { UtilityCopy } from "../../scripts/utility-copy.js";
+import type { UtilityCopy } from "../shared/utility-copy.ts";
 
 export function required<T extends HTMLElement>(selector: string, type: { new (): T }): T {
   const element = document.querySelector(selector);

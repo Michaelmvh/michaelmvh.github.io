@@ -1,10 +1,10 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { escapeHtml, output, readJson, root } from "../scripts/site.ts";
+import { escapeHtml, output, root } from "../scripts/site.ts";
 import { mermaidEditorRoute, renderMermaid } from "../scripts/mermaid.ts";
-import type { Pages } from "../scripts/types.ts";
 
 test("Mermaid embeds a pinned local build without shipping public upstream pages", async () => {
   const html = await fs.readFile(path.join(output, "tools/mermaid/index.html"), "utf8");
@@ -39,7 +39,7 @@ test("Mermaid embeds a pinned local build without shipping public upstream pages
 });
 
 test("Mermaid guidance and accessible iframe copy are escaped", async () => {
-  const pages = await readJson<Pages>("data/pages.json");
+  const { pages } = await loadSiteData();
   const value = 'A <diagram> & "editor"';
   const html = renderMermaid(
     { ...pages.mermaid, instructions: value, editorLabel: value, loadErrorMessage: value },

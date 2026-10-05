@@ -1,14 +1,14 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import path from "node:path";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { escapeHtml, output, readJson } from "../scripts/site.ts";
-import type { Pages, Site, Tool } from "../scripts/types.ts";
+import { escapeHtml, output } from "../scripts/site.ts";
 import { renderTools } from "../scripts/tools.ts";
 
 test("tools are unlisted, noindex, analytics-free, and use local scripts", async () => {
-  const tools = await readJson<Tool[]>("data/tools.json");
-  const site = await readJson<Site>("data/site.json");
+  const { tools } = await loadSiteData();
+  const { site } = await loadSiteData();
   const index = await fs.readFile(path.join(output, "tools/index.html"), "utf8");
   assert.doesNotMatch(
     index,
@@ -56,7 +56,7 @@ test("tools are unlisted, noindex, analytics-free, and use local scripts", async
 });
 
 test("the directory renders and escapes every registered tool", async () => {
-  const pages = await readJson<Pages>("data/pages.json");
+  const { pages } = await loadSiteData();
   const tools = [
     { slug: "first", name: "First <tool>", description: 'A "useful" utility & more.' },
     { slug: "second", name: "Second tool", description: "Another utility." },

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
 import { assert, resolveWithin } from "./site.ts";
-import type { OtherImage, OtherSection, Project, ProjectImage } from "./types.ts";
+import type { OtherImage, OtherSection, Project, ImageWithDimensions } from "../src/shared/content.ts";
 
 export interface PreparedOtherImage extends OtherImage {
   width: number;
@@ -116,11 +116,11 @@ export async function generateResponsiveImages(
     );
   }
 
-  const galleryImages: ProjectImage[] = [
+  const galleryImages: ImageWithDimensions[] = [
     ...otherSections.flatMap((section) => section.images),
     ...projects.flatMap((project) => (project.screenshots?.length ? [project, ...project.screenshots] : [])),
   ];
-  const uniqueImages = new Map<string, ProjectImage>();
+  const uniqueImages = new Map<string, ImageWithDimensions>();
   for (const image of galleryImages) {
     const existing = uniqueImages.get(image.image);
     assert(

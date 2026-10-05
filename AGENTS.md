@@ -17,6 +17,8 @@ enough to justify the added complexity.
 - Put trusted long-form prose in `src/content/`; project fragment filenames must match their data slugs.
 - Put browser behavior in `src/client/`, rendering and build behavior in `scripts/`, and ordered CSS partials
   in `src/styles/`.
+- Put shared content and copy contracts in `src/shared/`; keep behavior-specific types beside their
+  implementations. Load JSON through `scripts/data.ts` so runtime validation precedes typed use.
 - Treat `dist/` as generated output. Do not edit or commit it.
 - Keep authored copy out of generator functions. Rendering code should provide structure and reusable
   behavior, not act as a second content store.

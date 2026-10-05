@@ -1,15 +1,15 @@
+import { loadSiteData } from "../scripts/data.ts";
 import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import { AxeBuilder } from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import sharp from "sharp";
-import type { Pages, Tool } from "../scripts/types.ts";
 
-const { qrCode: copy, tools: directoryCopy } = JSON.parse(
-  await fs.readFile("src/data/pages.json", "utf8"),
-) as Pages;
-const tools = JSON.parse(await fs.readFile("src/data/tools.json", "utf8")) as Tool[];
+const {
+  pages: { qrCode: copy, tools: directoryCopy },
+  tools,
+} = await loadSiteData();
 const jsQR: typeof import("jsqr").default = createRequire(import.meta.url)("jsqr");
 
 async function decodeDownload(page: Page, format: "PNG" | "SVG"): Promise<string | undefined> {
