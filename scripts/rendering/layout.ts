@@ -47,7 +47,6 @@ export function createLayout(site: SiteConfig, copy: SharedCopy, year = new Date
     <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" sizes="180x180" href="${page.id === "tools" || page.id.startsWith("tool-") ? "/tools/apple-touch-icon.png" : "/apple-touch-icon.png"}">
     <script>
-      document.documentElement.classList.add("js");
       if (!location.pathname.startsWith("/style-options/")) {
         try {
           const theme = localStorage.getItem("site-theme");

@@ -1,18 +1,22 @@
 const menuButton = document.querySelector<HTMLButtonElement>(".menu-button");
 const siteNavigation = document.querySelector<HTMLElement>("#site-navigation");
 
-menuButton?.addEventListener("click", () => {
-  const isOpen = menuButton.getAttribute("aria-expanded") === "true";
-  menuButton.setAttribute("aria-expanded", String(!isOpen));
-  if (siteNavigation) siteNavigation.dataset.open = String(!isOpen);
-});
+if (menuButton && siteNavigation) {
+  menuButton.addEventListener("click", () => {
+    const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+    menuButton.setAttribute("aria-expanded", String(!isOpen));
+    siteNavigation.dataset.open = String(!isOpen);
+  });
 
-siteNavigation?.addEventListener("click", (event) => {
-  if (event.target instanceof Element && event.target.closest("a")) {
-    menuButton?.setAttribute("aria-expanded", "false");
-    delete siteNavigation.dataset.open;
-  }
-});
+  siteNavigation.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest("a")) {
+      menuButton.setAttribute("aria-expanded", "false");
+      delete siteNavigation.dataset.open;
+    }
+  });
+
+  document.documentElement.classList.add("menu-ready");
+}
 
 document.querySelector(".filters")?.addEventListener("click", (event) => {
   const button =

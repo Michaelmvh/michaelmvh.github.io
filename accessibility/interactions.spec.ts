@@ -57,6 +57,64 @@ test("local previews do not load production analytics", async ({ page }) => {
   expect(analyticsRequests).toEqual([]);
 });
 
+for (const failure of ["disabled JavaScript", "blocked site script"] as const) {
+  test.describe(`navigation with ${failure}`, () => {
+    test.use({ javaScriptEnabled: failure !== "disabled JavaScript" });
+
+    test("links remain visible and keyboard-accessible without a working menu button", async ({ page }) => {
+      if (failure === "blocked site script") {
+        await page.route("**/assets/js/site.js", (route) => route.abort());
+      }
+      await page.goto("/");
+      await expect(page.getByRole("button", { name: pageCopy.shared.menuLabel })).toBeHidden();
+      const navigation = page.getByRole("navigation", { name: pageCopy.shared.navigationLabel });
+      for (const link of await navigation.getByRole("link").all()) {
+        await expect(link).toBeVisible();
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      const link = navigation.locator('a[href^="/"]:not([href="/"])').first();
+      const href = await link.getAttribute("href");
+      if (!href) throw new Error("Navigation test requires an internal destination");
+      await link.focus();
+      await expect(link).toBeFocused();
+      await link.press("Enter");
+      await expect(page).toHaveURL(href);
+    });
+  });
+}
+
+test("mobile navigation collapses only after its delayed script is ready", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  let releaseScript!: () => void;
+  const scriptReady = new Promise<void>((resolve) => {
+    releaseScript = resolve;
+  });
+  await page.route("**/assets/js/site.js", async (route) => {
+    await scriptReady;
+    await route.continue();
+  });
+  try {
+    await page.goto("/", { waitUntil: "commit" });
+    const navigation = page.getByRole("navigation", { name: pageCopy.shared.navigationLabel });
+    const menu = page.getByRole("button", { name: pageCopy.shared.menuLabel });
+    await expect(navigation).toBeVisible();
+    await expect(menu).toBeHidden();
+    releaseScript();
+    await expect(menu).toBeVisible();
+    await expect(navigation).toBeHidden();
+    await menu.focus();
+    await menu.press("Enter");
+    await expect(menu).toHaveAttribute("aria-expanded", "true");
+    await expect(navigation).toBeVisible();
+    await menu.press("Enter");
+    await expect(menu).toHaveAttribute("aria-expanded", "false");
+    await expect(navigation).toBeHidden();
+  } finally {
+    releaseScript();
+    await page.unrouteAll({ behavior: "wait" });
+  }
+});
+
 test("the skip link stays clipped while scrolling and remains keyboard-accessible in dark device mode", async ({
   page,
 }) => {

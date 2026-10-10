@@ -19,11 +19,12 @@ deployed to GitHub Pages at <https://michaelmvh.com>.
 
 The small Node.js generator is written in strict TypeScript and renders complete semantic HTML. Browser
 TypeScript is compiled to plain JavaScript and provides progressive enhancements such as the mobile menu; it
-does not supply essential page content. The generator concatenates the ordered files in `src/styles/` into one
-`dist/assets/css/site.css`, preserving one browser request without requiring a CSS bundler. The document tools
-additionally use esbuild to bundle their browser-only npm dependencies into local ES modules. Code splitting
-loads the JSON parser only on the JSON page. Browser source imports may use `.ts` extensions; the client
-compiler rewrites them to `.js`.
+does not supply essential page content. Navigation remains visible until the menu handlers are installed,
+including when JavaScript is disabled or the site script fails to load. The generator concatenates the ordered
+files in `src/styles/` into one `dist/assets/css/site.css`, preserving one browser request without requiring a
+CSS bundler. The document tools additionally use esbuild to bundle their browser-only npm dependencies into
+local ES modules. Code splitting loads the JSON parser only on the JSON page. Browser source imports may use
+`.ts` extensions; the client compiler rewrites them to `.js`.
 
 `scripts/build.ts` orchestrates validated data loading, page registration, asset processing, and output
 writing. `scripts/data.ts` exposes `loadSiteData()`, which parses JSON as `unknown` and returns `SiteData`
